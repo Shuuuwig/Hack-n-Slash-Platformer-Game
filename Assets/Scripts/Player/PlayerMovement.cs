@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpPower;
 
     //Boolean Conditions
+    protected bool isJumping;
     protected bool isHanging;
     protected bool isMoving;
 
@@ -48,13 +49,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void HorizontalMovement()
     {
-        _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
-
-
+        if (isJumping == false)
+        {
+            _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
+        }
+        
     }
 
     private void VerticalMovement()
     {
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
+    }
+
+    private void GroundCheck()
+    {
+
     }
 }
