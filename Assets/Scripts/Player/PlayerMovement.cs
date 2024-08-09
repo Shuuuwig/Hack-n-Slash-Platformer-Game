@@ -12,21 +12,33 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float slidingPower;
     [SerializeField] private float slidingEndSpeed;
     [SerializeField] private float fallingSpeedLimit;
+    [SerializeField] private float maxJumpAmount;
+    private float currentJumpAmount;
+    [SerializeField] private Vector2 climbLedgePosition;
 
     //Cooldowns
     [Header("---Cooldown Duration---")]
     [SerializeField] private Cooldown slideCooldown;
 
+    //Layer Masks
+    [Header("---Layer Masks---")]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask wallLayer;
+
     //Ground Check Configuration
     [Header("---Ground Check Box Configuration---")]
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
-    [SerializeField] private LayerMask groundLayer;
+
+    //Ledge Check Configuration
+    [Header("---Ledge Check Box Configuration---")]
+    [SerializeField] private Transform ledgeDetector;
+    [SerializeField] private Vector2 boxSizeLedge;
 
     //Wall Check Configuration
-    [Header("---Ledge Check Box Configuration---")]
-    [SerializeField] private float castDistanceLedge;
-    [SerializeField] private Vector2 boxSizeLedge;
+    [Header("---Wall Check Box Configuration---")]
+    [SerializeField] private Transform wallDetector;
+    [SerializeField] private Vector2 boxSizeWall;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -41,13 +53,22 @@ public class PlayerMovement : MonoBehaviour
     protected bool isJumping;
     protected bool isFalling;
     protected bool isLetGO;
-    protected bool isClimbing;
+    protected bool isClimbingWall;
+    protected bool isClimbingLedge;
     protected bool isHanging;
     protected bool isRunning;
     protected bool isSliding;
     protected bool isGrounded;
 
     public bool IsMovingRight {  get { return isMovingRight; } }
+    public bool IsJumping { get { return isJumping; } }
+    public bool IsFalling { get { return isFalling; } }
+    public bool IsClimbingWall { get { return isClimbingWall; } }
+    public bool IsClimbingLedge { get { return isClimbingLedge; } }
+    public bool IsHanging { get { return isHanging; } }
+    public bool IsRunning { get { return isRunning; } }
+    public bool IsSliding { get { return isSliding; } }
+
 
     //Input
     private Vector2 _inputDirection;
@@ -65,17 +86,28 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         HandleInput();
+
+        //Overlap Checks
+        WallCheck();
         GroundCheck();
         LedgeCheck();
+
+        //Basic Movement
+        VerticalMovement();
         HorizontalMovement();
+
+        //Special Movement
         LedgeHang();
         SlideMovement();
+        WallJump();
+
+        //Limiter
         RigidbodyLimiter();
     }
 
     private void FixedUpdate()
     {
-        VerticalMovement();
+        
     }
 
     private void HandleInput()
@@ -87,14 +119,9 @@ public class PlayerMovement : MonoBehaviour
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        //Only allow x input when grounded
-        if (isGrounded != true)
-            return;
-
         if (isSliding == false)
         {
             _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
-            
         }
 
         if (_rigidbody2D.velocity.x > 0 || _rigidbody2D.velocity.x < 0)
@@ -118,13 +145,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void VerticalMovement()
     {
-        //Only jump when grounded
-        if (Input.GetButton("Jump") && isGrounded == true)
+        //Only jump when grounded or jumping off wall
+        if (!Input.GetButtonDown("Jump"))
+            return;
+
+        if (isGrounded == true || isClimbingWall == true)
         {
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
             isJumping = true;
+            currentJumpAmount++;
+            //Debug.Log(currentJumpAmount);
+        }
+        else if (currentJumpAmount < maxJumpAmount)
+        {
+            if (isFalling == true)
+            {
+                _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, 0f);
+            }
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
+            isJumping = true;
+            currentJumpAmount++;
+            //Debug.Log(currentJumpAmount);
         }
 
+        //Check if player is falling
         if (_rigidbody2D.velocity.y < 0f && isGrounded == false)
         {
             Debug.Log("Is Falling");
@@ -186,29 +230,59 @@ public class PlayerMovement : MonoBehaviour
 
     private void LedgeHang()
     {
-        if (isHanging == true)
-        {
-            //Freeze position when near ledge
-            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        if (isHanging != true)
+            return;
 
-            //Let go of the ledge
-            if (Input.GetKey(KeyCode.LeftControl))
-            {
-                isHanging = false;
-                isLetGO = true;
-            }
-            if (Input.GetKey(KeyCode.Space))
-            {
-                isHanging = false;
-                isClimbing = true;
-            }
-        }
-        else if (isHanging == false && isLetGO == true)
+        //Freeze position when near ledge
+        _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+
+        //Let go of the ledge
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
+            isHanging = false;
+            isLetGO = true;
+
             //Unfreeze position
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             _rigidbody2D.AddForce(Vector2.down); //Push the player down because the player gets stuck
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isHanging = false;
+            isClimbingLedge = true;
+
+            //Unfreeze position
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+
+            if (isMovingRight == false)
+            {
+                _rigidbody2D.position = _rigidbody2D.position + new Vector2(-climbLedgePosition.x, climbLedgePosition.y);
+            }
+            else if (isMovingRight == true)
+            {
+                _rigidbody2D.position = _rigidbody2D.position + climbLedgePosition;
+            }
+        }
+
+    }
+
+    private void WallJump()
+    {
+        if (isClimbingWall != true)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isClimbingWall = false;
+
+            //Unfreeze position
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        }
+    }
+
+    private void GrappleSwing()
+    {
+
     }
 
     //Limiter
@@ -222,18 +296,37 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //Collision Checks
+    private void WallCheck()
+    {
+        if (isGrounded == true)
+            return;
+
+        if (isClimbingWall == true)
+            return;
+
+        if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
+        {
+            isClimbingWall = true;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            Debug.Log("Climbing Wall");
+        }
+    }
+
     private void LedgeCheck()
     {
         if (isGrounded == true)
             return;
 
-        //Return if player lets go or climbs ledge
-        if (isLetGO == true || isClimbing == true) 
+        //Stop checking if player is already hanging
+        if (isHanging == true)
             return;
 
-        Debug.Log("Hung");
+        //Return if player lets go or climbs ledge
+        if (isLetGO == true || isClimbingLedge == true) 
+            return;
+
         //Creates a box that returns true when overlapping with groundLayer
-        if (Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y + 0.775f), boxSizeLedge, 0, -transform.up, castDistanceLedge, groundLayer))
+        if (Physics2D.OverlapBox(ledgeDetector.position, boxSizeLedge, 0, groundLayer))
         {
             isHanging = true;
         }
@@ -252,6 +345,9 @@ public class PlayerMovement : MonoBehaviour
             isJumping = false;
             isFalling = false;
             isLetGO = false;
+            isClimbingLedge = false;
+
+            currentJumpAmount = 1;
         }
         else
         {
@@ -263,7 +359,8 @@ public class PlayerMovement : MonoBehaviour
     {
         //Makes the Check Box Visible
         Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround);
-        Gizmos.DrawWireCube(transform.position - transform.up * castDistanceLedge, boxSizeLedge);
+        Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge);
+        Gizmos.DrawWireCube(wallDetector.position, boxSizeWall);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
