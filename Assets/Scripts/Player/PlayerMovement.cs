@@ -15,14 +15,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float slidingPower;
     [SerializeField] private float slidingEndSpeed;
     [SerializeField] private float fallingSpeedLimit;
-    [SerializeField] private float maxJumpAmount;
-    private float currentJumpAmount;
     [SerializeField] private Vector2 climbLedgePosition;
 
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
     [SerializeField] private Cooldown slideCooldown;
-    private Cooldown knockedbackTimer; //Duration is passed by other gameobjects, no need to serialize
+    [SerializeField] private Cooldown knockedbackTimer; //Duration is passed by other gameobjects
 
     //Layer Masks
     [Header("---Layer Masks---")]
@@ -52,6 +50,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Collider2D _slideCollider2D;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
+
+    //Values
+    protected float defaultGravityScale;
 
     //Boolean Conditions
     protected bool isMovingRight;
@@ -87,6 +88,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (_animator == null)
             Debug.LogWarning("Player Animator not found");
+
+        defaultGravityScale = _rigidbody2D.gravityScale;
     }
 
     private void Update()
@@ -107,8 +110,9 @@ public class PlayerMovement : MonoBehaviour
         SlideMovement();
         WallJump();
 
-        //Limiter
+        //Rigidbody Manipulation
         RigidbodyLimiter();
+        GravityManipulation();
 
         //State Check
         CheckState();
@@ -165,27 +169,9 @@ public class PlayerMovement : MonoBehaviour
         {
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
             isJumping = true;
-            currentJumpAmount++;
-            //Debug.Log(currentJumpAmount);
-        }
-        else if (currentJumpAmount < maxJumpAmount)
-        {
-            if (isFalling == true)
-            {
-                _rigidbody2D.velocity = Vector2.ClampMagnitude(_rigidbody2D.velocity, 0f);
-            }
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
-            isJumping = true;
-            currentJumpAmount++;
-            //Debug.Log(currentJumpAmount);
+
         }
 
-        //Check if player is falling
-        if (_rigidbody2D.velocity.y < 0f && isGrounded == false)
-        {
-            Debug.Log("Is Falling");
-            isFalling = true;
-        }
     }
 
     //----------Special Movement----------//
@@ -285,8 +271,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            isClimbingWall = false;
-
             //Unfreeze position
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         }
@@ -323,13 +307,42 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    //Velocity Limiter
+    //Rigidbody Manipulatation
     private void RigidbodyLimiter()
     {
+        Vector2 maxFallVelocity = _rigidbody2D.velocity;
         if (_rigidbody2D.velocity.y > fallingSpeedLimit && isFalling == true)
         {
-            Debug.Log(_rigidbody2D.velocity.y);
-            _rigidbody2D.velocity = Vector3.ClampMagnitude(_rigidbody2D.velocity, fallingSpeedLimit);
+            maxFallVelocity.y = Mathf.Clamp(maxFallVelocity.y, fallingSpeedLimit, 0);
+            _rigidbody2D.velocity = maxFallVelocity;
+        }
+    }
+
+    private void GravityManipulation()
+    {
+        //Check if player is falling
+        if (_rigidbody2D.velocity.y <= 0f && isGrounded == false)
+        {
+            isFalling = true;
+        }
+        else
+        {
+            isFalling = false;
+        }
+
+        //Reduce gravity scale at jump apex
+        if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
+        {
+            Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
+            _rigidbody2D.gravityScale = defaultGravityScale / 2f;
+        }
+        else if (isFalling == true) //Increase gravity scale when falling
+        {
+            _rigidbody2D.gravityScale = defaultGravityScale * 1.5f;
+        }
+        else
+        {
+            _rigidbody2D.gravityScale = defaultGravityScale;
         }
     }
 
@@ -337,9 +350,6 @@ public class PlayerMovement : MonoBehaviour
     private void WallCheck()
     {
         if (isGrounded == true)
-            return;
-
-        if (isClimbingWall == true)
             return;
 
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
@@ -351,7 +361,10 @@ public class PlayerMovement : MonoBehaviour
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 Debug.Log("Climbing Wall");
             }
-            
+        }
+        else
+        {
+            isClimbingWall = false;
         }
     }
 
@@ -371,9 +384,11 @@ public class PlayerMovement : MonoBehaviour
         //Creates a box that returns true when overlapping with groundLayer
         if (Physics2D.OverlapBox(ledgeDetector.position, boxSizeLedge, 0, groundLayer))
         {
+            Debug.Log("Near Ledge");
             //Requires button input to hang
             if (Input.GetKeyDown(KeyCode.E)) 
             {
+                Debug.Log("Hung on Ledge");
                 isHanging = true;
             }
         }
@@ -388,13 +403,12 @@ public class PlayerMovement : MonoBehaviour
         //Creates a box that returns true when overlapping with groundLayer
         if (Physics2D.BoxCast(transform.position, boxSizeGround, 0, -transform.up, castDistanceGround, groundLayer))
         {
+            //Reset all values to default
             isGrounded = true;
             isJumping = false;
             isFalling = false;
             isLetGO = false;
             isClimbingLedge = false;
-
-            currentJumpAmount = 1;
         }
         else
         {

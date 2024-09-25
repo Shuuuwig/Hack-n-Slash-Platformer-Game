@@ -28,7 +28,7 @@ public class PlayerCombat : MonoBehaviour
     private void Update()
     {
         BasicAttack();
-        Debug.Log(hitEnemy);
+        //Debug.Log(hitEnemy);
     }
 
     //----------------Combat Functions------------------
