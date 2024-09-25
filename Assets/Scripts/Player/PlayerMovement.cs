@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("---Gizmo Configuration---")]
+    [SerializeField] protected bool gizmoToggleOn = true;
+
     //Variables
     [Header("---Player Values---")]
     [SerializeField] private float acceleration;
@@ -17,8 +20,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 climbLedgePosition;
 
     //Cooldowns
-    [Header("---Cooldown Duration---")]
+    [Header("---Cooldown and Timer Duration---")]
     [SerializeField] private Cooldown slideCooldown;
+    private Cooldown knockedbackTimer; //Duration is passed by other gameobjects, no need to serialize
 
     //Layer Masks
     [Header("---Layer Masks---")]
@@ -42,11 +46,12 @@ public class PlayerMovement : MonoBehaviour
 
     //Player Component Reference
     [Header("---Component Reference---")]
-    [SerializeField] protected Rigidbody2D _rigidbody2D;
-    [SerializeField] protected Animator _animator;
-    [SerializeField] protected Collider2D _mainCollider2D;
-    [SerializeField] protected Collider2D _slideCollider2D;
+    [SerializeField] private Rigidbody2D _rigidbody2D;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Collider2D _mainCollider2D;
+    [SerializeField] private Collider2D _slideCollider2D;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
+    [SerializeField] private PlayerCombat playerCombat;
 
     //Boolean Conditions
     protected bool isMovingRight;
@@ -58,8 +63,10 @@ public class PlayerMovement : MonoBehaviour
     protected bool isHanging;
     protected bool isRunning;
     protected bool isSliding;
+    protected bool isKnockedBack;
     protected bool isGrounded;
 
+    public bool IsGrounded {  get { return isGrounded; } }
     public bool IsMovingRight {  get { return isMovingRight; } }
     public bool IsJumping { get { return isJumping; } }
     public bool IsFalling { get { return isFalling; } }
@@ -68,7 +75,6 @@ public class PlayerMovement : MonoBehaviour
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
     public bool IsSliding { get { return isSliding; } }
-
 
     //Input
     private Vector2 _inputDirection;
@@ -103,6 +109,9 @@ public class PlayerMovement : MonoBehaviour
 
         //Limiter
         RigidbodyLimiter();
+
+        //State Check
+        CheckState();
     }
 
     private void FixedUpdate()
@@ -119,10 +128,10 @@ public class PlayerMovement : MonoBehaviour
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        if (isSliding == false)
-        {
-            _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
-        }
+        if (isSliding == true || isKnockedBack == true)
+            return;
+
+        _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
 
         if (_rigidbody2D.velocity.x > 0 || _rigidbody2D.velocity.x < 0)
         {
@@ -145,6 +154,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void VerticalMovement()
     {
+        if (isSliding == true || isKnockedBack == true)
+            return;
+
         //Only jump when grounded or jumping off wall
         if (!Input.GetButtonDown("Jump"))
             return;
@@ -210,9 +222,9 @@ public class PlayerMovement : MonoBehaviour
                 _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
             }
         }
-        if (_rigidbody2D.velocity.x  < 0)
+        if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
         {
-            if (_rigidbody2D.velocity.x >= -slidingEndSpeed && isSliding == true)
+            if (_rigidbody2D.velocity.x >= -slidingEndSpeed )
             {
                 isSliding = false;
                 _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
@@ -285,7 +297,33 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    //Limiter
+    //----------Current Active State----------
+    private void CheckState()
+    {
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isKnockedBack = false;
+            _rigidbody2D.velocity = Vector2.zero;
+            knockedbackTimer.ResetCooldown();
+        }
+    }
+
+    public void KnockedBackState(Transform enemyTransform, float enemyKnockbackForce, float stunDuration)
+    {
+        isKnockedBack = true; //Change knockedback bool to true
+        Vector2 knockbackDirection = (transform.position - enemyTransform.position).normalized; //Determine knockback direction by comparing player and enemy position
+        _rigidbody2D.velocity = knockbackDirection * enemyKnockbackForce; //Multiply knockback with knockback force
+
+        knockedbackTimer.Duration = stunDuration;
+        knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+    }
+
+    private void InvulnerableState()
+    {
+
+    }
+
+    //Velocity Limiter
     private void RigidbodyLimiter()
     {
         if (_rigidbody2D.velocity.y > fallingSpeedLimit && isFalling == true)
@@ -295,7 +333,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //Collision Checks
+    //----------Collision Checks-----------
     private void WallCheck()
     {
         if (isGrounded == true)
@@ -306,9 +344,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
         {
-            isClimbingWall = true;
-            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-            Debug.Log("Climbing Wall");
+            //Requires button input to climb
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                isClimbingWall = true;
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                Debug.Log("Climbing Wall");
+            }
+            
         }
     }
 
@@ -328,7 +371,11 @@ public class PlayerMovement : MonoBehaviour
         //Creates a box that returns true when overlapping with groundLayer
         if (Physics2D.OverlapBox(ledgeDetector.position, boxSizeLedge, 0, groundLayer))
         {
-            isHanging = true;
+            //Requires button input to hang
+            if (Input.GetKeyDown(KeyCode.E)) 
+            {
+                isHanging = true;
+            }
         }
         else
         {
@@ -357,6 +404,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (gizmoToggleOn != true)
+            return;
+
         //Makes the Check Box Visible
         Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround);
         Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge);

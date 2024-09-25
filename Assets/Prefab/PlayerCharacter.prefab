@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 710543346932557189}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.13, y: -0.632, z: 0}
+  m_LocalScale: {x: 0.54375, y: 0.3565847, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7926815632849815710}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7846106961576776303, guid: 99e1f33810afb1e48b8963887995a8ef, type: 3}
   m_Color: {r: 0.87165725, g: 1, b: 0.6084906, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -257,7 +257,7 @@ MonoBehaviour:
   _animator: {fileID: 6863442781808648854}
   _mainCollider2D: {fileID: 3144496596227805163}
   _slideCollider2D: {fileID: 3830418915967391835}
-  playerAnimationHandler: {fileID: 0}
+  playerAnimationHandler: {fileID: 5489704775830526463}
 --- !u!114 &6181915135680443335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +275,8 @@ MonoBehaviour:
   basicAttackCooldown:
     CurrentProgress: 0
     Duration: 1
+  _weaponRigidbody2D: {fileID: 0}
+  playerMovement: {fileID: 0}
 --- !u!114 &5489704775830526463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,9 +290,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentScale: {x: 0.7806, y: 1.797964, z: 1}
-  playerCombat: {fileID: 0}
+  playerCombat: {fileID: 6181915135680443335}
   playerMovement: {fileID: 7698823367271624722}
-  playerAnimator: {fileID: 0}
+  playerAnimator: {fileID: 6863442781808648854}
 --- !u!1 &4727094917389393263
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2431653240270840198
 Transform:
   m_ObjectHideFlags: 0
