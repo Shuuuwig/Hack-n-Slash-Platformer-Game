@@ -732,11 +732,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 6
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -761,7 +761,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.13, y: -0.14999986, z: -10}
+  m_LocalPosition: {x: -14.13, y: -2.91, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1239,10 +1239,10 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1107236567}
   m_Lens:
-    FieldOfView: 60
-    OrthographicSize: 6
-    NearClipPlane: 0.3
-    FarClipPlane: 1000
+    FieldOfView: 40
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -1266,24 +1266,13 @@ Transform:
   m_GameObject: {fileID: 1201870125}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.13, y: -0.14999986, z: -10}
+  m_LocalPosition: {x: -14.13, y: -2.91, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2038976211}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1225506083 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-  m_PrefabInstance: {fileID: 7568159160880475259}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 829f703187978474e9aaad0f4bb76dbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1225506084 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
@@ -1479,7 +1468,7 @@ MonoBehaviour:
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
-  m_ScreenY: 0.73
+  m_ScreenY: 0.5
   m_CameraDistance: 10
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -1622,57 +1611,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCharacter
       objectReference: {fileID: 0}
-    - target: {fileID: 2431653240270840198, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.68
-      objectReference: {fileID: 0}
-    - target: {fileID: 2431653240270840198, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 3144496596227805163, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_Size.y
-      value: 1.0664684
-      objectReference: {fileID: 0}
-    - target: {fileID: 3144496596227805163, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.033234194
-      objectReference: {fileID: 0}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: playerMovement
-      value: 
-      objectReference: {fileID: 1225506084}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: playerKnockbackPower
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: generalTimer.Duration
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: knockbackTimer.Duration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: basicAttackCooldown.Duration
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6181915135680443335, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: basicAttackDuration.Duration
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6256161438930150051, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: gizmoToggleOn
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: playerCombat
-      value: 
-      objectReference: {fileID: 1225506083}
+      propertyPath: jumpApexGravityDivision
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: fallingSpeedLimit
-      value: -8
+      propertyPath: fallingGravityMultiplication
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 7926815632849815710, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1713,14 +1662,6 @@ PrefabInstance:
     - target: {fileID: 7926815632849815710, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7964752652834704161, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_SleepingMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7964752652834704161, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1799,6 +1740,6 @@ SceneRoots:
   - {fileID: 235040230}
   - {fileID: 157157697}
   - {fileID: 7568159160880475259}
-  - {fileID: 8202282280575280737}
   - {fileID: 7483619531681459689}
+  - {fileID: 8202282280575280737}
   - {fileID: 142782987}

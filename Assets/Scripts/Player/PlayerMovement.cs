@@ -12,9 +12,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("---Player Values---")]
     [SerializeField] private float acceleration;
     [SerializeField] private float jumpPower;
+    [SerializeField] private float jumpApexGravityDivision;
     [SerializeField] private float slidingPower;
     [SerializeField] private float slidingEndSpeed;
+    [SerializeField] private float fallingGravityMultiplication;
     [SerializeField] private float fallingSpeedLimit;
+    [SerializeField] private Vector2 wallJumpForce;
     [SerializeField] private Vector2 climbLedgePosition;
 
     //Cooldowns
@@ -65,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isRunning;
     protected bool isSliding;
     protected bool isKnockedBack;
+    protected bool isJumpingOffWall;
     protected bool isGrounded;
 
     public bool IsGrounded {  get { return isGrounded; } }
@@ -112,7 +116,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Rigidbody Manipulation
         RigidbodyLimiter();
-        GravityManipulation();
+        //GravityManipulation();
 
         //State Check
         CheckState();
@@ -161,17 +165,16 @@ public class PlayerMovement : MonoBehaviour
         if (isSliding == true || isKnockedBack == true)
             return;
 
-        //Only jump when grounded or jumping off wall
         if (!Input.GetButtonDown("Jump"))
             return;
 
-        if (isGrounded == true || isClimbingWall == true)
+        //Only jump when grounded or jumping off wall
+        if (isGrounded == true)
         {
+            Debug.Log("Jumped");
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
             isJumping = true;
-
         }
-
     }
 
     //----------Special Movement----------//
@@ -261,7 +264,6 @@ public class PlayerMovement : MonoBehaviour
                 _rigidbody2D.position = _rigidbody2D.position + climbLedgePosition;
             }
         }
-
     }
 
     private void WallJump()
@@ -269,10 +271,19 @@ public class PlayerMovement : MonoBehaviour
         if (isClimbingWall != true)
             return;
 
+        Debug.Log("Wall Jump enabled");
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            isClimbingWall = false;
+            isJumpingOffWall = true;
+
             //Unfreeze position
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            _rigidbody2D.gravityScale = defaultGravityScale;
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
+            //_rigidbody2D.AddForce(new Vector2(_rigidbody2D.velocity.x * wallJumpForce.x, wallJumpForce.y));
+            Debug.Log(isJumpingOffWall);
         }
     }
 
@@ -331,19 +342,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Reduce gravity scale at jump apex
-        if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
+        /*if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
         {
             Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
-            _rigidbody2D.gravityScale = defaultGravityScale / 2f;
+            _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivision;
         }
         else if (isFalling == true) //Increase gravity scale when falling
         {
-            _rigidbody2D.gravityScale = defaultGravityScale * 1.5f;
+            _rigidbody2D.gravityScale = defaultGravityScale * fallingGravityMultiplication;
         }
         else
         {
             _rigidbody2D.gravityScale = defaultGravityScale;
-        }
+        }*/
     }
 
     //----------Collision Checks-----------
@@ -352,12 +363,16 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded == true)
             return;
 
+        if (IsClimbingWall == true)
+            return;
+
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
         {
             //Requires button input to climb
             if (Input.GetKeyDown(KeyCode.E))
             {
                 isClimbingWall = true;
+                isJumpingOffWall = false;
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                 Debug.Log("Climbing Wall");
             }
@@ -409,6 +424,8 @@ public class PlayerMovement : MonoBehaviour
             isFalling = false;
             isLetGO = false;
             isClimbingLedge = false;
+            isClimbingWall = false;
+            isJumpingOffWall = false;
         }
         else
         {

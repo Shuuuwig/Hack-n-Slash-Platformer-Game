@@ -67,5 +67,10 @@ public class PlayerCombat : MonoBehaviour
             hitEnemy = true;
             knockbackTimer.StartCooldown();
         }
+
+        if (collision.CompareTag("Spike"))
+        {
+            //playerMovement.KnockedBackState()
+        }
     }
 }
