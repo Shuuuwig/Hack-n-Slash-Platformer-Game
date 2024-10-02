@@ -19,7 +19,6 @@ public abstract class EnemyClass : MonoBehaviour
 
     //Component References
     [Header("---Component References---")]
-    [SerializeField] protected Transform enemyTransform;
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected Transform visionTransform;
     [SerializeField] protected Vector2 visionBoxSize;
@@ -60,7 +59,7 @@ public abstract class EnemyClass : MonoBehaviour
 
     protected void KnockbackEffect()
     {
-        playerMovement.KnockedBackState(enemyTransform, knockbackForce, stunDuration);
+        playerMovement.KnockedBackState(transform, knockbackForce, stunDuration);
     }
 
     protected void TakingDamage()

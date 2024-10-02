@@ -7,6 +7,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("---Weapon configuration---")]
     [SerializeField] private float weaponDamage;
     [SerializeField] private float playerKnockbackPower;
+    [SerializeField] private float playerKnockedbackPower;
     [SerializeField] private Collider2D weaponHitbox;
     [SerializeField] private Cooldown basicAttackDuration;
     [SerializeField] private Cooldown basicAttackCooldown;
@@ -22,8 +23,10 @@ public class PlayerCombat : MonoBehaviour
     //Boolean conditions
     private bool isBasicAttacking;
     private bool hitEnemy;
+    private bool hitObstacle;
 
     public bool HitEnemy {  get { return hitEnemy; } }
+    public bool HitObstacle { get {  return hitObstacle; } }
 
     private void Update()
     {
@@ -68,9 +71,19 @@ public class PlayerCombat : MonoBehaviour
             knockbackTimer.StartCooldown();
         }
 
-        if (collision.CompareTag("Spike"))
+        if (collision.CompareTag("Obstacle"))
         {
-            //playerMovement.KnockedBackState()
+            Debug.Log("Hit Obstacle");
+            hitObstacle = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit Obstacle");
+            hitObstacle = false;
         }
     }
 }

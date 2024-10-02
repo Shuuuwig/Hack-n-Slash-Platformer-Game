@@ -234,9 +234,14 @@ MonoBehaviour:
   gizmoToggleOn: 1
   acceleration: 8
   jumpPower: 15
+  jumpApexGravityDivider: 2
+  pogoJumpPower: 12
   slidingPower: 350
   slidingEndSpeed: 4
+  fallingGravityMultiplier: 1.8
   fallingSpeedLimit: -8
+  maxJumpForce: 30
+  wallJumpPower: {x: 10, y: 20}
   climbLedgePosition: {x: 0.872, y: 1.666}
   slideCooldown:
     CurrentProgress: 0
@@ -276,13 +281,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponDamage: 5
   playerKnockbackPower: 50
+  playerKnockedbackPower: 30
   weaponHitbox: {fileID: 6277548842647494035}
   basicAttackDuration:
     CurrentProgress: 0
-    Duration: 0.5
+    Duration: 0.1
   basicAttackCooldown:
     CurrentProgress: 0
-    Duration: 1
+    Duration: 0.3
   knockbackTimer:
     CurrentProgress: 0
     Duration: 0.5
@@ -359,13 +365,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511863287468200748}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.4963763, w: -0.8681075}
-  m_LocalPosition: {x: 0.022413254, y: -0.66594887, z: -0.7002691}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: -0.516, y: -1.664, z: -0.7002691}
   m_LocalScale: {x: 0.2825, y: 2.7093, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2431653240270840198}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -59.521}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!212 &3444022576048853231
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -495,9 +501,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 1.3843613, y: 0.13658297}
-      - {x: -0.584467, y: -1.1862862}
-      - {x: -0.7244858, y: -0.9365519}
+    - - {x: -0.52022743, y: -3.2234778}
+      - {x: -0.35990912, y: -0.8868749}
+      - {x: -0.66626686, y: -0.88664997}
   m_UseDelaunayMesh: 0
 --- !u!1 &6263209033181887289
 GameObject:

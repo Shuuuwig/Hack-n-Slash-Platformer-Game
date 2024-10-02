@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -12,12 +13,14 @@ public class PlayerMovement : MonoBehaviour
     [Header("---Player Values---")]
     [SerializeField] private float acceleration;
     [SerializeField] private float jumpPower;
-    [SerializeField] private float jumpApexGravityDivision;
+    [SerializeField] private float jumpApexGravityDivider;
+    [SerializeField] private float pogoJumpPower;
     [SerializeField] private float slidingPower;
     [SerializeField] private float slidingEndSpeed;
-    [SerializeField] private float fallingGravityMultiplication;
+    [SerializeField] private float fallingGravityMultiplier;
     [SerializeField] private float fallingSpeedLimit;
-    [SerializeField] private Vector2 wallJumpForce;
+    [SerializeField] private float maxJumpForce;
+    [SerializeField] private Vector2 wallJumpPower;
     [SerializeField] private Vector2 climbLedgePosition;
 
     //Cooldowns
@@ -113,10 +116,11 @@ public class PlayerMovement : MonoBehaviour
         LedgeHang();
         SlideMovement();
         WallJump();
+        Pogo();
 
         //Rigidbody Manipulation
         RigidbodyLimiter();
-        //GravityManipulation();
+        GravityManipulation();
 
         //State Check
         CheckState();
@@ -211,7 +215,7 @@ public class PlayerMovement : MonoBehaviour
                 _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
             }
         }
-        if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
+        else if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
         {
             if (_rigidbody2D.velocity.x >= -slidingEndSpeed )
             {
@@ -220,11 +224,20 @@ public class PlayerMovement : MonoBehaviour
                 _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
             }   
         }
+        else if (_rigidbody2D.velocity.x == 0f && isSliding) //End slide upon hitting a wall
+        {
+            isSliding = false;
+            _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+            _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+        }
 
         //Reset slide cooldown when duration ends
         if (slideCooldown.CurrentProgress is Cooldown.Progress.Finished)
         {
+            isSliding = false;
             slideCooldown.ResetCooldown();
+            _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+            _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
         }
         
     }
@@ -281,10 +294,16 @@ public class PlayerMovement : MonoBehaviour
             //Unfreeze position
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             _rigidbody2D.gravityScale = defaultGravityScale;
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
-            //_rigidbody2D.AddForce(new Vector2(_rigidbody2D.velocity.x * wallJumpForce.x, wallJumpForce.y));
-            Debug.Log(isJumpingOffWall);
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x * wallJumpPower.x, wallJumpPower.y);
         }
+    }
+
+    private void Pogo()
+    {
+        if (playerCombat.HitObstacle == false)
+            return;
+
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoJumpPower);
     }
 
     private void GrappleSwing()
@@ -311,6 +330,8 @@ public class PlayerMovement : MonoBehaviour
 
         knockedbackTimer.Duration = stunDuration;
         knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+
+        Debug.Log("Knocked Back");
     }
 
     private void InvulnerableState()
@@ -324,7 +345,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 maxFallVelocity = _rigidbody2D.velocity;
         if (_rigidbody2D.velocity.y > fallingSpeedLimit && isFalling == true)
         {
-            maxFallVelocity.y = Mathf.Clamp(maxFallVelocity.y, fallingSpeedLimit, 0);
+            maxFallVelocity.y = Mathf.Clamp(maxFallVelocity.y, fallingSpeedLimit, maxJumpForce);
             _rigidbody2D.velocity = maxFallVelocity;
         }
     }
@@ -342,19 +363,19 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Reduce gravity scale at jump apex
-        /*if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
+        if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
         {
             Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
-            _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivision;
+            _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivider;
         }
         else if (isFalling == true) //Increase gravity scale when falling
         {
-            _rigidbody2D.gravityScale = defaultGravityScale * fallingGravityMultiplication;
+            _rigidbody2D.gravityScale = defaultGravityScale * fallingGravityMultiplier;
         }
         else
         {
             _rigidbody2D.gravityScale = defaultGravityScale;
-        }*/
+        }
     }
 
     //----------Collision Checks-----------
@@ -447,5 +468,10 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
     }
 }
