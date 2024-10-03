@@ -6,15 +6,32 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("---Weapon configuration---")]
     [SerializeField] private float weaponDamage;
+    [SerializeField] private float playerKnockbackPower;
+    [SerializeField] private float playerKnockedbackPower;
     [SerializeField] private Collider2D weaponHitbox;
+    [SerializeField] private Cooldown basicAttackDuration;
     [SerializeField] private Cooldown basicAttackCooldown;
+
+    //Timer
+    [Header("---Timer Duration---")]
+    [SerializeField] private Cooldown knockbackTimer;
+
+    //Player Component Reference
+    [Header("---Component Reference---")]
+    [SerializeField] private PlayerMovement playerMovement;
 
     //Boolean conditions
     private bool isBasicAttacking;
+    private bool hitEnemy;
+    private bool hitObstacle;
+
+    public bool HitEnemy {  get { return hitEnemy; } }
+    public bool HitObstacle { get {  return hitObstacle; } }
 
     private void Update()
     {
         BasicAttack();
+        //Debug.Log(hitEnemy);
     }
 
     //----------------Combat Functions------------------
@@ -23,16 +40,50 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && basicAttackCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
+            //Start basic attack duration and cooldown
             basicAttackCooldown.StartCooldown();
+            basicAttackDuration.StartCooldown();
+
             isBasicAttacking = true; //Bool for animator
             weaponHitbox.enabled = true;
         }
 
+        //Reset Hurtbox and bool
+        if (basicAttackDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            basicAttackDuration.ResetCooldown();
+            isBasicAttacking = false;
+            weaponHitbox.enabled = false;
+        }
+
+        //Reset cooldown
         if (basicAttackCooldown.CurrentProgress is Cooldown.Progress.Finished)
         {
             basicAttackCooldown.ResetCooldown();
-            isBasicAttacking = false;
-            weaponHitbox.enabled = false;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            hitEnemy = true;
+            knockbackTimer.StartCooldown();
+        }
+
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit Obstacle");
+            hitObstacle = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit Obstacle");
+            hitObstacle = false;
         }
     }
 }

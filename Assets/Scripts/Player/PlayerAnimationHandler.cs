@@ -8,6 +8,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private Vector3 currentScale;
 
     //Player Component Reference
+    [Header("---Component Reference---")]
     [SerializeField] private PlayerCombat playerCombat;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Animator playerAnimator;
@@ -16,7 +17,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     private void Update()
     {
         HandleFlip();
-        //HandleAnimation();
+        HandleAnimation();
     }
 
     void HandleFlip()
@@ -40,6 +41,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     private void HandleAnimation()
     {
+        playerAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
         playerAnimator.SetBool("isFacingLeft", isFacingLeft);
         playerAnimator.SetBool("isMovingRight", playerMovement.IsMovingRight);
         playerAnimator.SetBool("isJumping", playerMovement.IsJumping);

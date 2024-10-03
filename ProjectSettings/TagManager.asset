@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Weapon
+  - Enemy
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -15,8 +17,6 @@ TagManager:
   - Ground
   - Wall
   - TileFloor
-  - 
-  - 
   - 
   - 
   - 
