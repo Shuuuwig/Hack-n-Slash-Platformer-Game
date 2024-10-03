@@ -57,6 +57,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
 
+    //Input
+    private Vector2 _inputDirection;
+
     //Values
     protected float defaultGravityScale;
 
@@ -83,9 +86,9 @@ public class PlayerMovement : MonoBehaviour
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
     public bool IsSliding { get { return isSliding; } }
+    public Vector2 InputDirection { get { return _inputDirection; } }
 
-    //Input
-    private Vector2 _inputDirection;
+   
 
     private void Start()
     {
@@ -184,6 +187,9 @@ public class PlayerMovement : MonoBehaviour
     //----------Special Movement----------//
     private void SlideMovement()
     {
+        if (isGrounded == false)
+            return;
+
         //Slide when input key is pressed while character is runnning and ability is off cooldown
         if (Input.GetKey(KeyCode.LeftShift) && isRunning == true && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
@@ -365,7 +371,7 @@ public class PlayerMovement : MonoBehaviour
         //Reduce gravity scale at jump apex
         if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
         {
-            Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
+            //Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
             _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivider;
         }
         else if (isFalling == true) //Increase gravity scale when falling
@@ -390,7 +396,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
         {
             //Requires button input to climb
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 isClimbingWall = true;
                 isJumpingOffWall = false;
@@ -460,9 +466,12 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         //Makes the Check Box Visible
-        Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround);
-        Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge);
-        Gizmos.DrawWireCube(wallDetector.position, boxSizeWall);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround); //Ground wire cube
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge); //Ledge wire cube
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
