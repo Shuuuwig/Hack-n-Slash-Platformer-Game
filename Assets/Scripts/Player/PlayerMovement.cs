@@ -25,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
 
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
+    [SerializeField] private Cooldown coyoteTime;
+    [SerializeField] private Cooldown bufferJumpTime;
     [SerializeField] private Cooldown slideCooldown;
     [SerializeField] private Cooldown knockedbackTimer; //Duration is passed by other gameobjects
 
@@ -51,19 +53,21 @@ public class PlayerMovement : MonoBehaviour
     //Player Component Reference
     [Header("---Component Reference---")]
     [SerializeField] private Rigidbody2D _rigidbody2D;
-    [SerializeField] private Animator _animator;
-    [SerializeField] private Collider2D _mainCollider2D;
-    [SerializeField] private Collider2D _slideCollider2D;
+    [SerializeField] private Animator animator;
+    [SerializeField] private Collider2D mainCollider2D;
+    [SerializeField] private Collider2D slideCollider2D;
+    [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
 
     //Input
-    private Vector2 _inputDirection;
+    private Vector2 inputDirection;
 
     //Values
     protected float defaultGravityScale;
 
     //Boolean Conditions
+    protected bool jumpInputPressed;
     protected bool isMovingRight;
     protected bool isJumping;
     protected bool isFalling;
@@ -86,9 +90,8 @@ public class PlayerMovement : MonoBehaviour
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
     public bool IsSliding { get { return isSliding; } }
-    public Vector2 InputDirection { get { return _inputDirection; } }
+    public Vector2 InputDirection { get { return inputDirection; } }
 
-   
 
     private void Start()
     {
@@ -96,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         if (_rigidbody2D == null)
             Debug.LogWarning("Player Rigidbody2D not found");
 
-        if (_animator == null)
+        if (animator == null)
             Debug.LogWarning("Player Animator not found");
 
         defaultGravityScale = _rigidbody2D.gravityScale;
@@ -137,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
     private void HandleInput()
     {
         //Get input from x and y input
-        _inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
 
     //-----------Basic Movement------------//
@@ -146,7 +149,7 @@ public class PlayerMovement : MonoBehaviour
         if (isSliding == true || isKnockedBack == true)
             return;
 
-        _rigidbody2D.velocity = new Vector2(_inputDirection.x * acceleration, _rigidbody2D.velocity.y);
+        _rigidbody2D.velocity = new Vector2(inputDirection.x * acceleration, _rigidbody2D.velocity.y);
 
         if (_rigidbody2D.velocity.x > 0 || _rigidbody2D.velocity.x < 0)
         {
@@ -171,16 +174,41 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isSliding == true || isKnockedBack == true)
             return;
-
-        if (!Input.GetButtonDown("Jump"))
-            return;
-
-        //Only jump when grounded or jumping off wall
-        if (isGrounded == true)
+        
+        //--Buffer Jump--
+        if (Input.GetButtonDown("Jump"))
         {
-            Debug.Log("Jumped");
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
-            isJumping = true;
+            bufferJumpTime.StartCooldown(); //Start the cooldown when jump is pressed
+        }
+        else if (bufferJumpTime.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            bufferJumpTime.ResetCooldown();
+        }
+        Debug.Log(jumpInputPressed);
+       
+        
+        //--Only allows jump when buffer jump window is active--
+        if (bufferJumpTime.CurrentProgress is Cooldown.Progress.InProgress)
+        {
+            //Jump when grounded or when coyote time is active
+            if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress)
+            {
+                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
+                isJumping = true;
+                jumpInputPressed = true;
+            }
+        }
+
+        //--Start coyote time--
+        if (isGrounded == false && jumpInputPressed == false && coyoteTime.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            Debug.Log("Coyote started");
+            coyoteTime.StartCooldown();
+        }
+        //Reset coyote time
+        else if (isGrounded == true && coyoteTime.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            coyoteTime.ResetCooldown();
         }
     }
 
@@ -203,8 +231,8 @@ public class PlayerMovement : MonoBehaviour
             }
 
             //Enable Slide collider on slide and disable main collider
-            _mainCollider2D.enabled = false;
-            _slideCollider2D.enabled = true;
+            mainCollider2D.enabled = false;
+            slideCollider2D.enabled = true;
 
             slideCooldown.StartCooldown();
             isSliding = true;
@@ -217,8 +245,8 @@ public class PlayerMovement : MonoBehaviour
             if (_rigidbody2D.velocity.x <= slidingEndSpeed)
             {
                 isSliding = false;
-                _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
             }
         }
         else if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
@@ -226,15 +254,15 @@ public class PlayerMovement : MonoBehaviour
             if (_rigidbody2D.velocity.x >= -slidingEndSpeed )
             {
                 isSliding = false;
-                _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
             }   
         }
         else if (_rigidbody2D.velocity.x == 0f && isSliding) //End slide upon hitting a wall
         {
             isSliding = false;
-            _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
         }
 
         //Reset slide cooldown when duration ends
@@ -242,8 +270,8 @@ public class PlayerMovement : MonoBehaviour
         {
             isSliding = false;
             slideCooldown.ResetCooldown();
-            _mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            _slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
+            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
         }
         
     }
@@ -453,6 +481,8 @@ public class PlayerMovement : MonoBehaviour
             isClimbingLedge = false;
             isClimbingWall = false;
             isJumpingOffWall = false;
+
+            jumpInputPressed = false;
         }
         else
         {
@@ -460,6 +490,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+
+    }
+
+    //--------------------------------
     private void OnDrawGizmos()
     {
         if (gizmoToggleOn != true)
@@ -474,13 +515,5 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-
-    }
+    
 }

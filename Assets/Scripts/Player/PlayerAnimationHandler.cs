@@ -11,8 +11,8 @@ public class PlayerAnimationHandler : MonoBehaviour
     [Header("---Component Reference---")]
     [SerializeField] private PlayerCombat playerCombat;
     [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private Animator playerAnimator;
-    
+    [SerializeField] private Animator playerUpperBodyAnimator;
+    [SerializeField] private Animator playerLowerBodyAnimator;
 
     private void Update()
     {
@@ -41,15 +41,28 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     private void HandleAnimation()
     {
-        playerAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
-        playerAnimator.SetBool("isFacingLeft", isFacingLeft);
-        playerAnimator.SetBool("isMovingRight", playerMovement.IsMovingRight);
-        playerAnimator.SetBool("isJumping", playerMovement.IsJumping);
-        playerAnimator.SetBool("isFalling", playerMovement.IsFalling);
-        playerAnimator.SetBool("isClimbingWall", playerMovement.IsClimbingWall);
-        playerAnimator.SetBool("isClimbingLedge", playerMovement.IsClimbingLedge);
-        playerAnimator.SetBool("isHanging", playerMovement.IsHanging);
-        playerAnimator.SetBool("isRunning", playerMovement.IsRunning);
-        playerAnimator.SetBool("isSliding", playerMovement.IsSliding);
+        //Upper Body
+        playerUpperBodyAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
+        playerUpperBodyAnimator.SetBool("isFacingLeft", isFacingLeft);
+        //playerUpperBodyAnimator.SetBool("isMovingRight", playerMovement.IsMovingRight);
+        playerUpperBodyAnimator.SetBool("isJumping", playerMovement.IsJumping);
+        playerUpperBodyAnimator.SetBool("isFalling", playerMovement.IsFalling);
+        playerUpperBodyAnimator.SetBool("isClimbingWall", playerMovement.IsClimbingWall);
+        playerUpperBodyAnimator.SetBool("isClimbingLedge", playerMovement.IsClimbingLedge);
+        playerUpperBodyAnimator.SetBool("isHanging", playerMovement.IsHanging);
+        playerUpperBodyAnimator.SetBool("isRunning", playerMovement.IsRunning);
+        playerUpperBodyAnimator.SetBool("isSliding", playerMovement.IsSliding);
+
+        //Lower Body    
+        playerLowerBodyAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
+        playerLowerBodyAnimator.SetBool("isFacingLeft", isFacingLeft);
+        //playerLowerBodyAnimator.SetBool("isMovingRight", playerMovement.IsMovingRight);
+        playerLowerBodyAnimator.SetBool("isJumping", playerMovement.IsJumping);
+        playerLowerBodyAnimator.SetBool("isFalling", playerMovement.IsFalling);
+        playerLowerBodyAnimator.SetBool("isClimbingWall", playerMovement.IsClimbingWall);
+        playerLowerBodyAnimator.SetBool("isClimbingLedge", playerMovement.IsClimbingLedge);
+        playerLowerBodyAnimator.SetBool("isHanging", playerMovement.IsHanging);
+        playerLowerBodyAnimator.SetBool("isRunning", playerMovement.IsRunning);
+        playerLowerBodyAnimator.SetBool("isSliding", playerMovement.IsSliding);
     }
 }
