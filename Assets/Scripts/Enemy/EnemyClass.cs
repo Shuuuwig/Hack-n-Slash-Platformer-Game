@@ -16,7 +16,6 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected float stunDuration;
     [SerializeField] protected float movementSpeed;   
     [SerializeField] protected LayerMask detectableLayerMask;
-    [SerializeField] protected Vector2 attackBoxSize;
     [SerializeField] protected Vector2 parryBoxSize;
     [SerializeField] protected Vector2 visionBoxSize;
     [SerializeField] protected Vector2 detectionBoxSize;
@@ -26,7 +25,7 @@ public abstract class EnemyClass : MonoBehaviour
 
     //Component References
     [Header("---Component References---")]
-    [SerializeField] protected Transform attackBoxTransform;
+    [SerializeField] protected GameObject attackRangeBoxTransform;
     [SerializeField] protected Transform parryBoxTransform;
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected Transform visionBoxTransform;
@@ -117,12 +116,6 @@ public abstract class EnemyClass : MonoBehaviour
             target = null;
             playerDetected = false;
         }
-
-        //Attack Box Check
-        if (Physics2D.OverlapBox(attackBoxTransform.position, attackBoxSize, 0, detectableLayerMask))
-        {
-
-        }
     }
 
 
@@ -136,9 +129,6 @@ public abstract class EnemyClass : MonoBehaviour
         if (gizmoToggleOn != true)
             return;
 
-        //Attack box
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(attackBoxTransform.position, attackBoxSize);
         //Parry box
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(parryBoxTransform.position, parryBoxSize);

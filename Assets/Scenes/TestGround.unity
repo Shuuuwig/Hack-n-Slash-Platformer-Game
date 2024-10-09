@@ -988,11 +988,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!4 &633637186 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1682296586684920818, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-  m_PrefabInstance: {fileID: 7483619531681459689}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &639613393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1258,68 +1253,6 @@ BoxCollider2D:
   m_CorrespondingSourceObject: {fileID: 3830418915967391835, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
   m_PrefabInstance: {fileID: 7568159160880475259}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &936608032
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 936608033}
-  m_Layer: 0
-  m_Name: ParryBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &936608033
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 936608032}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.06, y: 0.87, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 633637186}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1002974085
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1002974086}
-  m_Layer: 0
-  m_Name: AttackBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1002974086
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1002974085}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.61, y: 0.88, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 633637186}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1010372963
 GameObject:
   m_ObjectHideFlags: 0
@@ -1956,100 +1889,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 37912868964768882, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: m_Name
-      value: VisionBox
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: damage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: health
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: maxHealth
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: attackSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: stunDuration
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: gizmoToggleOn
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: movementSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: enemyTransform
-      value: 
-      objectReference: {fileID: 633637186}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: knockbackForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: parryBoxSize.x
-      value: 1.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: parryBoxSize.y
-      value: 2.82
-      objectReference: {fileID: 0}
     - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
       propertyPath: playerMovement
       value: 
       objectReference: {fileID: 1225506084}
     - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: attackBoxSize.x
-      value: 2.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: attackBoxSize.y
-      value: 2.82
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: attackTransform
-      value: 
-      objectReference: {fileID: 1002974086}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1107236567}
     - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: parryBoxTransform
-      value: 
-      objectReference: {fileID: 936608033}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: attackBoxTransform
-      value: 
-      objectReference: {fileID: 1002974086}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: detectionBoxSize.x
-      value: 4.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: detectionBoxSize.y
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: visionBoxTransform
-      value: 
-      objectReference: {fileID: 7483619531681459690}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
       propertyPath: detectionBoxTransform
-      value: 
-      objectReference: {fileID: 142782987}
-    - target: {fileID: 500753358305870025, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      propertyPath: mainDetectionTransform
       value: 
       objectReference: {fileID: 142782987}
     - target: {fileID: 1324470850669220610, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
@@ -2096,22 +1945,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5976430026971097493, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
+      propertyPath: m_Name
+      value: AttackRangeBox
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1682296586684920818, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1002974086}
-    - targetCorrespondingSourceObject: {fileID: 1682296586684920818, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 936608033}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
---- !u!4 &7483619531681459690 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 234618481929435464, guid: bb421984bd6988d4093af34624ff4d92, type: 3}
-  m_PrefabInstance: {fileID: 7483619531681459689}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7568159160880475259
 PrefabInstance:
   m_ObjectHideFlags: 0
