@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+[CreateAssetMenu(menuName = "Player Stats Base Template")]
+public class PlayerStats : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum BaseStats
     {
-        
+        health,
+        damage,
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public Dictionary<BaseStats, float> baseStats = new Dictionary<BaseStats, float>();
+    public Dictionary<BaseStats, float> localStats = new Dictionary<BaseStats, float>();
+
+    public void InitializeStats()
     {
-        
+        localStats = new Dictionary<BaseStats, float>(baseStats);
     }
 }

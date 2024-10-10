@@ -36,6 +36,7 @@ public class PlayerCombat : MonoBehaviour
     private bool hitEnemy;
     private bool hitObstacle;
 
+    public float WeaponDamage { get { return weaponDamage; } }
     public bool HitEnemy {  get { return hitEnemy; } }
     public bool HitObstacle { get {  return hitObstacle; } }
 
@@ -133,7 +134,7 @@ public class PlayerCombat : MonoBehaviour
             parryActiveTime.ResetCooldown();
         }
     }
-
+    //-----------------------------------------------------------------
     private void OnDrawGizmos()
     {
         if (gizmoToggleOn != true)
