@@ -17,11 +17,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float pogoJumpPower;
     [SerializeField] private float slidingPower;
     [SerializeField] private float slidingEndSpeed;
+    [SerializeField] private float airDashPower;
     [SerializeField] private float fallingGravityMultiplier;
     [SerializeField] private float fallingSpeedLimit;
     [SerializeField] private float maxJumpForce;
     [SerializeField] private Vector2 wallJumpPower;
     [SerializeField] private Vector2 climbLedgePosition;
+    private Vector2 storedPlayerMomentum;
 
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
@@ -68,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
 
     //Boolean Conditions
     protected bool jumpInputPressed;
+    protected bool horizontalJumpInputReleased;
+    protected bool isAirDashing;
     protected bool isMovingRight;
     protected bool isJumping;
     protected bool isFalling;
@@ -119,8 +123,9 @@ public class PlayerMovement : MonoBehaviour
         HorizontalMovement();
 
         //Special Movement
-        LedgeHang();
         SlideMovement();
+        AirDash();
+        LedgeHang();
         WallJump();
         Pogo();
 
@@ -168,6 +173,18 @@ public class PlayerMovement : MonoBehaviour
         {
             isRunning = false;
         }
+
+        //Maintain momentum when input is gone during jump
+        if (inputDirection.x != 0 && isJumping == true)
+        {
+            storedPlayerMomentum = _rigidbody2D.velocity;
+            horizontalJumpInputReleased = true;
+        }
+        else if (horizontalJumpInputReleased == true)
+        {
+            Debug.Log("Momentum preserved");
+            _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.5f, _rigidbody2D.velocity.y);
+        }
     }
 
     private void VerticalMovement()
@@ -184,15 +201,14 @@ public class PlayerMovement : MonoBehaviour
         {
             bufferJumpTime.ResetCooldown();
         }
-        Debug.Log(jumpInputPressed);
        
-        
         //--Only allows jump when buffer jump window is active--
         if (bufferJumpTime.CurrentProgress is Cooldown.Progress.InProgress)
         {
-            //Jump when grounded or when coyote time is active
-            if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress)
+            //Jump when grounded or when coyote time is active and jump input is not pressed
+            if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress && jumpInputPressed == false)
             {
+                Debug.Log("Jumping");
                 _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
                 isJumping = true;
                 jumpInputPressed = true;
@@ -221,14 +237,7 @@ public class PlayerMovement : MonoBehaviour
         //Slide when input key is pressed while character is runnning and ability is off cooldown
         if (Input.GetKey(KeyCode.LeftShift) && isRunning == true && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
-            if (isMovingRight == true)
-            {
-                _rigidbody2D.AddForce(Vector2.right * slidingPower);
-            }
-            if (isMovingRight == false)
-            {
-                _rigidbody2D.AddForce(Vector2.left * slidingPower);
-            }
+            _rigidbody2D.AddForce(new Vector2(inputDirection.x * slidingPower, _rigidbody2D.velocity.y ));
 
             //Enable Slide collider on slide and disable main collider
             mainCollider2D.enabled = false;
@@ -274,6 +283,24 @@ public class PlayerMovement : MonoBehaviour
             slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
         }
         
+    }
+
+    private void AirDash()
+    {
+        if (isGrounded == true)
+            return;
+
+        if (Input.GetKey(KeyCode.LeftShift) && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            _rigidbody2D.AddForce(new Vector2(inputDirection.x * slidingPower, _rigidbody2D.velocity.y));
+
+            //Enable Slide collider on slide and disable main collider
+            mainCollider2D.enabled = false;
+            slideCollider2D.enabled = true;
+
+            slideCooldown.StartCooldown();
+            isSliding = true;
+        }
     }
 
     private void LedgeHang()
@@ -483,6 +510,7 @@ public class PlayerMovement : MonoBehaviour
             isJumpingOffWall = false;
 
             jumpInputPressed = false;
+            horizontalJumpInputReleased = false;
         }
         else
         {
