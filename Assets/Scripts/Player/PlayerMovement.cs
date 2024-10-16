@@ -6,58 +6,66 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("---Gizmo Configuration---")]
+    [Header("===Gizmo Configuration===")]
     [SerializeField] protected bool gizmoToggleOn = true;
 
     //Variables
-    [Header("---Player Values---")]
+    [Header("===Player Configuration===")]
+    [Header("---Run---")]
     [SerializeField] private float acceleration;
+    [Header("---Submerge---")]
+    [SerializeField] private Cooldown submergeDuration;
+    [SerializeField] private Cooldown submergeCooldown;
+    [Header("---Dash---")]
+    [SerializeField] private float dashPower;
+    [SerializeField] private Cooldown dashDuration;
+    [SerializeField] private Cooldown dashCooldown;
+    [Header("---Jump---")]
     [SerializeField] private float jumpPower;
-    [SerializeField] private float jumpApexGravityDivider;
+    [SerializeField] private Cooldown coyoteTime;
+    [SerializeField] private Cooldown bufferJumpTime;
+    [Header("---Pogo Jump---")]
     [SerializeField] private float pogoJumpPower;
-    [SerializeField] private float slidingPower;
-    [SerializeField] private float slidingEndSpeed;
-    [SerializeField] private float airDashPower;
+    [Header("---Wall Jump---")]
+    [SerializeField] private Vector2 wallJumpPower;
+    [Header("---Ledge Hang---")]
+    [SerializeField] private Vector2 climbLedgePosition;
+    [Header("---Gravity---")]
+    [SerializeField] private float jumpApexGravityDivider;
     [SerializeField] private float fallingGravityMultiplier;
+    [Header("---Limiter---")]
     [SerializeField] private float fallingSpeedLimit;
     [SerializeField] private float maxJumpForce;
-    [SerializeField] private Vector2 wallJumpPower;
-    [SerializeField] private Vector2 climbLedgePosition;
+    
     private Vector2 storedPlayerMomentum;
 
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
-    [SerializeField] private Cooldown coyoteTime;
-    [SerializeField] private Cooldown bufferJumpTime;
-    [SerializeField] private Cooldown slideCooldown;
+    [SerializeField] private Cooldown buttonInputWindow;
     [SerializeField] private Cooldown knockedbackTimer; //Duration is passed by other gameobjects
 
-    //Layer Masks
-    [Header("---Layer Masks---")]
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask wallLayer;
-
-    //Ground Check Configuration
-    [Header("---Ground Check Box Configuration---")]
+    [Header("===Collision/Trigger Checks Configuration===")]
+    [Header("---Ground Check---")]
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
-
-    //Ledge Check Configuration
-    [Header("---Ledge Check Box Configuration---")]
+    [SerializeField] private LayerMask groundLayer;
+    [Header("---Ledge Check---")]
     [SerializeField] private Transform ledgeDetector;
     [SerializeField] private Vector2 boxSizeLedge;
-
-    //Wall Check Configuration
-    [Header("---Wall Check Box Configuration---")]
+    [Header("---Wall Check---")]
     [SerializeField] private Transform wallDetector;
     [SerializeField] private Vector2 boxSizeWall;
+    [SerializeField] private LayerMask wallLayer;
+    [Header("---Grapple Check---")]
+    [SerializeField] private Transform grappleDetector;
+    [SerializeField] private float circleRadiusGrapple;
+    [SerializeField] private LayerMask grappleLayer;
 
     //Player Component Reference
     [Header("---Component Reference---")]
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D mainCollider2D;
-    [SerializeField] private Collider2D slideCollider2D;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
@@ -65,8 +73,9 @@ public class PlayerMovement : MonoBehaviour
     //Input
     private Vector2 inputDirection;
 
-    //Values
+    //Float
     protected float defaultGravityScale;
+    protected float downInputTally;
 
     //Boolean Conditions
     protected bool jumpInputPressed;
@@ -80,7 +89,8 @@ public class PlayerMovement : MonoBehaviour
     protected bool isClimbingLedge;
     protected bool isHanging;
     protected bool isRunning;
-    protected bool isSliding;
+    protected bool isDashing;
+    protected bool isSubmerged;
     protected bool isKnockedBack;
     protected bool isJumpingOffWall;
     protected bool isGrounded;
@@ -93,7 +103,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsClimbingLedge { get { return isClimbingLedge; } }
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
-    public bool IsSliding { get { return isSliding; } }
+    public bool IsSubmerged { get { return isSubmerged; } }
     public Vector2 InputDirection { get { return inputDirection; } }
 
 
@@ -123,11 +133,12 @@ public class PlayerMovement : MonoBehaviour
         HorizontalMovement();
 
         //Special Movement
-        SlideMovement();
-        AirDash();
+        Submerge();
+        Dash();
         LedgeHang();
         WallJump();
         Pogo();
+        Grapple();
 
         //Rigidbody Manipulation
         RigidbodyLimiter();
@@ -139,11 +150,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+        Debug.Log(_rigidbody2D.velocity.x);
     }
 
     private void HandleInput()
     {
+        if (isClimbingWall == true)
+            return;
+
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
@@ -151,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        if (isSliding == true || isKnockedBack == true)
+        if (isDashing == true || isKnockedBack == true)
             return;
 
         _rigidbody2D.velocity = new Vector2(inputDirection.x * acceleration, _rigidbody2D.velocity.y);
@@ -189,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void VerticalMovement()
     {
-        if (isSliding == true || isKnockedBack == true)
+        if (isKnockedBack == true)
             return;
         
         //--Buffer Jump--
@@ -229,77 +243,88 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //----------Special Movement----------//
-    private void SlideMovement()
+    private void Submerge()
     {
         if (isGrounded == false)
             return;
 
-        //Slide when input key is pressed while character is runnning and ability is off cooldown
-        if (Input.GetKey(KeyCode.LeftShift) && isRunning == true && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        //Submerge requires 2 downward inputs in quick succession
+        if (Input.GetKeyDown(KeyCode.S) && submergeCooldown.CurrentProgress is Cooldown.Progress.Ready && isSubmerged == false)
         {
-            _rigidbody2D.AddForce(new Vector2(inputDirection.x * slidingPower, _rigidbody2D.velocity.y ));
+            downInputTally++; //Tallies input
+            Debug.Log(downInputTally);
 
-            //Enable Slide collider on slide and disable main collider
-            mainCollider2D.enabled = false;
-            slideCollider2D.enabled = true;
-
-            slideCooldown.StartCooldown();
-            isSliding = true;
-        }
-
-        //Set isSliding to false after reaching the end speed to allow the player to walk
-        //Check end speed when sliding left or right
-        if (_rigidbody2D.velocity.x > 0 && isSliding == true)
-        {
-            if (_rigidbody2D.velocity.x <= slidingEndSpeed)
+            //Timer window for input
+            if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Ready)
             {
-                isSliding = false;
-                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+                buttonInputWindow.StartCooldown();
             }
         }
-        else if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
+
+        //Reset input tally after window has passed
+        if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Finished)
         {
-            if (_rigidbody2D.velocity.x >= -slidingEndSpeed )
-            {
-                isSliding = false;
-                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
-            }   
-        }
-        else if (_rigidbody2D.velocity.x == 0f && isSliding) //End slide upon hitting a wall
-        {
-            isSliding = false;
-            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            downInputTally = 0;
+            buttonInputWindow.ResetCooldown();
         }
 
-        //Reset slide cooldown when duration ends
-        if (slideCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        //Start submerge duration if input is successful
+        if (downInputTally == 2 && isSubmerged == false)
         {
-            isSliding = false;
-            slideCooldown.ResetCooldown();
-            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            Debug.Log("Submerged");
+            submergeDuration.StartCooldown();
+            isSubmerged = true;
         }
-        
+        else if (submergeDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            submergeDuration.ResetCooldown();
+            submergeCooldown.StartCooldown();
+            isSubmerged = false;
+        }
+
+        //Reset cooldown timer after cooldown ends
+        if (submergeCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            submergeCooldown.ResetCooldown();
+        }
     }
 
-    private void AirDash()
+    private void Dash()
     {
-        if (isGrounded == true)
-            return;
-
-        if (Input.GetKey(KeyCode.LeftShift) && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (Input.GetKey(KeyCode.LeftShift) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
-            _rigidbody2D.AddForce(new Vector2(inputDirection.x * slidingPower, _rigidbody2D.velocity.y));
+            dashDuration.StartCooldown(); //Start duration and cooldown at the same time
+            dashCooldown.StartCooldown();
+            isDashing = true;
+        }
 
-            //Enable Slide collider on slide and disable main collider
-            mainCollider2D.enabled = false;
-            slideCollider2D.enabled = true;
+        //Horizontal speed is set to dash power during dash duration
+        if (isDashing == true)
+        {
+            if (inputDirection.x > 0 || isMovingRight == true)
+            {
+                _rigidbody2D.velocity = new Vector2(dashPower, _rigidbody2D.velocity.y);
+            }
+            else if (inputDirection.x < 0 || isMovingRight == false)
+            {
+                _rigidbody2D.velocity = new Vector2(-dashPower, _rigidbody2D.velocity.y);
+            }
 
-            slideCooldown.StartCooldown();
-            isSliding = true;
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Retain Y-value of player during dash
+        }
+
+        //Stop dashing
+        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isDashing = false;
+            _rigidbody2D.constraints &= ~RigidbodyConstraints2D.FreezePositionY;
+        }
+
+        //Reset duration and cooldown to allow for dashing again
+        if (dashCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            dashDuration.ResetCooldown();
+            dashCooldown.ResetCooldown();
         }
     }
 
@@ -367,7 +392,7 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoJumpPower);
     }
 
-    private void GrappleSwing()
+    private void Grapple()
     {
 
     }
@@ -423,8 +448,12 @@ public class PlayerMovement : MonoBehaviour
             isFalling = false;
         }
 
-        //Reduce gravity scale at jump apex
-        if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
+        //Zero gravity during dash
+        if (isDashing == true)
+        {
+            _rigidbody2D.gravityScale = 0;
+        }
+        else if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f) //Reduce gravity scale at jump apex
         {
             //Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
             _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivider;
@@ -442,10 +471,7 @@ public class PlayerMovement : MonoBehaviour
     //----------Collision Checks-----------
     private void WallCheck()
     {
-        if (isGrounded == true)
-            return;
-
-        if (IsClimbingWall == true)
+        if (isGrounded == true || isClimbingWall == true)
             return;
 
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
@@ -455,7 +481,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 isClimbingWall = true;
                 isJumpingOffWall = false;
-                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
+                transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y); //Look away from the wall
                 Debug.Log("Climbing Wall");
             }
         }
@@ -467,15 +494,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void LedgeCheck()
     {
-        if (isGrounded == true)
-            return;
-
-        //Stop checking if player is already hanging
-        if (isHanging == true)
-            return;
-
-        //Return if player lets go or climbs ledge
-        if (isLetGO == true || isClimbingLedge == true) 
+        if (isGrounded == true || isHanging == true || isLetGO == true || isClimbingLedge == true)
             return;
 
         //Creates a box that returns true when overlapping with groundLayer
@@ -492,6 +511,15 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isHanging = false;
+        }
+    }
+
+    private void GrappleCheck()
+    {
+        if (Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer))
+        {
+            Debug.Log("Near grapple point");
+
         }
     }
 
@@ -541,6 +569,8 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge); //Ledge wire cube
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(grappleDetector.position, circleRadiusGrapple); //Grapple wire sphere
     }
 
     
