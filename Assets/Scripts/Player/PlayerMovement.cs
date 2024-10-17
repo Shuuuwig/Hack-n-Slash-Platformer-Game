@@ -30,6 +30,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 wallJumpPower;
     [Header("---Ledge Hang---")]
     [SerializeField] private Vector2 climbLedgePosition;
+    [Header("---Grapple---")]
+    [SerializeField] private float grappleSpeed;
+    [SerializeField] private float grapplePointOffset;
+    [SerializeField] private Cooldown grappleMomentumDuration;
     [Header("---Gravity---")]
     [SerializeField] private float jumpApexGravityDivider;
     [SerializeField] private float fallingGravityMultiplier;
@@ -73,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
     //Input
     private Vector2 inputDirection;
 
+    private Transform targetedGrapplePoint;
+
     //Float
     protected float defaultGravityScale;
     protected float downInputTally;
@@ -80,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
     //Boolean Conditions
     protected bool jumpInputPressed;
     protected bool horizontalJumpInputReleased;
+    protected bool grappleReleased;
     protected bool isAirDashing;
     protected bool isMovingRight;
     protected bool isJumping;
@@ -91,6 +98,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isRunning;
     protected bool isDashing;
     protected bool isSubmerged;
+    protected bool isGrappling;
     protected bool isKnockedBack;
     protected bool isJumpingOffWall;
     protected bool isGrounded;
@@ -127,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
         WallCheck();
         GroundCheck();
         LedgeCheck();
+        GrappleCheck();
 
         //Basic Movement
         VerticalMovement();
@@ -146,16 +155,17 @@ public class PlayerMovement : MonoBehaviour
 
         //State Check
         CheckState();
+        
     }
 
     private void FixedUpdate()
     {
-        Debug.Log(_rigidbody2D.velocity.x);
+
     }
 
     private void HandleInput()
     {
-        if (isClimbingWall == true)
+        if (isClimbingWall == true || isGrappling == true)
             return;
 
         //Get input from x and y input
@@ -380,7 +390,16 @@ public class PlayerMovement : MonoBehaviour
             //Unfreeze position
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
             _rigidbody2D.gravityScale = defaultGravityScale;
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x * wallJumpPower.x, wallJumpPower.y);
+
+            if (IsMovingRight == false)
+            {
+                _rigidbody2D.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
+            }
+            else if (isMovingRight == true)
+            {
+                _rigidbody2D.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
+            }
+            
         }
     }
 
@@ -394,7 +413,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Grapple()
     {
-
+        if (isGrappling == true)
+        {
+            Debug.Log("Grappling");
+            //transform.position = Vector3.MoveTowards(transform.position, targetedGrapplePoint.position, grappleSpeed * Time.deltaTime);
+            Vector2 grappleDirection = (transform.position - targetedGrapplePoint.position).normalized;
+            _rigidbody2D.velocity = -grappleDirection * grappleSpeed;
+            storedPlayerMomentum = _rigidbody2D.velocity;
+            //if (transform.position.x <= targetedGrapplePoint.position.x + grapplePointOffset && transform.position.x >= targetedGrapplePoint.position.x - grapplePointOffset || transform.position.y <= targetedGrapplePoint.position.y + grapplePointOffset && transform.position.y >= targetedGrapplePoint.position.y - grapplePointOffset)
+            //{
+            //    isGrappling = false;
+            //}
+        }
+        else if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress)
+        {
+            _rigidbody2D.velocity = storedPlayerMomentum / 1.3f;
+        }
+        else if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            grappleMomentumDuration.ResetCooldown();
+        }
     }
 
     //----------Current Active State----------
@@ -411,7 +449,7 @@ public class PlayerMovement : MonoBehaviour
     public void KnockedBackState(Transform enemyTransform, float enemyKnockbackForce, float stunDuration)
     {
         isKnockedBack = true; //Change knockedback bool to true
-        Vector2 knockbackDirection = (transform.position - enemyTransform.position).normalized; //Determine knockback direction by comparing player and enemy position
+        Vector2 knockbackDirection = (transform.position - enemyTransform.position); //Determine knockback direction by comparing player and enemy position
         _rigidbody2D.velocity = knockbackDirection * enemyKnockbackForce; //Multiply knockback with knockback force
 
         knockedbackTimer.Duration = stunDuration;
@@ -449,7 +487,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Zero gravity during dash
-        if (isDashing == true)
+        if (isDashing == true || isGrappling == true)
         {
             _rigidbody2D.gravityScale = 0;
         }
@@ -519,7 +557,19 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer))
         {
             Debug.Log("Near grapple point");
+            if (targetedGrapplePoint == null)
+            {
+                targetedGrapplePoint = Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer).transform;
+            }
 
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                isGrappling = true;
+            }
+        }
+        else
+        {
+            isGrappling = false;
         }
     }
 
@@ -553,7 +603,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Check for player trigger with grappling point
+        if (collision.CompareTag("GrapplePoint"))
+        {
+            isGrappling = false;
+            grappleMomentumDuration.StartCooldown();
+        }
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        
     }
 
     //--------------------------------
