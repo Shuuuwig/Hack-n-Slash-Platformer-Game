@@ -14,9 +14,9 @@ public class Enemy1 : EnemyClass
 
     }
 
-    private void Update()
+    protected override void Update()
     {
-        PlayerDetection();
+        base.Update();
     }
 
     protected override void EnemyMoveset()
@@ -30,6 +30,7 @@ public class Enemy1 : EnemyClass
 
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Weapon"))

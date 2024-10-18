@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Obstacle
   - Parryable
+  - GrapplePoint
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Wall
   - TileFloor
   - Parryable
-  - 
+  - GrapplePoint
   - 
   - 
   - 

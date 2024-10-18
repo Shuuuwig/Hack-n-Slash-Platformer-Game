@@ -6,56 +6,70 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("---Gizmo Configuration---")]
+    [Header("===Gizmo Configuration===")]
     [SerializeField] protected bool gizmoToggleOn = true;
 
     //Variables
-    [Header("---Player Values---")]
+    [Header("===Player Configuration===")]
+    [Header("---Run---")]
     [SerializeField] private float acceleration;
+    [Header("---Submerge---")]
+    [SerializeField] private Cooldown submergeDuration;
+    [SerializeField] private Cooldown submergeCooldown;
+    [Header("---Dash---")]
+    [SerializeField] private float dashPower;
+    [SerializeField] private Cooldown dashDuration;
+    [SerializeField] private Cooldown dashCooldown;
+    [Header("---Jump---")]
     [SerializeField] private float jumpPower;
-    [SerializeField] private float jumpApexGravityDivider;
+    [SerializeField] private Cooldown coyoteTime;
+    [SerializeField] private Cooldown bufferJumpTime;
+    [Header("---Pogo Jump---")]
     [SerializeField] private float pogoJumpPower;
-    [SerializeField] private float slidingPower;
-    [SerializeField] private float slidingEndSpeed;
+    [Header("---Wall Jump---")]
+    [SerializeField] private Vector2 wallJumpPower;
+    [SerializeField] private Cooldown wallJumpAppliedForceDuration;
+    [Header("---Ledge Hang---")]
+    [SerializeField] private Vector2 climbLedgePosition;
+    [Header("---Grapple---")]
+    [SerializeField] private float grapplePower;
+    [SerializeField] private Cooldown grappleMomentumDuration;
+    [Header("---Gravity---")]
+    [SerializeField] private float jumpApexGravityDivider;
     [SerializeField] private float fallingGravityMultiplier;
+    [Header("---Limiter---")]
     [SerializeField] private float fallingSpeedLimit;
     [SerializeField] private float maxJumpForce;
-    [SerializeField] private Vector2 wallJumpPower;
-    [SerializeField] private Vector2 climbLedgePosition;
+    
+    private Vector2 storedPlayerMomentum;
 
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
-    [SerializeField] private Cooldown coyoteTime;
-    [SerializeField] private Cooldown bufferJumpTime;
-    [SerializeField] private Cooldown slideCooldown;
+    [SerializeField] private Cooldown buttonInputWindow;
     [SerializeField] private Cooldown knockedbackTimer; //Duration is passed by other gameobjects
 
-    //Layer Masks
-    [Header("---Layer Masks---")]
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask wallLayer;
-
-    //Ground Check Configuration
-    [Header("---Ground Check Box Configuration---")]
+    [Header("===Collision/Trigger Checks Configuration===")]
+    [Header("---Ground Check---")]
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
-
-    //Ledge Check Configuration
-    [Header("---Ledge Check Box Configuration---")]
+    [SerializeField] private LayerMask groundLayer;
+    [Header("---Ledge Check---")]
     [SerializeField] private Transform ledgeDetector;
     [SerializeField] private Vector2 boxSizeLedge;
-
-    //Wall Check Configuration
-    [Header("---Wall Check Box Configuration---")]
+    [Header("---Wall Check---")]
     [SerializeField] private Transform wallDetector;
     [SerializeField] private Vector2 boxSizeWall;
+    [SerializeField] private LayerMask wallLayer;
+    [Header("---Grapple Check---")]
+    [SerializeField] private Transform grappleDetector;
+    [SerializeField] private float circleRadiusGrapple;
+    [SerializeField] private LayerMask grappleLayer;
 
     //Player Component Reference
     [Header("---Component Reference---")]
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D mainCollider2D;
-    [SerializeField] private Collider2D slideCollider2D;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
@@ -63,11 +77,17 @@ public class PlayerMovement : MonoBehaviour
     //Input
     private Vector2 inputDirection;
 
-    //Values
+    private Transform targetedGrapplePoint;
+
+    //Float
     protected float defaultGravityScale;
+    protected float downInputTally;
 
     //Boolean Conditions
     protected bool jumpInputPressed;
+    protected bool horizontalJumpInputReleased;
+    protected bool grappleReleased;
+    protected bool isAirDashing;
     protected bool isMovingRight;
     protected bool isJumping;
     protected bool isFalling;
@@ -76,7 +96,9 @@ public class PlayerMovement : MonoBehaviour
     protected bool isClimbingLedge;
     protected bool isHanging;
     protected bool isRunning;
-    protected bool isSliding;
+    protected bool isDashing;
+    protected bool isSubmerged;
+    protected bool isGrappling;
     protected bool isKnockedBack;
     protected bool isJumpingOffWall;
     protected bool isGrounded;
@@ -89,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsClimbingLedge { get { return isClimbingLedge; } }
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
-    public bool IsSliding { get { return isSliding; } }
+    public bool IsSubmerged { get { return isSubmerged; } }
     public Vector2 InputDirection { get { return inputDirection; } }
 
 
@@ -113,16 +135,19 @@ public class PlayerMovement : MonoBehaviour
         WallCheck();
         GroundCheck();
         LedgeCheck();
+        GrappleCheck();
 
         //Basic Movement
         VerticalMovement();
         HorizontalMovement();
 
         //Special Movement
+        Submerge();
+        Dash();
         LedgeHang();
-        SlideMovement();
         WallJump();
         Pogo();
+        Grapple();
 
         //Rigidbody Manipulation
         RigidbodyLimiter();
@@ -130,15 +155,19 @@ public class PlayerMovement : MonoBehaviour
 
         //State Check
         CheckState();
+        
     }
 
     private void FixedUpdate()
     {
-        
+
     }
 
     private void HandleInput()
     {
+        if (isClimbingWall == true || isGrappling == true)
+            return;
+
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
@@ -146,33 +175,42 @@ public class PlayerMovement : MonoBehaviour
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        if (isSliding == true || isKnockedBack == true)
+        if (isDashing == true || isKnockedBack == true)
             return;
 
         _rigidbody2D.velocity = new Vector2(inputDirection.x * acceleration, _rigidbody2D.velocity.y);
 
-        if (_rigidbody2D.velocity.x > 0 || _rigidbody2D.velocity.x < 0)
-        {
-            isRunning = true;
 
-            if (_rigidbody2D.velocity.x > 0)
-            {
-                isMovingRight = true;
-            }
-            if (_rigidbody2D.velocity.x < 0)
-            {
-                isMovingRight = false;
-            }
+        if (_rigidbody2D.velocity.x > 0)
+        {
+            isMovingRight = true;
+            isRunning = true;
+        }
+        else if (_rigidbody2D.velocity.x < 0)
+        {
+            isMovingRight = false;
+            isRunning = true;
         }
         else
         {
             isRunning = false;
         }
+
+        if (inputDirection.x != 0 && isJumping == true) //Maintain momentum when input is gone during jump
+        { 
+            storedPlayerMomentum = _rigidbody2D.velocity;
+            horizontalJumpInputReleased = true;
+        }
+        else if (horizontalJumpInputReleased == true)
+        {
+            Debug.Log("Momentum preserved");
+            _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, _rigidbody2D.velocity.y);
+        }
     }
 
     private void VerticalMovement()
     {
-        if (isSliding == true || isKnockedBack == true)
+        if (isKnockedBack == true)
             return;
         
         //--Buffer Jump--
@@ -184,15 +222,14 @@ public class PlayerMovement : MonoBehaviour
         {
             bufferJumpTime.ResetCooldown();
         }
-        Debug.Log(jumpInputPressed);
        
-        
         //--Only allows jump when buffer jump window is active--
         if (bufferJumpTime.CurrentProgress is Cooldown.Progress.InProgress)
         {
-            //Jump when grounded or when coyote time is active
-            if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress)
+            //Jump when grounded or when coyote time is active and jump input is not pressed
+            if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress && jumpInputPressed == false)
             {
+                Debug.Log("Jumping");
                 _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
                 isJumping = true;
                 jumpInputPressed = true;
@@ -213,67 +250,89 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //----------Special Movement----------//
-    private void SlideMovement()
+    private void Submerge()
     {
         if (isGrounded == false)
             return;
 
-        //Slide when input key is pressed while character is runnning and ability is off cooldown
-        if (Input.GetKey(KeyCode.LeftShift) && isRunning == true && slideCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        //Submerge requires 2 downward inputs in quick succession
+        if (Input.GetKeyDown(KeyCode.S) && submergeCooldown.CurrentProgress is Cooldown.Progress.Ready && isSubmerged == false)
         {
-            if (isMovingRight == true)
-            {
-                _rigidbody2D.AddForce(Vector2.right * slidingPower);
-            }
-            if (isMovingRight == false)
-            {
-                _rigidbody2D.AddForce(Vector2.left * slidingPower);
-            }
+            downInputTally++; //Tallies input
+            Debug.Log(downInputTally);
 
-            //Enable Slide collider on slide and disable main collider
-            mainCollider2D.enabled = false;
-            slideCollider2D.enabled = true;
-
-            slideCooldown.StartCooldown();
-            isSliding = true;
-        }
-
-        //Set isSliding to false after reaching the end speed to allow the player to walk
-        //Check end speed when sliding left or right
-        if (_rigidbody2D.velocity.x > 0 && isSliding == true)
-        {
-            if (_rigidbody2D.velocity.x <= slidingEndSpeed)
+            //Timer window for input
+            if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Ready)
             {
-                isSliding = false;
-                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+                buttonInputWindow.StartCooldown();
             }
         }
-        else if (_rigidbody2D.velocity.x  < 0 && isSliding == true)
+
+        //Reset input tally after window has passed
+        if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Finished)
         {
-            if (_rigidbody2D.velocity.x >= -slidingEndSpeed )
-            {
-                isSliding = false;
-                mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-                slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
-            }   
-        }
-        else if (_rigidbody2D.velocity.x == 0f && isSliding) //End slide upon hitting a wall
-        {
-            isSliding = false;
-            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            downInputTally = 0;
+            buttonInputWindow.ResetCooldown();
         }
 
-        //Reset slide cooldown when duration ends
-        if (slideCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        //Start submerge duration if input is successful
+        if (downInputTally == 2 && isSubmerged == false)
         {
-            isSliding = false;
-            slideCooldown.ResetCooldown();
-            mainCollider2D.enabled = true; //Re-enable main collider when reaching slide end speed
-            slideCollider2D.enabled = false; //Disable slide collider when reaching slide end speed
+            Debug.Log("Submerged");
+            submergeDuration.StartCooldown();
+            isSubmerged = true;
         }
-        
+        else if (submergeDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            submergeDuration.ResetCooldown();
+            submergeCooldown.StartCooldown();
+            isSubmerged = false;
+        }
+
+        //Reset cooldown timer after cooldown ends
+        if (submergeCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            submergeCooldown.ResetCooldown();
+        }
+    }
+
+    private void Dash()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            dashDuration.StartCooldown(); //Start duration and cooldown at the same time
+            dashCooldown.StartCooldown();
+            isDashing = true;
+        }
+
+        //Horizontal speed is set to dash power during dash duration
+        if (isDashing == true)
+        {
+            if (inputDirection.x > 0 || isMovingRight == true)
+            {
+                _rigidbody2D.velocity = new Vector2(dashPower, _rigidbody2D.velocity.y);
+            }
+            else if (inputDirection.x < 0 || isMovingRight == false)
+            {
+                _rigidbody2D.velocity = new Vector2(-dashPower, _rigidbody2D.velocity.y);
+            }
+
+            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Retain Y-value of player during dash
+        }
+
+        //Stop dashing
+        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isDashing = false;
+            _rigidbody2D.constraints &= ~RigidbodyConstraints2D.FreezePositionY;
+        }
+
+        //Reset duration and cooldown to allow for dashing again
+        if (dashCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            dashDuration.ResetCooldown();
+            dashCooldown.ResetCooldown();
+        }
     }
 
     private void LedgeHang()
@@ -315,20 +374,43 @@ public class PlayerMovement : MonoBehaviour
 
     private void WallJump()
     {
-        if (isClimbingWall != true)
-            return;
-
-        Debug.Log("Wall Jump enabled");
-
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (isClimbingWall == true)
         {
-            isClimbingWall = false;
-            isJumpingOffWall = true;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log("Wall Jump enabled");
+                isClimbingWall = false;
+                isJumpingOffWall = true;
 
-            //Unfreeze position
-            _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-            _rigidbody2D.gravityScale = defaultGravityScale;
-            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x * wallJumpPower.x, wallJumpPower.y);
+                //Unfreeze position
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                _rigidbody2D.gravityScale = defaultGravityScale;
+
+                wallJumpAppliedForceDuration.StartCooldown();
+            }
+        }
+        else if (isJumpingOffWall == true && wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.InProgress)
+        {
+            if (transform.localScale.x < 0) //Facing left
+            {
+                Debug.Log("Jumped to left");
+                _rigidbody2D.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
+            }
+            if (transform.localScale.x > 0) //Facing right
+            {
+                Debug.Log("Jumped to right");
+                _rigidbody2D.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
+            }
+            storedPlayerMomentum = _rigidbody2D.velocity;
+        }
+        else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, _rigidbody2D.velocity.y);
+
+            if (isGrounded == true || isClimbingWall == true)
+            {
+                wallJumpAppliedForceDuration.ResetCooldown();
+            }
         }
     }
 
@@ -340,9 +422,27 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoJumpPower);
     }
 
-    private void GrappleSwing()
+    private void Grapple()
     {
+        if (isGrappling == true)
+        {
+            Debug.Log("Grappling");
+            Vector2 grappleDirection = (transform.position - targetedGrapplePoint.position).normalized;
+            _rigidbody2D.velocity = -grappleDirection * grapplePower;
+            storedPlayerMomentum = _rigidbody2D.velocity;
 
+            
+        }
+        else if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress || grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.5f, _rigidbody2D.velocity.y);
+        }
+
+        if (isGrounded == true && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished || isClimbingWall == true && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            grappleMomentumDuration.ResetCooldown();
+            isGrappling = false;
+        }
     }
 
     //----------Current Active State----------
@@ -359,7 +459,7 @@ public class PlayerMovement : MonoBehaviour
     public void KnockedBackState(Transform enemyTransform, float enemyKnockbackForce, float stunDuration)
     {
         isKnockedBack = true; //Change knockedback bool to true
-        Vector2 knockbackDirection = (transform.position - enemyTransform.position).normalized; //Determine knockback direction by comparing player and enemy position
+        Vector2 knockbackDirection = (transform.position - enemyTransform.position); //Determine knockback direction by comparing player and enemy position
         _rigidbody2D.velocity = knockbackDirection * enemyKnockbackForce; //Multiply knockback with knockback force
 
         knockedbackTimer.Duration = stunDuration;
@@ -396,8 +496,12 @@ public class PlayerMovement : MonoBehaviour
             isFalling = false;
         }
 
-        //Reduce gravity scale at jump apex
-        if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f)
+        //Zero gravity during dash
+        if (isDashing == true || isGrappling == true)
+        {
+            _rigidbody2D.gravityScale = 0;
+        }
+        else if (isGrounded == false && _rigidbody2D.velocity.y <= 1f && _rigidbody2D.velocity.y >= -1f) //Reduce gravity scale at jump apex
         {
             //Debug.Log("Current gs: " + _rigidbody2D.gravityScale);
             _rigidbody2D.gravityScale = defaultGravityScale / jumpApexGravityDivider;
@@ -415,10 +519,7 @@ public class PlayerMovement : MonoBehaviour
     //----------Collision Checks-----------
     private void WallCheck()
     {
-        if (isGrounded == true)
-            return;
-
-        if (IsClimbingWall == true)
+        if (isGrounded == true || isClimbingWall == true)
             return;
 
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
@@ -428,7 +529,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 isClimbingWall = true;
                 isJumpingOffWall = false;
-                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+
+                horizontalJumpInputReleased = false;
+
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
+
+                transform.localScale *= new Vector2(-1, 1); 
+
+                wallJumpAppliedForceDuration.ResetCooldown();
                 Debug.Log("Climbing Wall");
             }
         }
@@ -440,15 +548,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void LedgeCheck()
     {
-        if (isGrounded == true)
-            return;
-
-        //Stop checking if player is already hanging
-        if (isHanging == true)
-            return;
-
-        //Return if player lets go or climbs ledge
-        if (isLetGO == true || isClimbingLedge == true) 
+        if (isGrounded == true || isHanging == true || isLetGO == true || isClimbingLedge == true)
             return;
 
         //Creates a box that returns true when overlapping with groundLayer
@@ -468,6 +568,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void GrappleCheck()
+    {
+        if (Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer))
+        {
+            Debug.Log("Near grapple point");
+            if (targetedGrapplePoint == null)
+            {
+                targetedGrapplePoint = Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer).transform;
+            }
+
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                isGrappling = true;
+            }
+        }
+        else
+        {
+            isGrappling = false;
+        }
+    }
+
     private void GroundCheck()
     {
         //Creates a box that returns true when overlapping with groundLayer
@@ -483,6 +604,7 @@ public class PlayerMovement : MonoBehaviour
             isJumpingOffWall = false;
 
             jumpInputPressed = false;
+            horizontalJumpInputReleased = false;
         }
         else
         {
@@ -497,7 +619,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Check for player trigger with grappling point
+        if (collision.CompareTag("GrapplePoint"))
+        {
+            isGrappling = false;
+            grappleMomentumDuration.StartCooldown();
+        }
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        
     }
 
     //--------------------------------
@@ -513,6 +645,8 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge); //Ledge wire cube
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(grappleDetector.position, circleRadiusGrapple); //Grapple wire sphere
     }
 
     

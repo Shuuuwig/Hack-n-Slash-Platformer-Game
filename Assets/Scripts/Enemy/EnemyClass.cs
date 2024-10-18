@@ -55,7 +55,7 @@ public abstract class EnemyClass : MonoBehaviour
         playerCombat = FindObjectOfType<PlayerCombat>();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         EnemyMoveset();
         AggroPlayer();
@@ -75,7 +75,9 @@ public abstract class EnemyClass : MonoBehaviour
         if (target == null)
             return;
 
-        
+
+        Debug.Log("Moving to player");
+
     }
 
     //---Effects---
@@ -107,7 +109,7 @@ public abstract class EnemyClass : MonoBehaviour
         //Detect player
         if (Physics2D.OverlapBox(detectionBoxTransform.position, detectionBoxSize, 0, detectableLayerMask) && Physics2D.OverlapBox(visionBoxTransform.position, visionBoxSize, 0, detectableLayerMask))
         {
-            target = Physics2D.OverlapBox(visionBoxTransform.position, visionBoxSize, 0, detectableLayerMask).gameObject;
+            target = GameObject.FindWithTag("Player");
             playerDetected = true;
             Debug.Log("Sees player");
         }
