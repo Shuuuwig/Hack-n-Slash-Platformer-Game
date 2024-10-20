@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManger : MonoBehaviour
 {
@@ -27,12 +29,40 @@ public class GameManger : MonoBehaviour
         }
     }
 
-    [SerializeField] private int mainMenuLevel = 0;
+    [SerializeField] private int mainMenuLevel;
     [SerializeField] private int currentlevel;
+    [SerializeField] private GameObject pauseMenu;
+
+    private void Awake()
+    {
+        pauseMenu = GameObject.FindWithTag("PauseMenu");
+        pauseMenu.SetActive(false);
+    }
 
     private void Update()
     {
-        
+
+        PauseGame();
+    }
+
+    private void PauseGame()
+    {
+        //if (m_instance.currentlevel == 0)
+        //    return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Time.timeScale == 0)
+            {
+                Time.timeScale = 1;
+                pauseMenu.SetActive(false);
+            }
+            else if (Time.timeScale == 1)
+            {
+                Time.timeScale = 0;
+                pauseMenu.SetActive(true);
+            }
+        }
     }
 
     private void CheckLevel()
@@ -40,9 +70,10 @@ public class GameManger : MonoBehaviour
 
     }
 
-    private void ToNextLevel()
+    public void ToNextLevel()
     {
         m_instance.currentlevel++;
+        SceneManager.LoadScene(m_instance.currentlevel);
     }
 
     private void QuitGame()
