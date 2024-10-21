@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Cooldown coyoteTime;
     [SerializeField] private Cooldown bufferJumpTime;
     [Header("---Pogo Jump---")]
-    [SerializeField] private float pogoJumpPower;
+    [SerializeField] private float pogoPower;
     [Header("---Wall Jump---")]
     [SerializeField] private Vector2 wallJumpPower;
     [SerializeField] private Cooldown wallJumpAppliedForceDuration;
@@ -69,7 +69,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("---Component Reference---")]
     [SerializeField] private Rigidbody2D _rigidbody2D;
     [SerializeField] private Animator animator;
-    [SerializeField] private Collider2D mainCollider2D;
+    [SerializeField] private Collider2D mainCollider;
+    [SerializeField] private GameObject playerGraphic;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
@@ -321,6 +322,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Retain Y-value of player during dash
+            storedPlayerMomentum = _rigidbody2D.velocity; //Store velocity value
         }
 
         //Stop dashing
@@ -422,7 +424,28 @@ public class PlayerMovement : MonoBehaviour
         if (playerCombat.HitObstacle == false)
             return;
 
-        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoJumpPower);
+        if (playerCombat.OverheadAttack == true)
+        {
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, -pogoPower);
+        }
+        else if (playerCombat.LowAttack == true)
+        {
+            _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoPower);
+        }
+        else if (playerCombat.NeutralAttack == true)
+        {
+            if (transform.localScale.x > 0)
+            {
+                Debug.Log("Attack");
+                _rigidbody2D.velocity = new Vector2(-pogoPower, _rigidbody2D.velocity.y);
+            }
+            else if (transform.localScale.x < 0)
+            {
+                _rigidbody2D.velocity = new Vector2(pogoPower, _rigidbody2D.velocity.y);
+            }
+        }
+
+        storedPlayerMomentum = _rigidbody2D.velocity; //Store velocity value
     }
 
     private void Grapple()
@@ -433,8 +456,6 @@ public class PlayerMovement : MonoBehaviour
             Vector2 grappleDirection = (transform.position - targetedGrapplePoint.position).normalized;
             _rigidbody2D.velocity = -grappleDirection * grapplePower;
             storedPlayerMomentum = _rigidbody2D.velocity;
-
-            
         }
         else if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress || grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
@@ -589,6 +610,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isGrappling = false;
+            targetedGrapplePoint = null;
         }
     }
 
