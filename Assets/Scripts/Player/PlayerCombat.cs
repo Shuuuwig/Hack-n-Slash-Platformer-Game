@@ -55,7 +55,7 @@ public class PlayerCombat : MonoBehaviour
     //----------------Combat Functions------------------
     private void DirectionalAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0) && attackCooldown.CurrentProgress is Cooldown.Progress.Ready && attackDuration.CurrentProgress is Cooldown.Progress.Ready)
+        if (Input.GetKeyDown(KeyCode.J) && attackCooldown.CurrentProgress is Cooldown.Progress.Ready && attackDuration.CurrentProgress is Cooldown.Progress.Ready)
         {
             //Start attack duration
             attackDuration.StartCooldown();

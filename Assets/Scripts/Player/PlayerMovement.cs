@@ -88,8 +88,11 @@ public class PlayerMovement : MonoBehaviour
     protected bool jumpInputPressed;
     protected bool horizontalJumpInputReleased;
     protected bool grappleReleased;
-    protected bool isAirDashing;
     protected bool isMovingRight;
+
+    protected bool isTransitionToAirDash;
+    protected bool isAirDashing;
+    
     protected bool isJumping;
     protected bool isFalling;
     protected bool isLetGO;
@@ -113,6 +116,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsHanging { get { return isHanging; } }
     public bool IsRunning { get { return isRunning; } }
     public bool IsSubmerged { get { return isSubmerged; } }
+    public bool IsDashing {  get { return isDashing; } }
     public Vector2 InputDirection { get { return inputDirection; } }
 
 
@@ -148,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
         //Special Movement
         Submerge();
         Dash();
-        LedgeHang();
+        //LedgeHang();
         WallJump();
         Pogo();
         Grapple();
@@ -179,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        if (isDashing == true || isKnockedBack == true)
+        if (isDashing == true || isKnockedBack == true || isJumpingOffWall == true)
             return;
 
         _rigidbody2D.velocity = new Vector2(inputDirection.x * acceleration, _rigidbody2D.velocity.y);
@@ -302,7 +306,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Dash()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (Input.GetKey(KeyCode.M) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
             dashDuration.StartCooldown(); //Start duration and cooldown at the same time
             dashCooldown.StartCooldown();
@@ -411,6 +415,7 @@ public class PlayerMovement : MonoBehaviour
         else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
             _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, _rigidbody2D.velocity.y);
+            isJumpingOffWall = false;
 
             if (isGrounded == true || isClimbingWall == true)
             {
@@ -549,7 +554,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
         {
             //Requires button input to climb
-            if (Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.N))
             {
                 isClimbingWall = true;
                 isJumpingOffWall = false;
@@ -580,7 +585,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("Near Ledge");
             //Requires button input to hang
-            if (Input.GetKeyDown(KeyCode.E)) 
+            if (Input.GetKeyDown(KeyCode.N)) 
             {
                 Debug.Log("Hung on Ledge");
                 isHanging = true;

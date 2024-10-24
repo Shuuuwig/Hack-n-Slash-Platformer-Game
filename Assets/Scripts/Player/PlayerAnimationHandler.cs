@@ -13,6 +13,11 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private Animator playerAnimator;
 
+    private void Start()
+    {
+        currentScale = transform.localScale;
+    }
+
 
     private void Update()
     {
@@ -22,11 +27,11 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     void HandleFlip()
     {
-        if (playerMovement.IsMovingRight == true && isFacingLeft)
+        if (playerMovement.IsMovingRight == false && !isFacingLeft)
         {
             FlipCheck();
         }
-        if (playerMovement.IsMovingRight == false && !isFacingLeft)
+        if (playerMovement.IsMovingRight == true && isFacingLeft)
         {
             FlipCheck();
         }
@@ -51,5 +56,8 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerAnimator.SetBool("isHanging", playerMovement.IsHanging);
         playerAnimator.SetBool("isRunning", playerMovement.IsRunning);
         playerAnimator.SetBool("isSubmerged", playerMovement.IsSubmerged);
+        playerAnimator.SetBool("isDashing", playerMovement.IsDashing);
+
+        playerAnimator.SetBool("isLowAttacking", playerCombat.LowAttack);
     }
 }

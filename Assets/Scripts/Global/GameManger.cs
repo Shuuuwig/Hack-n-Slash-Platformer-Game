@@ -29,7 +29,7 @@ public class GameManger : MonoBehaviour
         }
     }
 
-    [SerializeField] private int mainMenuLevel;
+    [SerializeField] private int mainMenuLevel = 0;
     [SerializeField] private int currentlevel;
     [SerializeField] private GameObject pauseMenu;
 
@@ -41,8 +41,8 @@ public class GameManger : MonoBehaviour
 
     private void Update()
     {
-
         PauseGame();
+        ResetScene();
     }
 
     private void PauseGame()
@@ -62,6 +62,14 @@ public class GameManger : MonoBehaviour
                 Time.timeScale = 0;
                 pauseMenu.SetActive(true);
             }
+        }
+    }
+
+    private void ResetScene()
+    {
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            SceneManager.LoadScene(currentlevel);
         }
     }
 
