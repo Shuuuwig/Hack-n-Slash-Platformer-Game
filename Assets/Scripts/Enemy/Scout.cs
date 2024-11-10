@@ -4,16 +4,8 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Enemy1 : EnemyClass
+public class Scout : EnemyClass
 {
-    
-
-    private void Start()
-    {
-        
-
-    }
-
     protected override void Update()
     {
         base.Update();
@@ -33,18 +25,6 @@ public class Enemy1 : EnemyClass
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Weapon"))
-        {
-            TakingDamage();
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("Collided with player");
-            KnockbackEffect();
-        }
+        
     }
 }

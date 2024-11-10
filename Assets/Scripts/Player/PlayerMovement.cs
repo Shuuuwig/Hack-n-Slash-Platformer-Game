@@ -53,17 +53,26 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
     [SerializeField] private LayerMask groundLayer;
+    RaycastHit2D groundBoxcast;
     [Header("---Ledge Check---")]
     [SerializeField] private Transform ledgeDetector;
     [SerializeField] private Vector2 boxSizeLedge;
+    Collider2D ledgeOverlapBox;
     [Header("---Wall Check---")]
     [SerializeField] private Transform wallDetector;
     [SerializeField] private Vector2 boxSizeWall;
     [SerializeField] private LayerMask wallLayer;
+    Collider2D wallOverlapBox;
     [Header("---Grapple Check---")]
     [SerializeField] private Transform grappleDetector;
     [SerializeField] private float circleRadiusGrapple;
     [SerializeField] private LayerMask grappleLayer;
+    [SerializeField] private LayerMask grappleObstacleLayers;
+    private Collider2D grappleOverlapCircle;
+    private Transform targetedGrapplePoint;
+    private RaycastHit2D grappleRaycast;
+    private Vector2 grappleRaycastDirection;
+    private float grappleRaycastDistance;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -71,14 +80,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Collider2D mainCollider;
     [SerializeField] private GameObject playerGraphic;
-    [SerializeField] private PlayerStats playerStats;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
 
     //Input
     private Vector2 inputDirection;
-
-    private Transform targetedGrapplePoint;
 
     //Float
     protected float defaultGravityScale;
@@ -130,6 +136,8 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogWarning("Player Animator not found");
 
         defaultGravityScale = _rigidbody2D.gravityScale;
+
+        
     }
 
     private void Update()
@@ -497,11 +505,6 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Knocked Back");
     }
 
-    private void InvulnerableState()
-    {
-
-    }
-
     //Rigidbody Manipulatation
     private void RigidbodyLimiter()
     {
@@ -551,7 +554,9 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded == true || isClimbingWall == true)
             return;
 
-        if (Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer))
+        wallOverlapBox = Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer);
+
+        if (wallOverlapBox)
         {
             //Requires button input to climb
             if (Input.GetKeyDown(KeyCode.N))
@@ -581,6 +586,8 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         //Creates a box that returns true when overlapping with groundLayer
+
+
         if (Physics2D.OverlapBox(ledgeDetector.position, boxSizeLedge, 0, groundLayer))
         {
             Debug.Log("Near Ledge");
@@ -599,12 +606,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void GrappleCheck()
     {
-        if (Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer))
+        grappleOverlapCircle = Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer);
+
+        if (grappleOverlapCircle == false)
+        {
+            return;
+        }
+        else
         {
             Debug.Log("Near grapple point");
+        }
+            
+        grappleRaycastDistance = circleRadiusGrapple;
+        grappleRaycastDirection = (grappleOverlapCircle.transform.position - grappleDetector.position);
+        grappleRaycast = Physics2D.Raycast(grappleDetector.position, grappleRaycastDirection, grappleRaycastDistance, grappleObstacleLayers);
+
+        
+        if (grappleRaycast)
+        {
+            Debug.Log("Grapple point blocked");
+            isGrappling = false;
+            targetedGrapplePoint = null;
+            return;
+        }
+        else
+        {
+            Debug.Log("Can grapple to point");
             if (targetedGrapplePoint == null)
             {
-                targetedGrapplePoint = Physics2D.OverlapCircle(grappleDetector.position, circleRadiusGrapple, grappleLayer).transform;
+                targetedGrapplePoint = grappleOverlapCircle.transform;
             }
 
             if (Input.GetKeyDown(KeyCode.T))
@@ -612,17 +642,14 @@ public class PlayerMovement : MonoBehaviour
                 isGrappling = true;
             }
         }
-        else
-        {
-            isGrappling = false;
-            targetedGrapplePoint = null;
-        }
     }
 
     private void GroundCheck()
     {
         //Creates a box that returns true when overlapping with groundLayer
-        if (Physics2D.BoxCast(transform.position, boxSizeGround, 0, -transform.up, castDistanceGround, groundLayer))
+        groundBoxcast = Physics2D.BoxCast(transform.position, boxSizeGround, 0, -transform.up, castDistanceGround, groundLayer);
+
+        if (groundBoxcast)
         {
             //Reset all values to default
             isGrounded = true;
@@ -644,7 +671,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -677,6 +707,7 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(grappleDetector.position, circleRadiusGrapple); //Grapple wire sphere
+        Gizmos.DrawRay(grappleDetector.position, grappleRaycastDirection); //Grapple ray
     }
 
     

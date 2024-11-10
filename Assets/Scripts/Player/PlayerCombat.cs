@@ -21,6 +21,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Cooldown attackCooldown;
     [SerializeField] private Cooldown knockbackTimer;
     [SerializeField] private Cooldown parryActiveTime;
+    [SerializeField] private Cooldown hitstopDuration;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -50,6 +51,8 @@ public class PlayerCombat : MonoBehaviour
         //Basic Attacks
         DirectionalAttack();
         Parry();
+
+        HitStop();
     }
 
     //----------------Combat Functions------------------
@@ -123,6 +126,27 @@ public class PlayerCombat : MonoBehaviour
         }
     }
     //-----------------------------------------------------------------
+    //Combat Effects
+    private void HitStop()
+    {
+        if (hitEnemy == false)
+            return;
+
+        if (hitstopDuration.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            hitstopDuration.StartCooldownRealtime();
+            Time.timeScale = 0;
+            Debug.Log("hitstopped");
+        }
+        if (hitstopDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            Time.timeScale = 1;
+            hitstopDuration.ResetCooldown();
+            Debug.Log("hitstop ended");
+            hitEnemy = false;
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (gizmoToggleOn != true)
