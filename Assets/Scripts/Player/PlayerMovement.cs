@@ -43,10 +43,16 @@ public class PlayerMovement : MonoBehaviour
     
     private Vector2 storedPlayerMomentum;
 
+    //States
+    [Header("---Knockback State---")]
+    [SerializeField] private float knockedbackForce;
+    [SerializeField] private Cooldown knockedbackTimer;
+    private Vector2 enemyCollisionPoint;
+
     //Cooldowns
     [Header("---Cooldown and Timer Duration---")]
     [SerializeField] private Cooldown buttonInputWindow;
-    [SerializeField] private Cooldown knockedbackTimer; //Duration is passed by other gameobjects
+   
 
     [Header("===Collision/Trigger Checks Configuration===")]
     [Header("---Ground Check---")]
@@ -470,8 +476,10 @@ public class PlayerMovement : MonoBehaviour
             _rigidbody2D.velocity = -grappleDirection * grapplePower;
             storedPlayerMomentum = _rigidbody2D.velocity;
         }
-        else if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress || grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
+
+        if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress || grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
+            isGrappling = false;
             _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.5f, _rigidbody2D.velocity.y);
         }
 
@@ -493,13 +501,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void KnockedBackState(Transform enemyTransform, float enemyKnockbackForce, float stunDuration)
+    private void KnockedBackState()
     {
         isKnockedBack = true; //Change knockedback bool to true
-        Vector2 knockbackDirection = (transform.position - enemyTransform.position); //Determine knockback direction by comparing player and enemy position
-        _rigidbody2D.velocity = knockbackDirection * enemyKnockbackForce; //Multiply knockback with knockback force
+        Vector2 knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, transform.position.y); //Determine knockback direction by comparing player and enemy position
+        _rigidbody2D.velocity = knockbackDirection * knockedbackForce; //Multiply knockback with knockback force
+        storedPlayerMomentum = _rigidbody2D.velocity;
 
-        knockedbackTimer.Duration = stunDuration;
         knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
 
         Debug.Log("Knocked Back");
@@ -610,6 +618,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (grappleOverlapCircle == false)
         {
+            isGrappling = false;
             return;
         }
         else
@@ -618,7 +627,7 @@ public class PlayerMovement : MonoBehaviour
         }
             
         grappleRaycastDistance = circleRadiusGrapple;
-        grappleRaycastDirection = (grappleOverlapCircle.transform.position - grappleDetector.position);
+        grappleRaycastDirection = grappleOverlapCircle.transform.position - grappleDetector.position;
         grappleRaycast = Physics2D.Raycast(grappleDetector.position, grappleRaycastDirection, grappleRaycastDistance, grappleObstacleLayers);
 
         
@@ -637,8 +646,9 @@ public class PlayerMovement : MonoBehaviour
                 targetedGrapplePoint = grappleOverlapCircle.transform;
             }
 
-            if (Input.GetKeyDown(KeyCode.T))
+            if (Input.GetKeyDown(KeyCode.T) && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Ready)
             {
+                Debug.Log("Input to grapple");
                 isGrappling = true;
             }
         }
@@ -673,7 +683,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            
+            enemyCollisionPoint = collision.transform.position;
+            KnockedBackState();
         }
     }
 
@@ -682,7 +693,6 @@ public class PlayerMovement : MonoBehaviour
         //Check for player trigger with grappling point
         if (collision.CompareTag("GrapplePoint"))
         {
-            isGrappling = false;
             grappleMomentumDuration.StartCooldown();
         }
     }
