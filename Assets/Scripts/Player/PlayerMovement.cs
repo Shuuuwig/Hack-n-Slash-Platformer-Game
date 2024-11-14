@@ -320,7 +320,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Dash()
     {
-        if (Input.GetKey(KeyCode.M) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (Input.GetKey(KeyCode.K) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
             dashDuration.StartCooldown(); //Start duration and cooldown at the same time
             dashCooldown.StartCooldown();
@@ -440,7 +440,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Pogo()
     {
-        if (playerCombat.HitObstacle == false)
+        if (playerCombat.HitObstacle == false || isGrappling == true)
             return;
 
         if (playerCombat.OverheadAttack == true)
@@ -450,6 +450,7 @@ public class PlayerMovement : MonoBehaviour
         else if (playerCombat.LowAttack == true)
         {
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, pogoPower);
+            Debug.Log("Pogo Up");
         }
         else if (playerCombat.NeutralAttack == true)
         {
@@ -504,7 +505,7 @@ public class PlayerMovement : MonoBehaviour
     private void KnockedBackState()
     {
         isKnockedBack = true; //Change knockedback bool to true
-        Vector2 knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, transform.position.y); //Determine knockback direction by comparing player and enemy position
+        Vector2 knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, 1); //Determine knockback direction by comparing player and enemy position
         _rigidbody2D.velocity = knockbackDirection * knockedbackForce; //Multiply knockback with knockback force
         storedPlayerMomentum = _rigidbody2D.velocity;
 
@@ -567,7 +568,7 @@ public class PlayerMovement : MonoBehaviour
         if (wallOverlapBox)
         {
             //Requires button input to climb
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Input.GetKeyDown(KeyCode.J))
             {
                 isClimbingWall = true;
                 isJumpingOffWall = false;
@@ -619,6 +620,7 @@ public class PlayerMovement : MonoBehaviour
         if (grappleOverlapCircle == false)
         {
             isGrappling = false;
+            targetedGrapplePoint = null;
             return;
         }
         else
