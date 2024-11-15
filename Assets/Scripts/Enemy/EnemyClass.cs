@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.LowLevel;
 
 public abstract class EnemyClass : MonoBehaviour
 {
@@ -25,13 +26,15 @@ public abstract class EnemyClass : MonoBehaviour
 
     //Component References
     [Header("---Component References---")]
-    [SerializeField] protected GameObject attackRangeBoxTransform;
+    [SerializeField] protected Transform attackHitboxTransform;
+    [SerializeField] protected Transform attackRangeBoxTransform;
     [SerializeField] protected Transform parryBoxTransform;
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected Transform visionBoxTransform;
     [SerializeField] protected Transform detectionBoxTransform;
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
+    [SerializeField] protected PlayerStats playerStats;
 
     //Bools
     protected bool playerDetected;
@@ -47,12 +50,13 @@ public abstract class EnemyClass : MonoBehaviour
     public float StunDuration { get { return stunDuration; } set { stunDuration = value; } }
     public float MovementSpeed { get { return movementSpeed; } set { attackSpeed = value; } }
 
-    private void Start()
+    protected void Start()
     {
         currentHealth = maxHealth;
 
         playerMovement = FindObjectOfType<PlayerMovement>();
         playerCombat = FindObjectOfType<PlayerCombat>();
+        playerStats = FindObjectOfType<PlayerStats>();
     }
 
     protected virtual void Update()
@@ -61,7 +65,6 @@ public abstract class EnemyClass : MonoBehaviour
         AggroPlayer();
 
         PlayerDetection();
-
     }
 
     //-------------
@@ -75,16 +78,10 @@ public abstract class EnemyClass : MonoBehaviour
         if (target == null)
             return;
 
-
         Debug.Log("Moving to player");
-
     }
 
     //---Effects---
-    protected void KnockbackEffect()
-    {
-        playerMovement.KnockedBackState(transform, knockbackForce, stunDuration);
-    }
 
     //---States---
     protected virtual void GuardUpState()
@@ -92,15 +89,12 @@ public abstract class EnemyClass : MonoBehaviour
 
     }
 
-    protected void TakingDamage()
+    protected void DealDamage()
     {
-        currentHealth -= playerCombat.WeaponDamage;
-        Debug.Log("Took Damage");
+        if (playerStats == null)
+            return;
 
-        if (currentHealth <= 0)
-        {
-            Destroy(this);
-        }
+        playerStats.PlayerCurrentHealth -= damage;
     }
 
     //---Collision/Trigger Check---
@@ -126,10 +120,25 @@ public abstract class EnemyClass : MonoBehaviour
 
     }
 
+    protected void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            DealDamage();
+        }
+
+        if (collision.gameObject.CompareTag("PlayerWeapon"))
+        {
+            
+        }
+    }
+
     protected void OnDrawGizmos()
     {
         if (gizmoToggleOn != true)
             return;
+        //Attack box
+        Gizmos.color = Color.blue;
 
         //Parry box
         Gizmos.color = Color.yellow;

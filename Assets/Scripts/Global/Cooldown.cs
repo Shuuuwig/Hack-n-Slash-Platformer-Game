@@ -30,6 +30,14 @@ public class Cooldown
         _coroutine = CoroutineHost.Instance.StartCoroutine(DoCooldown());
     }
 
+    public void StartCooldownRealtime()
+    {
+        if (CurrentProgress is Progress.InProgress)
+            return;
+
+        _coroutine = CoroutineHost.Instance.StartCoroutine(DoCooldownRealtime());
+    }
+
     public void ResetCooldown()
     {
         if (_coroutine != null)
@@ -49,6 +57,26 @@ public class Cooldown
         {
             currentDuration -= Time.deltaTime;
             CurrentProgress = Progress.InProgress;
+
+            yield return null;
+        }
+
+        currentDuration = 0f;
+        isOnCooldown = false;
+
+        CurrentProgress = Progress.Finished;
+    }
+
+    IEnumerator DoCooldownRealtime()
+    {
+        currentDuration = Duration;
+        isOnCooldown = true;
+
+        while (currentDuration > 0f)
+        {
+            currentDuration -= Time.unscaledDeltaTime;
+            CurrentProgress = Progress.InProgress;
+            Debug.Log(currentDuration);
 
             yield return null;
         }
