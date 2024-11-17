@@ -13,9 +13,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("===Player Configuration===")]
     [Header("---Run---")]
     [SerializeField] private float acceleration;
-    [Header("---Submerge---")]
-    [SerializeField] private Cooldown submergeDuration;
-    [SerializeField] private Cooldown submergeCooldown;
     [Header("---Dash---")]
     [SerializeField] private float dashPower;
     [SerializeField] private Cooldown dashDuration;
@@ -48,11 +45,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float knockedbackForce;
     [SerializeField] private Cooldown knockedbackTimer;
     private Vector2 enemyCollisionPoint;
-
-    //Cooldowns
-    [Header("---Cooldown and Timer Duration---")]
-    [SerializeField] private Cooldown buttonInputWindow;
-   
 
     [Header("===Collision/Trigger Checks Configuration===")]
     [Header("---Ground Check---")]
@@ -88,6 +80,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject playerGraphic;
     [SerializeField] private PlayerAnimationHandler playerAnimationHandler;
     [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private PlayerInputTally playerInputTally;
 
     //Input
     private Vector2 inputDirection;
@@ -106,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isAirDashing;
     
     protected bool isJumping;
+    protected bool isSuperJumping;
     protected bool isFalling;
     protected bool isLetGO;
     protected bool isClimbingWall;
@@ -122,6 +116,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsGrounded {  get { return isGrounded; } }
     public bool IsMovingRight {  get { return isMovingRight; } }
     public bool IsJumping { get { return isJumping; } }
+    public bool IsSuperJumping {  get { return isSuperJumping; } }
     public bool IsFalling { get { return isFalling; } }
     public bool IsClimbingWall { get { return isClimbingWall; } }
     public bool IsClimbingLedge { get { return isClimbingLedge; } }
@@ -251,10 +246,20 @@ public class PlayerMovement : MonoBehaviour
             //Jump when grounded or when coyote time is active and jump input is not pressed
             if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress && jumpInputPressed == false)
             {
-                Debug.Log("Jumping");
-                _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
-                isJumping = true;
-                jumpInputPressed = true;
+                if (playerInputTally.DownInputTally > 0)
+                {
+                    Debug.Log("Super Jump");
+                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower * 1.5f);
+                    isSuperJumping = true;
+                    jumpInputPressed = true;
+                }
+                else
+                {
+                    Debug.Log("Jump");
+                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower);
+                    isJumping = true;
+                    jumpInputPressed = true;
+                }
             }
         }
 
@@ -277,44 +282,13 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded == false)
             return;
 
-        //Submerge requires 2 downward inputs in quick succession
-        if (Input.GetKeyDown(KeyCode.S) && submergeCooldown.CurrentProgress is Cooldown.Progress.Ready && isSubmerged == false)
+        if (Input.GetKey(KeyCode.S))
         {
-            downInputTally++; //Tallies input
-            Debug.Log(downInputTally);
-
-            //Timer window for input
-            if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Ready)
-            {
-                buttonInputWindow.StartCooldown();
-            }
-        }
-
-        //Reset input tally after window has passed
-        if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            downInputTally = 0;
-            buttonInputWindow.ResetCooldown();
-        }
-
-        //Start submerge duration if input is successful
-        if (downInputTally == 2 && isSubmerged == false)
-        {
-            Debug.Log("Submerged");
-            submergeDuration.StartCooldown();
             isSubmerged = true;
         }
-        else if (submergeDuration.CurrentProgress is Cooldown.Progress.Finished)
+        else
         {
-            submergeDuration.ResetCooldown();
-            submergeCooldown.StartCooldown();
             isSubmerged = false;
-        }
-
-        //Reset cooldown timer after cooldown ends
-        if (submergeCooldown.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            submergeCooldown.ResetCooldown();
         }
     }
 
@@ -648,7 +622,7 @@ public class PlayerMovement : MonoBehaviour
                 targetedGrapplePoint = grappleOverlapCircle.transform;
             }
 
-            if (Input.GetKeyDown(KeyCode.T) && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Ready)
+            if (Input.GetKey(KeyCode.T) && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Ready)
             {
                 Debug.Log("Input to grapple");
                 isGrappling = true;
@@ -665,6 +639,7 @@ public class PlayerMovement : MonoBehaviour
         {
             //Reset all values to default
             isGrounded = true;
+            isJumping = false;
             isJumping = false;
             isFalling = false;
             isLetGO = false;

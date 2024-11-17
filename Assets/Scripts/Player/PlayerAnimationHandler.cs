@@ -48,8 +48,8 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         playerAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
         playerAnimator.SetBool("isFacingLeft", isFacingLeft);
-        //playerAnimator.SetBool("isMovingRight", playerMovement.IsMovingRight);
         playerAnimator.SetBool("isJumping", playerMovement.IsJumping);
+        playerAnimator.SetBool("isSuperJumping", playerMovement.IsSuperJumping);
         playerAnimator.SetBool("isFalling", playerMovement.IsFalling);
         playerAnimator.SetBool("isClimbingWall", playerMovement.IsClimbingWall);
         playerAnimator.SetBool("isClimbingLedge", playerMovement.IsClimbingLedge);
