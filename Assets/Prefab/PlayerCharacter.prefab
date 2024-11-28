@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6181915135680443335}
   - component: {fileID: 5489704775830526463}
   - component: {fileID: 958293123045035508}
+  - component: {fileID: 5213741362311669891}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Player
@@ -83,12 +84,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gizmoToggleOn: 1
   acceleration: 8
-  submergeDuration:
-    CurrentProgress: 0
-    Duration: 4
-  submergeCooldown:
-    CurrentProgress: 0
-    Duration: 5
   dashPower: 18
   dashDuration:
     CurrentProgress: 0
@@ -96,7 +91,7 @@ MonoBehaviour:
   dashCooldown:
     CurrentProgress: 0
     Duration: 2
-  jumpPower: 15
+  jumpPower: 16
   coyoteTime:
     CurrentProgress: 0
     Duration: 0.2
@@ -104,24 +99,21 @@ MonoBehaviour:
     CurrentProgress: 0
     Duration: 0.2
   pogoPower: 13
-  wallJumpPower: {x: 12, y: 20}
+  wallJumpPower: {x: 10, y: 16}
   wallJumpAppliedForceDuration:
     CurrentProgress: 0
     Duration: 0.2
   climbLedgePosition: {x: 0.872, y: 1.666}
-  grapplePower: 25
+  grapplePower: 26
   grappleMomentumDuration:
     CurrentProgress: 0
     Duration: 0.3
   jumpApexGravityDivider: 2
-  fallingGravityMultiplier: 1.8
-  fallingSpeedLimit: -8
+  fallingGravityMultiplier: 1.5
+  fallingSpeedLimit: -5
   maxJumpForce: 30
-  knockedbackForce: 5
+  knockedbackForce: 10
   knockedbackTimer:
-    CurrentProgress: 0
-    Duration: 0.2
-  buttonInputWindow:
     CurrentProgress: 0
     Duration: 0.3
   castDistanceGround: 0.91
@@ -150,6 +142,7 @@ MonoBehaviour:
   playerGraphic: {fileID: 5048888360779042903}
   playerAnimationHandler: {fileID: 5489704775830526463}
   playerCombat: {fileID: 6181915135680443335}
+  playerInputTally: {fileID: 5213741362311669891}
 --- !u!114 &6181915135680443335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,7 +214,22 @@ MonoBehaviour:
   currentHealth: 5
   InvulnerabilityDuration:
     CurrentProgress: 0
-    Duration: 0
+    Duration: 0.6
+--- !u!114 &5213741362311669891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115979995829133763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3b635ce1441d41489bc755d512d03f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonInputWindow:
+    CurrentProgress: 0
+    Duration: 0.2
 --- !u!1 &1264137945283206221
 GameObject:
   m_ObjectHideFlags: 0
