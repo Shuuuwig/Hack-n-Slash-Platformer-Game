@@ -213,7 +213,7 @@ public class PlayerMovement : MonoBehaviour
             isRunning = false;
         }
 
-        if (inputDirection.x != 0 && isJumping == true) //Maintain momentum when input is gone during jump
+        if (inputDirection.x != 0 && (isJumping == true || isSuperJumping == true)) //Maintain momentum when input is gone during jump
         { 
             storedPlayerMomentum = _rigidbody2D.velocity;
             horizontalJumpInputReleased = true;

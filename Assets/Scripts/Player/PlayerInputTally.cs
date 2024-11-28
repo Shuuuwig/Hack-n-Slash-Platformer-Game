@@ -53,15 +53,24 @@ public class PlayerInputTally : MonoBehaviour
             {
                 buttonInputWindow.StartCooldown();
             }
-            
         }
 
         if (buttonInputWindow.CurrentProgress is Cooldown.Progress.Finished)
         {
+            if (Input.GetKey(KeyCode.S) == false)
+            {
+                downInputTally = 0;
+            }
+            if (Input.GetKey(KeyCode.A) == false)
+            {
+                leftInputTally = 0;
+            }
+            if (Input.GetKey(KeyCode.D) == false)
+            {
+                rightInputTally = 0;
+            }
+
             upInputTally = 0;
-            downInputTally = 0;
-            leftInputTally = 0;
-            rightInputTally = 0;
             
             buttonInputWindow.ResetCooldown();
         }
