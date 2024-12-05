@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.LowLevel;
 
@@ -20,18 +21,24 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected Vector2 parryBoxSize;
     [SerializeField] protected Vector2 visionBoxSize;
     [SerializeField] protected Vector2 detectionBoxSize;
+    [SerializeField] protected Vector2 attackBoxSize;
+    protected Collider2D attackBox;
 
     [Header("---Cooldowns---")]
     [SerializeField] protected Cooldown attackCooldown;
+    [SerializeField] protected Cooldown staggeredDuration;
 
     //Component References
     [Header("---Component References---")]
-    [SerializeField] protected Transform attackHitboxTransform;
+    [SerializeField] protected Transform attackBoxTransform;
     [SerializeField] protected Transform attackRangeBoxTransform;
     [SerializeField] protected Transform parryBoxTransform;
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected Transform visionBoxTransform;
     [SerializeField] protected Transform detectionBoxTransform;
+    [SerializeField] protected LayerMask playerLayer;
+    [SerializeField] protected Collider2D neutralAttackCollider;
+
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
     [SerializeField] protected PlayerStats playerStats;
@@ -39,6 +46,7 @@ public abstract class EnemyClass : MonoBehaviour
     //Bools
     protected bool playerDetected;
     protected bool canAttack;
+    protected bool parriedByPlayer;
 
     //Others
     protected GameObject target;
@@ -70,7 +78,14 @@ public abstract class EnemyClass : MonoBehaviour
     //-------------
     protected virtual void EnemyMoveset()
     {
+        if (playerDetected != true)
+            return;
 
+        //Move 1: Basic Swing
+        if (attackCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            attackBox = Physics2D.OverlapBox(attackBoxTransform.position, attackBoxSize, 0, playerLayer);
+        }
     }
 
     protected virtual void AggroPlayer()
@@ -87,6 +102,29 @@ public abstract class EnemyClass : MonoBehaviour
     protected virtual void GuardUpState()
     {
 
+    }
+
+    protected virtual void Staggered()
+    {
+        if (playerCombat.ParriedAttack)
+        {
+            staggeredDuration.StartCooldown();
+        }
+
+        if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            staggeredDuration.ResetCooldown();
+        }
+    }
+
+    protected void TakeDamage()
+    {
+        currentHealth -= playerStats.PlayerCurrentDamage;
+
+        if (currentHealth <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     protected void DealDamage()
@@ -129,7 +167,7 @@ public abstract class EnemyClass : MonoBehaviour
 
         if (collision.gameObject.CompareTag("PlayerWeapon"))
         {
-            
+            TakeDamage();
         }
     }
 
@@ -139,7 +177,7 @@ public abstract class EnemyClass : MonoBehaviour
             return;
         //Attack box
         Gizmos.color = Color.blue;
-
+        Gizmos.DrawWireCube(attackBoxTransform.position, attackBoxSize);
         //Parry box
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(parryBoxTransform.position, parryBoxSize);

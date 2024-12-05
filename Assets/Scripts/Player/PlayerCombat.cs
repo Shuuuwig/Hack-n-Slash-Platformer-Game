@@ -21,6 +21,8 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Cooldown attackCooldown;
     [SerializeField] private Cooldown knockbackTimer;
     [SerializeField] private Cooldown parryActiveTime;
+    [SerializeField] private Cooldown parrySuccessTime;
+    [SerializeField] private Cooldown comboDuration;
     [SerializeField] private Cooldown hitstopDuration;
 
     //Player Component Reference
@@ -31,10 +33,13 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Collider2D lowAttackCollider;
     [SerializeField] private PlayerMovement playerMovement;
 
+    private int comboTally;
+
     //Boolean conditions
     private bool isNeutralAttacking;
     private bool isOverheadAttacking;
     private bool isLowAttacking;
+    private bool parriedAttack;
     private bool hitEnemy;
     private bool hitObstacle;
 
@@ -44,6 +49,7 @@ public class PlayerCombat : MonoBehaviour
     public bool NeutralAttack { get { return isNeutralAttacking; } }
     public bool OverheadAttack { get { return isOverheadAttacking; } }
     public bool LowAttack { get { return isLowAttacking; } }
+    public bool ParriedAttack { get { return parriedAttack; } }
     
 
     private void Update()
@@ -53,6 +59,23 @@ public class PlayerCombat : MonoBehaviour
         Parry();
 
         HitStop();
+
+        AttackTally();
+    }
+
+    private void AttackTally()
+    {
+        if (hitEnemy == true)
+        {
+            comboTally++;
+            comboDuration.StartCooldown();
+        }
+
+        if (comboDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            comboTally = 0;
+            comboDuration.ResetCooldown();
+        }
     }
 
     //----------------Combat Functions------------------
@@ -70,7 +93,7 @@ public class PlayerCombat : MonoBehaviour
                 isOverheadAttacking = true;
                 overheadAttackCollider.enabled = true;
             }
-            else if (playerMovement.InputDirection.y < 0)
+            else if (playerMovement.InputDirection.y < 0 && playerMovement.IsGrounded == false)
             {
                 isLowAttacking = true;
                 lowAttackCollider.enabled = true;
@@ -115,8 +138,21 @@ public class PlayerCombat : MonoBehaviour
         {
             if (Physics2D.OverlapBox(parryTransform.position, parryBoxSize, 0, parryableLayer))
             {
+                parriedAttack = true;
                 Debug.Log("Parried");
             }
+        }
+
+        if (parriedAttack == true)
+        {
+            attackCooldown.ResetCooldown();
+            parrySuccessTime.StartCooldown();
+        }
+
+        if (parrySuccessTime.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            parriedAttack = false;
+            parrySuccessTime.ResetCooldown();
         }
 
         //Reset time

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour
 {
     [SerializeField] private float currentHealth;
-
+    [SerializeField] private float currentDamage;
     [SerializeField] private Cooldown InvulnerabilityDuration;
 
     private bool tookDamage;
@@ -22,6 +22,7 @@ public class PlayerStats : MonoBehaviour
              
         }
     }
+    public float PlayerCurrentDamage { get { return currentDamage; } }
     void Start()
     {
         
