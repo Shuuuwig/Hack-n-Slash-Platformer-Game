@@ -4,23 +4,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class GameManger : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    private static GameManger m_instance = null;
-    public static GameManger Instance
+    private static GameManager m_instance = null;
+    public static GameManager Instance
     {
         get
         {
             //Look for Game Manager instance
             if (m_instance == null)
             {
-                m_instance = FindObjectOfType<GameManger>();
+                m_instance = FindObjectOfType<GameManager>();
 
                 //If Game Manager instance could not be found, make a new one
                 if (m_instance == null)
                 {
                     GameObject newGameManager = new GameObject("GameManager");
-                    newGameManager.AddComponent<GameManger>();
+                    newGameManager.AddComponent<GameManager>();
                 }
                 //Keep the Instance alive throughout the project
                 DontDestroyOnLoad(m_instance.gameObject);
@@ -30,13 +30,20 @@ public class GameManger : MonoBehaviour
     }
 
     [SerializeField] private int mainMenuLevel = 0;
-    [SerializeField] private int currentlevel;
+    [SerializeField] private int currentlevel = 0;
     [SerializeField] private GameObject pauseMenu;
+
+    public int CurrentLevel { get { return currentlevel; } }
 
     private void Awake()
     {
         pauseMenu = GameObject.FindWithTag("PauseMenu");
-        pauseMenu.SetActive(false);
+        if (pauseMenu != null )
+        {
+            pauseMenu.SetActive(false);
+        }
+        
+        
     }
 
     private void Update()
@@ -78,10 +85,17 @@ public class GameManger : MonoBehaviour
 
     }
 
+    public void StartGame()
+    {
+        currentlevel++;
+        SceneManager.LoadScene(currentlevel);
+    }
+
     public void ToNextLevel()
     {
         m_instance.currentlevel++;
         SceneManager.LoadScene(m_instance.currentlevel);
+
     }
 
     private void QuitGame()
