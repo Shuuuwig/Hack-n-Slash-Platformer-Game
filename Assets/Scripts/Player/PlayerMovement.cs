@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("---Grapple---")]
     [SerializeField] private float grapplePower;
     [SerializeField] private Cooldown grappleMomentumDuration;
+    [SerializeField] private Cooldown linkToGrapplePointTime;
     [Header("---Gravity---")]
     [SerializeField] private float jumpApexGravityDivider;
     [SerializeField] private float fallingGravityMultiplier;
@@ -52,6 +53,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 boxSizeGround;
     [SerializeField] private LayerMask groundLayer;
     RaycastHit2D groundBoxcast;
+    [Header("---Submerge Overhead Check---")]
+    [SerializeField] private Transform submergeOverheadDetector;
+    [SerializeField] private Vector2 boxSizeSubmergeOverhead;
+    [SerializeField] private LayerMask submergeOverheadDetectableLayer;
+    Collider2D submergeOverheadOverlapBox;
     [Header("---Ledge Check---")]
     [SerializeField] private Transform ledgeDetector;
     [SerializeField] private Vector2 boxSizeLedge;
@@ -112,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isKnockedBack;
     protected bool isJumpingOffWall;
     protected bool isGrounded;
+    protected bool obstacleAboveSubmerge;
 
     public bool IsGrounded {  get { return isGrounded; } }
     public bool IsMovingRight {  get { return isMovingRight; } }
@@ -151,6 +158,7 @@ public class PlayerMovement : MonoBehaviour
         //Overlap Checks
         WallCheck();
         GroundCheck();
+        SubmergeOverheadCheck();
         LedgeCheck();
         GrappleCheck();
 
@@ -187,12 +195,13 @@ public class PlayerMovement : MonoBehaviour
 
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        Debug.Log(inputDirection);
     }
 
     //-----------Basic Movement------------//
     private void HorizontalMovement()
     {
-        if (isDashing == true || isKnockedBack == true || isJumpingOffWall == true)
+        if (isDashing == true || isKnockedBack == true || isJumpingOffWall == true || isGrappling == true)
             return;
 
         _rigidbody2D.velocity = new Vector2(inputDirection.x * acceleration, _rigidbody2D.velocity.y);
@@ -202,23 +211,28 @@ public class PlayerMovement : MonoBehaviour
         {
             isMovingRight = true;
             isRunning = true;
+
+            storedPlayerMomentum = _rigidbody2D.velocity;
         }
         else if (_rigidbody2D.velocity.x < 0)
         {
             isMovingRight = false;
             isRunning = true;
+
+            storedPlayerMomentum = _rigidbody2D.velocity;
         }
         else
         {
             isRunning = false;
         }
 
-        if (inputDirection.x != 0 && (isJumping == true || isSuperJumping == true)) //Maintain momentum when input is gone during jump
-        { 
-            storedPlayerMomentum = _rigidbody2D.velocity;
+        if (Input.GetButtonUp("Horizontal") && (isJumping == true || isSuperJumping == true)) //Maintain momentum when input is gone during jump
+        {
+            Debug.Log("Horizontal input let go");
             horizontalJumpInputReleased = true;
         }
-        else if (horizontalJumpInputReleased == true)
+
+        if (horizontalJumpInputReleased == true)
         {
             Debug.Log("Momentum preserved");
             _rigidbody2D.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, _rigidbody2D.velocity.y);
@@ -249,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
                 if (playerInputTally.DownInputTally > 0)
                 {
                     Debug.Log("Super Jump");
-                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower * 1.5f);
+                    _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, jumpPower * 1.3f);
                     isSuperJumping = true;
                     jumpInputPressed = true;
                 }
@@ -286,7 +300,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isSubmerged = true;
         }
-        else
+        else if (obstacleAboveSubmerge == false)
         {
             isSubmerged = false;
         }
@@ -294,6 +308,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Dash()
     {
+        if (isGrappling == true)
+            return;
+
         if (Input.GetKey(KeyCode.K) && dashCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
             dashDuration.StartCooldown(); //Start duration and cooldown at the same time
@@ -446,10 +463,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isGrappling == true)
         {
-            Debug.Log("Grappling");
-            Vector2 grappleDirection = (transform.position - targetedGrapplePoint.position).normalized;
-            _rigidbody2D.velocity = -grappleDirection * grapplePower;
-            storedPlayerMomentum = _rigidbody2D.velocity;
+            if (linkToGrapplePointTime.CurrentProgress is Cooldown.Progress.Ready)
+            {
+                linkToGrapplePointTime.StartCooldown();
+                
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+            }
+            else if (linkToGrapplePointTime.CurrentProgress is Cooldown.Progress.Finished)
+            {
+                storedPlayerMomentum = Vector2.zero;
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+
+                Debug.Log("Grappling");
+                Vector2 grappleDirection = (transform.position - targetedGrapplePoint.position).normalized;
+                _rigidbody2D.velocity = -grappleDirection * grapplePower;
+                storedPlayerMomentum = _rigidbody2D.velocity;
+            }
         }
 
         if (grappleMomentumDuration.CurrentProgress is Cooldown.Progress.InProgress || grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
@@ -460,6 +489,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded == true && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished || isClimbingWall == true && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
+            linkToGrapplePointTime.ResetCooldown();
             grappleMomentumDuration.ResetCooldown();
             isGrappling = false;
         }
@@ -560,6 +590,26 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isClimbingWall = false;
+        }
+    }
+
+    private void SubmergeOverheadCheck()
+    {
+        if (isSubmerged == false)
+            return;
+
+        submergeOverheadOverlapBox = Physics2D.OverlapBox(submergeOverheadDetector.position, boxSizeSubmergeOverhead, 0, submergeOverheadDetectableLayer);
+
+        if (submergeOverheadOverlapBox)
+        {
+            if (isSubmerged)
+            {
+                obstacleAboveSubmerge = true;
+            }
+        }
+        else
+        {
+            obstacleAboveSubmerge = false;
         }
     }
 
@@ -688,6 +738,8 @@ public class PlayerMovement : MonoBehaviour
         //Makes the Check Box Visible
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround); //Ground wire cube
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(submergeOverheadDetector.position, boxSizeSubmergeOverhead); //Submerge Overhead wire cube
         Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(ledgeDetector.position, boxSizeLedge); //Ledge wire cube
         Gizmos.color = Color.green;

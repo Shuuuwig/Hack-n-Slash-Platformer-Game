@@ -11,18 +11,6 @@ public class Scout : EnemyClass
         base.Update();
     }
 
-    protected override void EnemyMoveset()
-    {      
-        if (playerDetected != true)
-            return;
-
-        //Move 1: Basic Swing
-        if (attackCooldown.CurrentProgress is Cooldown.Progress.Ready)
-        {
-
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         
