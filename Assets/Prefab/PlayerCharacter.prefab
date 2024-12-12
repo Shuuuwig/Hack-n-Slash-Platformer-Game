@@ -37,6 +37,7 @@ Transform:
   m_Children:
   - {fileID: 7484320910919367461}
   - {fileID: 2431653240270840198}
+  - {fileID: 6124860876851227831}
   - {fileID: 2224189033019967039}
   - {fileID: 891263366473886746}
   - {fileID: 8595561290232331772}
@@ -108,6 +109,9 @@ MonoBehaviour:
   grappleMomentumDuration:
     CurrentProgress: 0
     Duration: 0.3
+  linkToGrapplePointTime:
+    CurrentProgress: 0
+    Duration: 0.15
   jumpApexGravityDivider: 2
   fallingGravityMultiplier: 1.5
   fallingSpeedLimit: -5
@@ -121,6 +125,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  submergeOverheadDetector: {fileID: 6124860876851227831}
+  boxSizeSubmergeOverhead: {x: 0.79, y: 0.39}
+  submergeOverheadDetectableLayer:
+    serializedVersion: 2
+    m_Bits: 193
   ledgeDetector: {fileID: 891263366473886746}
   boxSizeLedge: {x: -0.27, y: 0.22}
   wallDetector: {fileID: 8595561290232331772}
@@ -175,6 +184,12 @@ MonoBehaviour:
   parryActiveTime:
     CurrentProgress: 0
     Duration: 0.2
+  parrySuccessTime:
+    CurrentProgress: 0
+    Duration: 0
+  comboDuration:
+    CurrentProgress: 0
+    Duration: 1
   hitstopDuration:
     CurrentProgress: 0
     Duration: 0.05
@@ -256,6 +271,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.788, y: -0.215, z: 0.7002691}
+  m_LocalScale: {x: 1.2810658, y: 0.55618477, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7926815632849815710}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4197593011868788877
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6124860876851227831}
+  m_Layer: 0
+  m_Name: SubmergeOverheadDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6124860876851227831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4197593011868788877}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.149, z: 0.7002691}
   m_LocalScale: {x: 1.2810658, y: 0.55618477, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
