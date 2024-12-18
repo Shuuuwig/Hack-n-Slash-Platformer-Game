@@ -59,5 +59,6 @@ public class PlayerAnimationHandler : MonoBehaviour
         playerAnimator.SetBool("isDashing", playerMovement.IsDashing);
 
         playerAnimator.SetBool("isLowAttacking", playerCombat.LowAttack);
+        playerAnimator.SetBool("isParrying", playerCombat.Parrying);
     }
 }
