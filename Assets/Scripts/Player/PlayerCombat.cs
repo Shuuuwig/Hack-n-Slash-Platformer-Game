@@ -32,6 +32,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Collider2D overheadAttackCollider;
     [SerializeField] private Collider2D lowAttackCollider;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private Animator animator;
 
     private int comboTally;
 
@@ -39,6 +40,7 @@ public class PlayerCombat : MonoBehaviour
     private bool isNeutralAttacking;
     private bool isOverheadAttacking;
     private bool isLowAttacking;
+    private bool isParrying;
     private bool parriedAttack;
     private bool hitEnemy;
     private bool hitObstacle;
@@ -49,6 +51,7 @@ public class PlayerCombat : MonoBehaviour
     public bool NeutralAttack { get { return isNeutralAttacking; } }
     public bool OverheadAttack { get { return isOverheadAttacking; } }
     public bool LowAttack { get { return isLowAttacking; } }
+    public bool Parrying { get { return isParrying; } }
     public bool ParriedAttack { get { return parriedAttack; } }
     
 
@@ -57,8 +60,6 @@ public class PlayerCombat : MonoBehaviour
         //Basic Attacks
         DirectionalAttack();
         Parry();
-
-        HitStop();
 
         AttackTally();
     }
@@ -129,9 +130,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void Parry()
     {
-        if (Input.GetKeyDown (KeyCode.F))
+        if (Input.GetKeyDown (KeyCode.F) && parryActiveTime.CurrentProgress is Cooldown.Progress.Ready)
         {
             parryActiveTime.StartCooldown();
+            isParrying = true;
         }
 
         if (parryActiveTime.CurrentProgress is Cooldown.Progress.InProgress)
@@ -159,6 +161,7 @@ public class PlayerCombat : MonoBehaviour
         if (parryActiveTime.CurrentProgress is Cooldown.Progress.Finished)
         {
             parryActiveTime.ResetCooldown();
+            isParrying = false;
         }
     }
     //-----------------------------------------------------------------
