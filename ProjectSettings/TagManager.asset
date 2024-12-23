@@ -21,7 +21,7 @@ TagManager:
   - UI
   - Ground
   - Wall
-  - TileFloor
+  - Tunnel
   - Parryable
   - GrapplePoint
   - 
@@ -46,6 +46,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 4220975909
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

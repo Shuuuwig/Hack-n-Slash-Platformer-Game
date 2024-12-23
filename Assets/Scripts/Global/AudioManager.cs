@@ -20,7 +20,7 @@ public class AudioManager : MonoBehaviour
     }
     private void Update()
     {
-        if (GameManager.Instance.CurrentLevel == 1)
+        if (GameManager.Instance.CurrentLevel >= 1)
         {
             if (Area1Bgm.isPlaying == false)
             {

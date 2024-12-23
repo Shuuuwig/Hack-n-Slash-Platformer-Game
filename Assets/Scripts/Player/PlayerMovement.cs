@@ -156,10 +156,10 @@ public class PlayerMovement : MonoBehaviour
         HandleInput();
 
         //Overlap Checks
-        WallCheck();
+        //WallCheck();
         GroundCheck();
         SubmergeOverheadCheck();
-        LedgeCheck();
+        //LedgeCheck();
         GrappleCheck();
 
         //Basic Movement
@@ -581,7 +581,7 @@ public class PlayerMovement : MonoBehaviour
 
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
 
-                transform.localScale *= new Vector2(-1, 1); 
+                transform.localScale *= new Vector2(-1, 1);
 
                 wallJumpAppliedForceDuration.ResetCooldown();
                 Debug.Log("Climbing Wall");
@@ -625,7 +625,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log("Near Ledge");
             //Requires button input to hang
-            if (Input.GetKeyDown(KeyCode.N)) 
+            if (Input.GetKeyDown(KeyCode.N))
             {
                 Debug.Log("Hung on Ledge");
                 isHanging = true;
@@ -672,7 +672,7 @@ public class PlayerMovement : MonoBehaviour
                 targetedGrapplePoint = grappleOverlapCircle.transform;
             }
 
-            if (Input.GetKey(KeyCode.T) && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Ready)
+            if (Input.GetKey(KeyCode.L) && grappleMomentumDuration.CurrentProgress is Cooldown.Progress.Ready)
             {
                 Debug.Log("Input to grapple");
                 isGrappling = true;

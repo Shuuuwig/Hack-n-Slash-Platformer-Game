@@ -92,7 +92,7 @@ MonoBehaviour:
   dashCooldown:
     CurrentProgress: 0
     Duration: 2
-  jumpPower: 16
+  jumpPower: 14
   coyoteTime:
     CurrentProgress: 0
     Duration: 0.2
@@ -129,7 +129,7 @@ MonoBehaviour:
   boxSizeSubmergeOverhead: {x: 0.79, y: 0.39}
   submergeOverheadDetectableLayer:
     serializedVersion: 2
-    m_Bits: 193
+    m_Bits: 448
   ledgeDetector: {fileID: 891263366473886746}
   boxSizeLedge: {x: -0.27, y: 0.22}
   wallDetector: {fileID: 8595561290232331772}
@@ -198,6 +198,7 @@ MonoBehaviour:
   overheadAttackCollider: {fileID: 9151978216601210864}
   lowAttackCollider: {fileID: 7071043820300342589}
   playerMovement: {fileID: 7698823367271624722}
+  animator: {fileID: 0}
 --- !u!114 &5489704775830526463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentHealth: 5
+  currentDamage: 0
   InvulnerabilityDuration:
     CurrentProgress: 0
     Duration: 0.6
@@ -413,7 +415,7 @@ SpriteRenderer:
   m_SortingLayerID: -2040132249
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -4621837042513520168, guid: fbce6a76683690a4b9db51d2d3039b1c, type: 3}
+  m_Sprite: {fileID: 2420595480475612060, guid: c3c2a1923047c9c4f949d297421a46c2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -477,18 +479,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.12603816, y: 1.75}
+  m_Offset: {x: 0.12603816, y: 1.7198881}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5217391, y: -0.6666667}
-    oldSize: {x: 1.4375, y: 1.5}
+    pivot: {x: 0.6296296, y: -0.6666667}
+    oldSize: {x: 1.6875, y: 1.5}
     newSize: {x: 1.4375, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.9293365, y: 1.5}
+  m_Size: {x: 0.9293365, y: 1.4397762}
   m_EdgeRadius: 0
 --- !u!1 &5500112032038972610
 GameObject:
