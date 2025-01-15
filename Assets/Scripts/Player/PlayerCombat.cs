@@ -19,6 +19,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("---Timer Duration---")]
     [SerializeField] private Cooldown attackDuration;
     [SerializeField] private Cooldown attackCooldown;
+    [SerializeField] private Cooldown comboActiveTimer;
     [SerializeField] private Cooldown knockbackTimer;
     [SerializeField] private Cooldown parryActiveTime;
     [SerializeField] private Cooldown parrySuccessTime;
@@ -102,8 +103,25 @@ public class PlayerCombat : MonoBehaviour
             else
             {
                 isNeutralAttacking = true;
+                comboTally++;
                 neutralAttackCollider.enabled = true;
+                neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = true;
             }
+        }
+
+        if (isNeutralAttacking == true)
+        {
+            if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Ready || comboActiveTimer.CurrentProgress is Cooldown.Progress.InProgress)
+            {
+                comboActiveTimer.StartCooldown();
+                Debug.Log(comboTally);
+            }
+        }
+        if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            comboActiveTimer.ResetCooldown();
+            comboTally = 0;
+            Debug.Log(comboTally);
         }
 
         //Reset Hurtbox and bool
@@ -117,6 +135,8 @@ public class PlayerCombat : MonoBehaviour
             isLowAttacking = false;
 
             neutralAttackCollider.enabled = false;
+            neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = false;
+
             overheadAttackCollider.enabled = false;
             lowAttackCollider.enabled = false;
         }
