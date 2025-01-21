@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimationHandler : MonoBehaviour
 {
-    private bool isFacingLeft;
-    [SerializeField] private Vector3 currentScale;
+    private string currentAnimation;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -15,50 +14,115 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     private void Start()
     {
-        currentScale = transform.localScale;
-    }
 
+    }
 
     private void Update()
     {
-        HandleFlip();
         HandleAnimation();
-    }
-
-    void HandleFlip()
-    {
-        if (playerMovement.IsMovingRight == false && !isFacingLeft)
-        {
-            FlipCheck();
-        }
-        if (playerMovement.IsMovingRight == true && isFacingLeft)
-        {
-            FlipCheck();
-        }
-    }
-
-    void FlipCheck()
-    {
-        currentScale.x *= -1;
-        transform.localScale = currentScale;
-        isFacingLeft = !isFacingLeft;
+        Debug.Log($"Current animation: {currentAnimation}");
     }
 
     private void HandleAnimation()
     {
-        playerAnimator.SetBool("isGrounded", playerMovement.IsGrounded);
-        playerAnimator.SetBool("isFacingLeft", isFacingLeft);
-        playerAnimator.SetBool("isJumping", playerMovement.IsJumping);
-        playerAnimator.SetBool("isSuperJumping", playerMovement.IsSuperJumping);
-        playerAnimator.SetBool("isFalling", playerMovement.IsFalling);
-        playerAnimator.SetBool("isClimbingWall", playerMovement.IsClimbingWall);
-        playerAnimator.SetBool("isClimbingLedge", playerMovement.IsClimbingLedge);
-        playerAnimator.SetBool("isHanging", playerMovement.IsHanging);
-        playerAnimator.SetBool("isRunning", playerMovement.IsRunning);
-        playerAnimator.SetBool("isSubmerged", playerMovement.IsSubmerged);
-        playerAnimator.SetBool("isDashing", playerMovement.IsDashing);
+        if (playerMovement.IsJumping)
+        {
+            if (playerMovement.IsMovingForward)
+            {
+                ChangeAnimation("playerJumpForward");
+            }
+            else if (playerMovement.IsMovingBackward)
+            {
+                ChangeAnimation("playerJumpBackward");
+            }
+            else
+            {
+                ChangeAnimation("playerJumpNeutral");
+            }
+        }
 
-        playerAnimator.SetBool("isLowAttacking", playerCombat.LowAttack);
-        playerAnimator.SetBool("isParrying", playerCombat.Parrying);
+        else if (playerMovement.IsSuperJumping)
+        {
+            if (playerMovement.IsMovingForward)
+            {
+                ChangeAnimation("playerSuperJumpForward");
+            }
+            else if (playerMovement.IsMovingBackward)
+            {
+                ChangeAnimation("playerSuperJumpBackward");
+            }
+            else
+            {
+                ChangeAnimation("playerSuperJumpNeutral");
+            }
+        }
+
+        else if (playerMovement.IsSubmerged)
+        {
+            if (playerMovement.IsMovingForward)
+            {
+                ChangeAnimation("playerSubmergeMoveForward");
+            }
+            else if (playerMovement.IsMovingBackward)
+            {
+                ChangeAnimation("playerSubmergeMoveBackward");
+            }
+            else
+            {
+                ChangeAnimation("playerSubmergeNeutral");
+            }
+        }
+
+        else if (playerMovement.IsDashingForward)
+        {
+            ChangeAnimation("playerDashForward");
+        }
+        else if (playerMovement.IsDashingBackward)
+        {
+            ChangeAnimation("playerDashBackward");
+        }
+
+        else if (playerMovement.IsFalling)
+        {
+            if (currentAnimation == "playerJumpForward" || currentAnimation == "playerDashForward" || currentAnimation == "playerFallForward")
+            {
+                ChangeAnimation("playerFallForward");
+            }
+            else if (currentAnimation == "playerJumpBackward" || currentAnimation == "playerDashBackward" || currentAnimation == "playerFallBackward")
+            {
+                ChangeAnimation("playerFallBackward");
+            }
+            else
+            {
+                ChangeAnimation("playerFallNeutral");
+            }
+        }
+
+        else if (playerMovement.IsMovingForward)
+        {
+            ChangeAnimation("playerMoveForward");
+        }
+        else if (playerMovement.IsMovingBackward)
+        {
+            ChangeAnimation("playerMoveBackward");
+        }
+
+        else
+        {
+            ChangeAnimation("playerIdle");
+        }
+        
+
+
+
+    }
+
+    private void ChangeAnimation(string animation)
+    {
+        if (currentAnimation != animation)
+        {
+            currentAnimation = animation;
+            playerAnimator.Play(animation);
+        }
     }
 }

@@ -17,6 +17,7 @@ public class Cooldown
     private float currentDuration = 0f;
     private bool isOnCooldown = false;
 
+    public float CurrentDuration {  get { return currentDuration; } }
     public float TimeLeft { get { return currentDuration; } }
     public bool IsOnCooldown { get { return isOnCooldown; } }
 
@@ -38,13 +39,19 @@ public class Cooldown
         _coroutine = CoroutineHost.Instance.StartCoroutine(DoCooldownRealtime());
     }
 
-    public void ResetCooldown()
+    public void EndCooldown()
     {
         if (_coroutine != null)
             CoroutineHost.Instance.StopCoroutine(_coroutine);
 
         currentDuration = 0f;
         isOnCooldown = false;
+        CurrentProgress = Progress.Finished;
+    }
+
+    public void ResetCooldown()
+    {
+        EndCooldown();
         CurrentProgress = Progress.Ready;
     }
 
