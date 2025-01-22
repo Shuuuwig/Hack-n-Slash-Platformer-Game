@@ -84,7 +84,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoToggleOn: 1
-  speed: 10
+  speedForwards: 10
+  speedBackwards: 7
   dashPower: 20
   dashDuration:
     CurrentProgress: 0
@@ -126,25 +127,20 @@ MonoBehaviour:
   submergeOverheadDetectableLayer:
     serializedVersion: 2
     m_Bits: 448
-  ledgeDetector: {fileID: 891263366473886746}
-  boxSizeLedge: {x: -0.27, y: 0.22}
   wallDetector: {fileID: 8595561290232331772}
   boxSizeWall: {x: 0.23, y: 0.81}
   wallLayer:
     serializedVersion: 2
     m_Bits: 128
   grappleDetector: {fileID: 7346755882047849463}
-  grappleRadius: 0
+  grappleRadius: 5
   grappleLayer:
     serializedVersion: 2
     m_Bits: 1024
   grappleObstacleLayers:
     serializedVersion: 2
     m_Bits: 192
-  grappleInvalidRadius: 0
-  grappleInvalidLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  grappleInvalidRadius: 1
   playerRigidbody: {fileID: 7964752652834704161}
   mainCollider: {fileID: 5759335046320117338}
   playerGraphic: {fileID: 5048888360779042903}
@@ -420,7 +416,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.4375, y: 1.5}
+  m_Size: {x: 1.6875, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -484,7 +480,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.6296296, y: -0.6666667}
     oldSize: {x: 1.6875, y: 1.5}
-    newSize: {x: 1.4375, y: 1.5}
+    newSize: {x: 1.6875, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -886,7 +882,7 @@ Transform:
   m_GameObject: {fileID: 7777548464773955839}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
