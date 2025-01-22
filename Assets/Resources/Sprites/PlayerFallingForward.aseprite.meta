@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59aba5814a41d1e41b94ecdc0084e031
+guid: b0349748b3c930d469e92f9690293b4f
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -95,7 +95,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638730053894760334
+  platformSettingsDirtyTick: 638731489359248243
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -119,18 +119,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: PlayerFalling_Frame_0
+  - name: PlayerFallingForward_Frame_0
     originalName: 
-    pivot: {x: 0.48, y: -0.5925926}
+    pivot: {x: 0.45000002, y: -0.5862069}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 25
-      height: 27
-    spriteID: 200214333b52d3b4794d2fb20f3638df
+      width: 20
+      height: 29
+    spriteID: 85ae575b4a02e914ea826210b430140c
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -139,18 +139,18 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: PlayerFalling_Frame_1
+  - name: PlayerFallingForward_Frame_1
     originalName: 
-    pivot: {x: 0.48, y: -0.61538464}
+    pivot: {x: 0.4, y: -0.6296296}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 39
-      width: 25
-      height: 26
-    spriteID: b8827678153d2694abbcef72ad3b700c
+      x: 32
+      y: 4
+      width: 20
+      height: 27
+    spriteID: 2a54415f02f975e479f2dd494a78484e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -158,32 +158,32 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 39}
+    uvTransform: {x: 32, y: 4}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -2140034766
-    name: PlayerFalling
+    guid: 1618771651
+    name: PlayerFallingForward
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: PlayerFalling_Frame_0
+    - name: PlayerFallingForward_Frame_0
       frameIndex: 0
       cellRect:
-        x: 20
-        y: 16
-        width: 25
-        height: 27
-      spriteId: 200214333b52d3b4794d2fb20f3638df
-    - name: PlayerFalling_Frame_1
+        x: 23
+        y: 17
+        width: 20
+        height: 29
+      spriteId: 85ae575b4a02e914ea826210b430140c
+    - name: PlayerFallingForward_Frame_1
       frameIndex: 1
       cellRect:
-        x: 20
-        y: 16
-        width: 25
-        height: 26
-      spriteId: b8827678153d2694abbcef72ad3b700c
+        x: 24
+        y: 17
+        width: 20
+        height: 27
+      spriteId: 2a54415f02f975e479f2dd494a78484e
     linkedCells: []
     parentIndex: -1
   platformSettings:

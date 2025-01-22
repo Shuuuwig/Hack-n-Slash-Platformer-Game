@@ -251,6 +251,7 @@ public class PlayerMovement : MonoBehaviour
             isFalling = true;
             isJumping = false;
             isSuperJumping = false;
+            Debug.Log("Player falling");
         }
         else
         {
@@ -303,6 +304,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isGrounded = false;
+            isSubmerged = false;
         }
     }
 
@@ -359,11 +361,18 @@ public class PlayerMovement : MonoBehaviour
         {
             if (playerRigidbody.velocity.x > 0.1f && isFacingRight == false || playerRigidbody.velocity.x < -0.1f && isFacingRight == true) //Move backwards
             {
+                isMovingForward = false;
                 isMovingBackward = true;
                 Debug.Log("Player running backwards");
             }
+            else if (playerRigidbody.velocity.x > 0.1f && isFacingRight == true || playerRigidbody.velocity.x < -0.1f && isFacingRight == false)
+            {
+                isMovingForward = true;
+                isMovingBackward = false;
+            }
             else
             {
+                isMovingForward = false;
                 isMovingBackward = false;
             }
         }

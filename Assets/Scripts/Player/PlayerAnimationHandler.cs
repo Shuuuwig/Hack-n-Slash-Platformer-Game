@@ -84,11 +84,11 @@ public class PlayerAnimationHandler : MonoBehaviour
 
         else if (playerMovement.IsFalling)
         {
-            if (currentAnimation == "playerJumpForward" || currentAnimation == "playerDashForward" || currentAnimation == "playerFallForward")
+            if (playerMovement.IsMovingForward)
             {
                 ChangeAnimation("playerFallForward");
             }
-            else if (currentAnimation == "playerJumpBackward" || currentAnimation == "playerDashBackward" || currentAnimation == "playerFallBackward")
+            else if (playerMovement.IsMovingBackward)
             {
                 ChangeAnimation("playerFallBackward");
             }

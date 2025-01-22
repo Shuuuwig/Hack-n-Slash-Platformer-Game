@@ -119,7 +119,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: playerDashForward_Frame_0
+  - name: PlayerDashForward_Frame_0
     originalName: 
     pivot: {x: 0.6, y: -0.61538464}
     alignment: 9
@@ -130,7 +130,7 @@ ScriptedImporter:
       y: 4
       width: 30
       height: 26
-    spriteID: c875d36bbc57ef74697b05cedc0e426a
+    spriteID: 188a21f36ecad3d44a13692f385c1147
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -139,7 +139,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: playerDashForward_Frame_1
+  - name: PlayerDashForward_Frame_1
     originalName: 
     pivot: {x: 0.61904764, y: -1.923077}
     alignment: 9
@@ -150,7 +150,7 @@ ScriptedImporter:
       y: 38
       width: 42
       height: 13
-    spriteID: 14718eb0bac88ef4694513c3250f4493
+    spriteID: 2e87be5cdc0bf4b438a58b7fbafb76ba
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -162,28 +162,28 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 154516972
-    name: playerDashForward
+    guid: -1582889460
+    name: PlayerDashForward
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: playerDashForward_Frame_0
+    - name: PlayerDashForward_Frame_0
       frameIndex: 0
       cellRect:
         x: 14
         y: 16
         width: 30
         height: 26
-      spriteId: c875d36bbc57ef74697b05cedc0e426a
-    - name: playerDashForward_Frame_1
+      spriteId: 188a21f36ecad3d44a13692f385c1147
+    - name: PlayerDashForward_Frame_1
       frameIndex: 1
       cellRect:
         x: 6
         y: 25
         width: 42
         height: 13
-      spriteId: 14718eb0bac88ef4694513c3250f4493
+      spriteId: 2e87be5cdc0bf4b438a58b7fbafb76ba
     linkedCells: []
     parentIndex: -1
   platformSettings:

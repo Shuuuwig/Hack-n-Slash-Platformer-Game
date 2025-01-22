@@ -70,7 +70,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void DirectionLock()
     {
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.C))
         {
             flipLocked = true;
             Debug.Log("Flip Locked");

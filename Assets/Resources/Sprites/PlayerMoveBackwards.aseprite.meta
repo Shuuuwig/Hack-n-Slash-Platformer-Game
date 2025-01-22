@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fbce6a76683690a4b9db51d2d3039b1c
+guid: 6582b09cf487d2249a87fc55aa3f241b
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -95,7 +95,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638645468637002698
+  platformSettingsDirtyTick: 638731509911795617
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -119,98 +119,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: transitiontestgoo_Frame_0
+  - name: PlayerMoveBackwards_Frame_0
     originalName: 
-    pivot: {x: 0.5217391, y: -0.6666667}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 35
-      width: 23
-      height: 24
-    spriteID: 69a8b863561d1454dbc4a640cd110e6f
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 35}
-  - name: transitiontestgoo_Frame_1
-    originalName: 
-    pivot: {x: 0.5263158, y: -0.64}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 98
-      width: 19
-      height: 25
-    spriteID: c267ee28db0be2341a8cb97685d5f32f
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 98}
-  - name: transitiontestgoo_Frame_2
-    originalName: 
-    pivot: {x: 0.5217391, y: -0.6666667}
+    pivot: {x: 0.5, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 35
-      y: 35
-      width: 23
-      height: 24
-    spriteID: ef641037ac48a7642bd2072c597d0b03
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 35, y: 35}
-  - name: transitiontestgoo_Frame_3
-    originalName: 
-    pivot: {x: 0.5263158, y: -0.64}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 31
-      y: 98
-      width: 19
-      height: 25
-    spriteID: 97bb6bce6331d834bacd6d6be7058c1d
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 31, y: 98}
-  - name: transitiontestgoo_Frame_4
-    originalName: 
-    pivot: {x: 0.5833334, y: -0.6956522}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 72
-      y: 4
-      width: 24
+      y: 66
+      width: 22
       height: 23
-    spriteID: b553b5bcafde14f48bb58c9056d77038
+    spriteID: e1dc827fbb676c243baf4dca59fd21a0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -218,19 +138,39 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 72, y: 4}
-  - name: transitiontestgoo_Frame_5
+    uvTransform: {x: 14, y: 50}
+  - name: PlayerMoveBackwards_Frame_1
     originalName: 
-    pivot: {x: 0.5833334, y: -0.6956522}
+    pivot: {x: 0.5, y: -0.6956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 35
+      y: 97
+      width: 22
+      height: 23
+    spriteID: 126a1bb272c63784388e3b8a7916cc92
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 35, y: 97}
+  - name: PlayerMoveBackwards_Frame_2
+    originalName: 
+    pivot: {x: 0.5, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 66
-      y: 35
-      width: 24
+      y: 4
+      width: 22
       height: 23
-    spriteID: c3ba652f9b647da4289b6782d94e6d04
+    spriteID: ea6e2a841ec5cea4481a21dfdcc71fe7
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -238,19 +178,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 66, y: 35}
-  - name: transitiontestgoo_Frame_6
+    uvTransform: {x: 66, y: 4}
+  - name: PlayerMoveBackwards_Frame_3
     originalName: 
-    pivot: {x: 0.5769231, y: -0.6956522}
+    pivot: {x: 0.47826087, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 26
+      width: 23
       height: 23
-    spriteID: bc595e6cf73d8d44797656264e56167c
+    spriteID: 7853e04d6420c354cb6954669eaefa54
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -259,38 +199,18 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: transitiontestgoo_Frame_7
+  - name: PlayerMoveBackwards_Frame_4
     originalName: 
-    pivot: {x: 0.5833334, y: -0.6956522}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 98
-      y: 35
-      width: 24
-      height: 23
-    spriteID: 2bfffe49c7743134f93565f6beca57cf
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 98, y: 35}
-  - name: transitiontestgoo_Frame_8
-    originalName: 
-    pivot: {x: 0.5833334, y: -0.6956522}
+    pivot: {x: 0.47826087, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 67
-      width: 24
+      y: 35
+      width: 23
       height: 23
-    spriteID: 8b33c1a5046fdc54a937acd96571017a
+    spriteID: 7b3494ee6fd3a134cbfe90deab1ad7d0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -298,19 +218,19 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 67}
-  - name: transitiontestgoo_Frame_9
+    uvTransform: {x: 4, y: 35}
+  - name: PlayerMoveBackwards_Frame_5
     originalName: 
-    pivot: {x: 0.5833334, y: -0.6956522}
+    pivot: {x: 0.47826087, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 36
-      y: 67
-      width: 24
+      x: 4
+      y: 66
+      width: 23
       height: 23
-    spriteID: 195ea550aea22f242b9fb0a6e8c30195
+    spriteID: ddf8e7b3b1db04b4ea87cf19cc6a852f
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -318,19 +238,39 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 36, y: 67}
-  - name: transitiontestgoo_Frame_10
+    uvTransform: {x: 4, y: 66}
+  - name: PlayerMoveBackwards_Frame_6
     originalName: 
-    pivot: {x: 0.5769231, y: -0.6956522}
+    pivot: {x: 0.47826087, y: -0.6956522}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 38
+      x: 4
+      y: 97
+      width: 23
+      height: 23
+    spriteID: 0328a56f43dd5fa4196ef662ed6e0dbb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 97}
+  - name: PlayerMoveBackwards_Frame_7
+    originalName: 
+    pivot: {x: 0.47826087, y: -0.6956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 35
       y: 4
-      width: 26
+      width: 23
       height: 23
-    spriteID: 174eb93164846b24eaef9e19ad842d42
+    spriteID: 049052bff7660254a9621f6b4fbacd7e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -338,104 +278,136 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 38, y: 4}
+    uvTransform: {x: 35, y: 4}
+  - name: PlayerMoveBackwards_Frame_8
+    originalName: 
+    pivot: {x: 0.47826087, y: -0.6956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 35
+      y: 35
+      width: 23
+      height: 23
+    spriteID: 03485633a07abce40b00047b297209c0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 35, y: 35}
+  - name: PlayerMoveBackwards_Frame_9
+    originalName: 
+    pivot: {x: 0.5, y: -0.6956522}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 66
+      y: 35
+      width: 22
+      height: 23
+    spriteID: 2e56b149beaaf3b41afa7c6d60500399
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 66, y: 35}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 700852404
-    name: transitiontestgoo
+    guid: -284975872
+    name: PlayerMoveBackwards
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: transitiontestgoo_Frame_0
+    - name: PlayerMoveBackwards_Frame_0
       frameIndex: 0
       cellRect:
-        x: 20
-        y: 16
-        width: 23
-        height: 24
-      spriteId: 69a8b863561d1454dbc4a640cd110e6f
-    - name: transitiontestgoo_Frame_1
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      spriteId: e1dc827fbb676c243baf4dca59fd21a0
+    - name: PlayerMoveBackwards_Frame_1
       frameIndex: 1
       cellRect:
-        x: 22
+        x: 21
         y: 16
-        width: 19
-        height: 25
-      spriteId: c267ee28db0be2341a8cb97685d5f32f
-    - name: transitiontestgoo_Frame_2
+        width: 22
+        height: 23
+      spriteId: 126a1bb272c63784388e3b8a7916cc92
+    - name: PlayerMoveBackwards_Frame_2
       frameIndex: 2
       cellRect:
-        x: 20
+        x: 21
         y: 16
-        width: 23
-        height: 24
-      spriteId: ef641037ac48a7642bd2072c597d0b03
-    - name: transitiontestgoo_Frame_3
+        width: 22
+        height: 23
+      spriteId: ea6e2a841ec5cea4481a21dfdcc71fe7
+    - name: PlayerMoveBackwards_Frame_3
       frameIndex: 3
       cellRect:
-        x: 22
+        x: 21
         y: 16
-        width: 19
-        height: 25
-      spriteId: 97bb6bce6331d834bacd6d6be7058c1d
-    - name: transitiontestgoo_Frame_4
+        width: 23
+        height: 23
+      spriteId: 7853e04d6420c354cb6954669eaefa54
+    - name: PlayerMoveBackwards_Frame_4
       frameIndex: 4
       cellRect:
-        x: 18
+        x: 21
         y: 16
-        width: 24
+        width: 23
         height: 23
-      spriteId: b553b5bcafde14f48bb58c9056d77038
-    - name: transitiontestgoo_Frame_5
+      spriteId: 7b3494ee6fd3a134cbfe90deab1ad7d0
+    - name: PlayerMoveBackwards_Frame_5
       frameIndex: 5
       cellRect:
-        x: 18
+        x: 21
         y: 16
-        width: 24
+        width: 23
         height: 23
-      spriteId: c3ba652f9b647da4289b6782d94e6d04
-    - name: transitiontestgoo_Frame_6
+      spriteId: ddf8e7b3b1db04b4ea87cf19cc6a852f
+    - name: PlayerMoveBackwards_Frame_6
       frameIndex: 6
       cellRect:
-        x: 17
+        x: 21
         y: 16
-        width: 26
+        width: 23
         height: 23
-      spriteId: bc595e6cf73d8d44797656264e56167c
-    - name: transitiontestgoo_Frame_7
+      spriteId: 0328a56f43dd5fa4196ef662ed6e0dbb
+    - name: PlayerMoveBackwards_Frame_7
       frameIndex: 7
       cellRect:
-        x: 18
+        x: 21
         y: 16
-        width: 24
+        width: 23
         height: 23
-      spriteId: 2bfffe49c7743134f93565f6beca57cf
-    - name: transitiontestgoo_Frame_8
+      spriteId: 049052bff7660254a9621f6b4fbacd7e
+    - name: PlayerMoveBackwards_Frame_8
       frameIndex: 8
       cellRect:
-        x: 18
+        x: 21
         y: 16
-        width: 24
+        width: 23
         height: 23
-      spriteId: 8b33c1a5046fdc54a937acd96571017a
-    - name: transitiontestgoo_Frame_9
+      spriteId: 03485633a07abce40b00047b297209c0
+    - name: PlayerMoveBackwards_Frame_9
       frameIndex: 9
       cellRect:
-        x: 18
+        x: 21
         y: 16
-        width: 24
+        width: 22
         height: 23
-      spriteId: 195ea550aea22f242b9fb0a6e8c30195
-    - name: transitiontestgoo_Frame_10
-      frameIndex: 10
-      cellRect:
-        x: 17
-        y: 16
-        width: 26
-        height: 23
-      spriteId: 174eb93164846b24eaef9e19ad842d42
+      spriteId: 2e56b149beaaf3b41afa7c6d60500399
     linkedCells: []
     parentIndex: -1
   platformSettings:

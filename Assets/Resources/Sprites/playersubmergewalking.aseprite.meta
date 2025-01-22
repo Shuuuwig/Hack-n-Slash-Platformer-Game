@@ -119,7 +119,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: playersubmergewalking_Frame_0
+  - name: PlayerSubmergewalking_Frame_0
     originalName: 
     pivot: {x: 0.5, y: -1.0909091}
     alignment: 9
@@ -130,7 +130,7 @@ ScriptedImporter:
       y: 4
       width: 32
       height: 11
-    spriteID: 1f8ff1714f8723a4db3cf8e73ee2d543
+    spriteID: c5b35c8658034524db7e868daef22fed
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -139,7 +139,7 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: playersubmergewalking_Frame_1
+  - name: PlayerSubmergewalking_Frame_1
     originalName: 
     pivot: {x: 0.5, y: -1.2}
     alignment: 9
@@ -150,7 +150,7 @@ ScriptedImporter:
       y: 23
       width: 30
       height: 10
-    spriteID: 70222ac93b7d5a94dafce6b5ea52d26f
+    spriteID: b1dfa9a705e50d44ebe7bfca07d8c114
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -162,28 +162,28 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -590877292
-    name: playersubmergewalking
+    guid: 1080279444
+    name: PlayerSubmergewalking
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: playersubmergewalking_Frame_0
+    - name: PlayerSubmergewalking_Frame_0
       frameIndex: 0
       cellRect:
         x: 16
         y: 12
         width: 32
         height: 11
-      spriteId: 1f8ff1714f8723a4db3cf8e73ee2d543
-    - name: playersubmergewalking_Frame_1
+      spriteId: c5b35c8658034524db7e868daef22fed
+    - name: PlayerSubmergewalking_Frame_1
       frameIndex: 1
       cellRect:
         x: 17
         y: 12
         width: 30
         height: 10
-      spriteId: 70222ac93b7d5a94dafce6b5ea52d26f
+      spriteId: b1dfa9a705e50d44ebe7bfca07d8c114
     linkedCells: []
     parentIndex: -1
   platformSettings:
