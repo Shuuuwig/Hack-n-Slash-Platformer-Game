@@ -445,6 +445,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCharacter
       objectReference: {fileID: 0}
+    - target: {fileID: 5491175397579073367, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: m_Size.x
+      value: 1.6875
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346755882047849463, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: grappleRadius
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: speedForwards
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: speedBackwards
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: grappleInvalidRadius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7926815632849815710, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.400278
@@ -25583,13 +25607,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: GrapplePoint
       objectReference: {fileID: 0}
+    - target: {fileID: 7163082366150969153, guid: 0050b5041feece74abd6a04ae8c36451, type: 3}
+      propertyPath: m_Radius
+      value: 0.32481003
+      objectReference: {fileID: 0}
+    - target: {fileID: 7163082366150969153, guid: 0050b5041feece74abd6a04ae8c36451, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7825637598458982824, guid: 0050b5041feece74abd6a04ae8c36451, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.983389
       objectReference: {fileID: 0}
     - target: {fileID: 7825637598458982824, guid: 0050b5041feece74abd6a04ae8c36451, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.19
+      value: 7.53
       objectReference: {fileID: 0}
     - target: {fileID: 7825637598458982824, guid: 0050b5041feece74abd6a04ae8c36451, type: 3}
       propertyPath: m_LocalPosition.z

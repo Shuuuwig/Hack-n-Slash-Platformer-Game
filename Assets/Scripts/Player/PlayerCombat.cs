@@ -19,6 +19,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("---Timer Duration---")]
     [SerializeField] private Cooldown attackDuration;
     [SerializeField] private Cooldown attackCooldown;
+    [SerializeField] private Cooldown comboActiveTimer;
     [SerializeField] private Cooldown knockbackTimer;
     [SerializeField] private Cooldown parryActiveTime;
     [SerializeField] private Cooldown parrySuccessTime;
@@ -37,6 +38,7 @@ public class PlayerCombat : MonoBehaviour
     private int comboTally;
 
     //Boolean conditions
+    private bool flipLocked;
     private bool isNeutralAttacking;
     private bool isOverheadAttacking;
     private bool isLowAttacking;
@@ -46,6 +48,7 @@ public class PlayerCombat : MonoBehaviour
     private bool hitObstacle;
 
     public float WeaponDamage { get { return weaponDamage; } }
+    public bool FlipLocked { get { return flipLocked; } }
     public bool HitEnemy {  get { return hitEnemy; } }
     public bool HitObstacle { get {  return hitObstacle; } }
     public bool NeutralAttack { get { return isNeutralAttacking; } }
@@ -61,7 +64,21 @@ public class PlayerCombat : MonoBehaviour
         DirectionalAttack();
         Parry();
 
+        DirectionLock();
         AttackTally();
+    }
+
+    private void DirectionLock()
+    {
+        if (Input.GetKey(KeyCode.C))
+        {
+            flipLocked = true;
+            Debug.Log("Flip Locked");
+        }
+        else
+        {
+            flipLocked = false;
+        }
     }
 
     private void AttackTally()
@@ -102,8 +119,25 @@ public class PlayerCombat : MonoBehaviour
             else
             {
                 isNeutralAttacking = true;
+                comboTally++;
                 neutralAttackCollider.enabled = true;
+                neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = true;
             }
+        }
+
+        if (isNeutralAttacking == true)
+        {
+            if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Ready || comboActiveTimer.CurrentProgress is Cooldown.Progress.InProgress)
+            {
+                comboActiveTimer.StartCooldown();
+                Debug.Log(comboTally);
+            }
+        }
+        if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            comboActiveTimer.ResetCooldown();
+            comboTally = 0;
+            Debug.Log(comboTally);
         }
 
         //Reset Hurtbox and bool
@@ -117,6 +151,8 @@ public class PlayerCombat : MonoBehaviour
             isLowAttacking = false;
 
             neutralAttackCollider.enabled = false;
+            neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = false;
+
             overheadAttackCollider.enabled = false;
             lowAttackCollider.enabled = false;
         }
