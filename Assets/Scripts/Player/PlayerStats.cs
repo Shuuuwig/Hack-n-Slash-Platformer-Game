@@ -19,7 +19,6 @@ public class PlayerStats : MonoBehaviour
             {
                 currentHealth = value;
             }
-             
         }
     }
     public float PlayerCurrentDamage { get { return currentDamage; } }
