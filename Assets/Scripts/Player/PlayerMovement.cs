@@ -200,6 +200,13 @@ public class PlayerMovement : MonoBehaviour
         if (isClimbingWall == true || isGrappling == true)
             return;
 
+        if (playerCombat.NeutralAttack == true)
+        {
+            inputDirection = Vector2.zero;
+            return;
+        }
+            
+
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
@@ -258,7 +265,7 @@ public class PlayerMovement : MonoBehaviour
             isFalling = false;
         }
 
-        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished) //Freeze player after dash for short duration for cleaner effect
+        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished && isGrappling == false) //Freeze player after dash for short duration for cleaner effect
         {
             playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 2, playerRigidbody.velocity.y);
         }
@@ -637,9 +644,6 @@ public class PlayerMovement : MonoBehaviour
     //==================== GRAPPLE ====================//
     private void Grapple()
     {
-        if (isDashingForward == true || isDashingBackward == true)
-            return;
-
         if (isGrappling == true)
         {
             if (linkToGrapplePointTime.CurrentProgress is Cooldown.Progress.Ready) //Pause in position for grapple animation
@@ -719,6 +723,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 targetedGrapplePoint = grappleOverlapCircle.transform;
             }
+
+            if (isDashingForward == true || isDashingBackward == true)
+                return;
 
             if (Input.GetKey(KeyCode.L) && tooCloseToGrapplePoint == false) //Grapple when not too close to grapple point
             {

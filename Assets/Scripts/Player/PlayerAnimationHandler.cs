@@ -107,6 +107,20 @@ public class PlayerAnimationHandler : MonoBehaviour
             ChangeAnimation("playerMoveBackward");
         }
 
+        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 1)
+        {
+            ChangeAnimation("playerNeutralAttackCombo1");
+        }
+        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 2)
+        {
+            ChangeAnimation("playerNeutralAttackCombo2");
+        }
+        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 3)
+        {
+            ChangeAnimation("playerNeutralAttackCombo3");
+            Debug.Log("Final Combo");
+        }
+
         else
         {
             ChangeAnimation("playerIdle");

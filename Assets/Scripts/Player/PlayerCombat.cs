@@ -23,13 +23,14 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private Cooldown knockbackTimer;
     [SerializeField] private Cooldown parryActiveTime;
     [SerializeField] private Cooldown parrySuccessTime;
-    [SerializeField] private Cooldown comboDuration;
     [SerializeField] private Cooldown hitstopDuration;
 
     //Player Component Reference
     [Header("---Component Reference---")]
     [SerializeField] private Transform parryTransform;
-    [SerializeField] private Collider2D neutralAttackCollider;
+    [SerializeField] private Collider2D neutralAttackCollider1;
+    [SerializeField] private Collider2D neutralAttackCollider2;
+    [SerializeField] private Collider2D neutralAttackCollider3;
     [SerializeField] private Collider2D overheadAttackCollider;
     [SerializeField] private Collider2D lowAttackCollider;
     [SerializeField] private PlayerMovement playerMovement;
@@ -47,6 +48,7 @@ public class PlayerCombat : MonoBehaviour
     private bool hitEnemy;
     private bool hitObstacle;
 
+    public int ComboTally {  get { return comboTally; } }
     public float WeaponDamage { get { return weaponDamage; } }
     public bool FlipLocked { get { return flipLocked; } }
     public bool HitEnemy {  get { return hitEnemy; } }
@@ -70,7 +72,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void DirectionLock()
     {
-        if (Input.GetKey(KeyCode.C))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             flipLocked = true;
             Debug.Log("Flip Locked");
@@ -86,14 +88,16 @@ public class PlayerCombat : MonoBehaviour
         if (hitEnemy == true)
         {
             comboTally++;
-            comboDuration.StartCooldown();
+            Debug.Log(comboTally);
         }
 
-        if (comboDuration.CurrentProgress is Cooldown.Progress.Finished)
+        if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Finished)
         {
             comboTally = 0;
-            comboDuration.ResetCooldown();
+            comboActiveTimer.ResetCooldown();
         }
+
+        
     }
 
     //----------------Combat Functions------------------
@@ -106,52 +110,75 @@ public class PlayerCombat : MonoBehaviour
 
             //Check input direction to determine attack direction
             //Y input check
-            if (playerMovement.InputDirection.y > 0)
+            if (playerMovement.IsGrounded == false)
             {
-                isOverheadAttacking = true;
-                overheadAttackCollider.enabled = true;
+                if (playerMovement.InputDirection.y > 0)
+                {
+                    isOverheadAttacking = true;
+                    overheadAttackCollider.enabled = true;
+                }
+                else if (playerMovement.InputDirection.y < 0)
+                {
+                    isLowAttacking = true;
+                    lowAttackCollider.enabled = true;
+                }
             }
-            else if (playerMovement.InputDirection.y < 0 && playerMovement.IsGrounded == false)
+            else if (playerMovement.IsGrounded == true)
             {
-                isLowAttacking = true;
-                lowAttackCollider.enabled = true;
-            }
-            else
-            {
-                isNeutralAttacking = true;
-                comboTally++;
-                neutralAttackCollider.enabled = true;
-                neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = true;
-            }
-        }
+                if (playerMovement.IsSubmerged)
+                {
 
-        if (isNeutralAttacking == true)
-        {
-            if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Ready || comboActiveTimer.CurrentProgress is Cooldown.Progress.InProgress)
-            {
-                comboActiveTimer.StartCooldown();
-                Debug.Log(comboTally);
+                }
+                else
+                {
+                    isNeutralAttacking = true;
+                    comboTally++;
+                    Debug.Log($"Combo No.{comboTally}");
+
+                    if (comboTally == 1)
+                    {
+                        neutralAttackCollider1.enabled = true;
+                    }
+                    else if (comboTally == 2)
+                    {
+                        neutralAttackCollider2.enabled = true;
+                    }
+                    else if (comboTally == 3)
+                    {
+                        neutralAttackCollider3.enabled = true;
+                    }
+
+                    if (comboActiveTimer.CurrentProgress is Cooldown.Progress.InProgress)
+                    {
+                        comboActiveTimer.ResetCooldown();
+                    }
+                }
             }
-        }
-        if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            comboActiveTimer.ResetCooldown();
-            comboTally = 0;
-            Debug.Log(comboTally);
         }
 
         //Reset Hurtbox and bool
         if (attackDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
-            attackDuration.ResetCooldown();
-            attackCooldown.StartCooldown();
+            if (comboTally >= 3)
+            {
+                comboTally = 0;
+                attackCooldown.StartCooldown();
+            }
 
+            if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Ready)
+            {
+                comboActiveTimer.StartCooldown();
+            }
+
+            attackDuration.ResetCooldown();
+            
             isNeutralAttacking = false;
             isOverheadAttacking = false;
             isLowAttacking = false;
 
-            neutralAttackCollider.enabled = false;
-            neutralAttackCollider.GetComponent<SpriteRenderer>().enabled = false;
+            neutralAttackCollider1.enabled = false;
+            neutralAttackCollider2.enabled = false;
+            neutralAttackCollider3.enabled = false;
 
             overheadAttackCollider.enabled = false;
             lowAttackCollider.enabled = false;
