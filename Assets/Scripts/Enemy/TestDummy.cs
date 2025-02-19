@@ -14,6 +14,8 @@ public class TestDummy : MonoBehaviour
 
     [SerializeField] private Animator animator;
 
+    [SerializeField] private Collider2D slashCollider;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,10 +39,12 @@ public class TestDummy : MonoBehaviour
         if (attackCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
             animator.Play("Slash");
+            slashCollider.enabled = true;
             attackCooldown.StartCooldown();
         }
         else if (attackCooldown.CurrentProgress is Cooldown.Progress.Finished)
         {
+            slashCollider.enabled = false;
             attackCooldown.ResetCooldown();
         }
 

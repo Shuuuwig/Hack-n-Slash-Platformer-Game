@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 880560ec1bf4d9b44928213b4f392cba
+guid: ecb2b5141740ab841883d222fe6f043e
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -95,7 +95,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638700680874002405
+  platformSettingsDirtyTick: 638753315634368571
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -119,18 +119,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: TestDummy1_Frame_0
+  - name: hauntingBladeSlash_Frame_0
     originalName: 
-    pivot: {x: 0.59375, y: -0.42857143}
+    pivot: {x: 0.5090909, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 48
-      width: 32
-      height: 35
-    spriteID: 409a1450ad32ce547894ac554eaddb44
+      y: 116
+      width: 55
+      height: 55
+    spriteID: 5b94ad67efd10444cb8ce5f258de4e09
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -138,19 +138,119 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 48}
-  - name: TestDummy1_Frame_1
+    uvTransform: {x: 4, y: 116}
+  - name: hauntingBladeSlash_Frame_1
     originalName: 
-    pivot: {x: 0.5625, y: -0.41666666}
+    pivot: {x: 0.5090909, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 179
+      width: 55
+      height: 52
+    spriteID: 9229d02adc8f198419b52cf91408fa6c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 179}
+  - name: hauntingBladeSlash_Frame_2
+    originalName: 
+    pivot: {x: 0.38636366, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 239
+      width: 44
+      height: 62
+    spriteID: 048c0092960133f4283efe3c6a3f7e22
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 239}
+  - name: hauntingBladeSlash_Frame_3
+    originalName: 
+    pivot: {x: 0.46296296, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 376
+      width: 54
+      height: 49
+    spriteID: fa100cba6bca02b4cbcd61b321f516c0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 376}
+  - name: hauntingBladeSlash_Frame_4
+    originalName: 
+    pivot: {x: 0.44444445, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 309
+      width: 45
+      height: 59
+    spriteID: 0a140a503edf2fb4cb34ea252737b3f5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 309}
+  - name: hauntingBladeSlash_Frame_5
+    originalName: 
+    pivot: {x: 0.24324325, y: -0.015873017}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 433
+      width: 37
+      height: 63
+    spriteID: 008f4728de32b664e8a2ff39b7b00a20
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 433}
+  - name: hauntingBladeSlash_Frame_6
+    originalName: 
+    pivot: {x: 0.5362319, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 32
-      height: 36
-    spriteID: 3fb18700c8a881f4e8ca5e06d9c37c36
+      width: 69
+      height: 48
+    spriteID: b1e5c91c72b361446ae6f071f5e0587e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -159,98 +259,18 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: TestDummy1_Frame_2
+  - name: hauntingBladeSlash_Frame_7
     originalName: 
-    pivot: {x: 0.48387095, y: -0.41666666}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 44
-      y: 45
-      width: 31
-      height: 36
-    spriteID: 63c6133b0720fdb47a5d84ef9fd1e2eb
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 44, y: 45}
-  - name: TestDummy1_Frame_3
-    originalName: 
-    pivot: {x: 0.37931034, y: -0.41666666}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 86
-      y: 4
-      width: 29
-      height: 36
-    spriteID: 0fe5c7ffc96874d4d8852faadf4c45c6
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 86, y: 4}
-  - name: TestDummy1_Frame_4
-    originalName: 
-    pivot: {x: 0.61764705, y: -0.45454547}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 44
-      y: 4
-      width: 34
-      height: 33
-    spriteID: 302c7859d533e844aa27d3a7f0375572
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 44, y: 4}
-  - name: TestDummy1_Frame_5
-    originalName: 
-    pivot: {x: 0.55172414, y: -0.45454547}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 44
-      y: 89
-      width: 29
-      height: 33
-    spriteID: 87258955aaff9024aa3c8760e5d748fc
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 44, y: 89}
-  - name: TestDummy1_Frame_6
-    originalName: 
-    pivot: {x: 0.5666667, y: -0.45454547}
+    pivot: {x: 0.5362319, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 91
-      width: 30
-      height: 33
-    spriteID: 8b0eea85494057946834d8da4360a148
+      y: 60
+      width: 69
+      height: 48
+    spriteID: 8d3cb11f76e688c4ea1b1d459c6d5475
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -258,72 +278,108 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 91}
+    uvTransform: {x: 4, y: 60}
+  - name: hauntingBladeSlash_Frame_8
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 81
+      y: 4
+      width: 64
+      height: 35
+    spriteID: 0c4bc73cfb43c3247a8e21c20e793e89
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 81, y: 4}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1875284729
-    name: TestDummy1
+    guid: 23674997
+    name: hauntingBladeSlash
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: TestDummy1_Frame_0
+    - name: hauntingBladeSlash_Frame_0
       frameIndex: 0
       cellRect:
-        x: 13
-        y: 15
-        width: 32
-        height: 35
-      spriteId: 409a1450ad32ce547894ac554eaddb44
-    - name: TestDummy1_Frame_1
+        x: 4
+        y: 0
+        width: 55
+        height: 55
+      spriteId: 5b94ad67efd10444cb8ce5f258de4e09
+    - name: hauntingBladeSlash_Frame_1
       frameIndex: 1
       cellRect:
-        x: 14
-        y: 15
-        width: 32
-        height: 36
-      spriteId: 3fb18700c8a881f4e8ca5e06d9c37c36
-    - name: TestDummy1_Frame_2
+        x: 4
+        y: 0
+        width: 55
+        height: 52
+      spriteId: 9229d02adc8f198419b52cf91408fa6c
+    - name: hauntingBladeSlash_Frame_2
       frameIndex: 2
       cellRect:
-        x: 17
-        y: 15
-        width: 31
-        height: 36
-      spriteId: 63c6133b0720fdb47a5d84ef9fd1e2eb
-    - name: TestDummy1_Frame_3
+        x: 15
+        y: 0
+        width: 44
+        height: 62
+      spriteId: 048c0092960133f4283efe3c6a3f7e22
+    - name: hauntingBladeSlash_Frame_3
       frameIndex: 3
       cellRect:
-        x: 21
-        y: 15
-        width: 29
-        height: 36
-      spriteId: 0fe5c7ffc96874d4d8852faadf4c45c6
-    - name: TestDummy1_Frame_4
+        x: 7
+        y: 0
+        width: 54
+        height: 49
+      spriteId: fa100cba6bca02b4cbcd61b321f516c0
+    - name: hauntingBladeSlash_Frame_4
       frameIndex: 4
       cellRect:
-        x: 11
-        y: 15
-        width: 34
-        height: 33
-      spriteId: 302c7859d533e844aa27d3a7f0375572
-    - name: TestDummy1_Frame_5
+        x: 12
+        y: 0
+        width: 45
+        height: 59
+      spriteId: 0a140a503edf2fb4cb34ea252737b3f5
+    - name: hauntingBladeSlash_Frame_5
       frameIndex: 5
       cellRect:
-        x: 16
-        y: 15
-        width: 29
-        height: 33
-      spriteId: 87258955aaff9024aa3c8760e5d748fc
-    - name: TestDummy1_Frame_6
+        x: 23
+        y: 1
+        width: 37
+        height: 63
+      spriteId: 008f4728de32b664e8a2ff39b7b00a20
+    - name: hauntingBladeSlash_Frame_6
       frameIndex: 6
       cellRect:
-        x: 15
-        y: 15
-        width: 30
-        height: 33
-      spriteId: 8b0eea85494057946834d8da4360a148
+        x: -5
+        y: 0
+        width: 69
+        height: 48
+      spriteId: b1e5c91c72b361446ae6f071f5e0587e
+    - name: hauntingBladeSlash_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: -5
+        y: 0
+        width: 69
+        height: 48
+      spriteId: 8d3cb11f76e688c4ea1b1d459c6d5475
+    - name: hauntingBladeSlash_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 0
+        y: 0
+        width: 64
+        height: 35
+      spriteId: 0c4bc73cfb43c3247a8e21c20e793e89
     linkedCells: []
     parentIndex: -1
   platformSettings:

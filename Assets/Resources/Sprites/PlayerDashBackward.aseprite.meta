@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d4de34cb011c5cb45a543fcf9c03433a
+guid: bc5844a8c7011ed438aeddd4d4b9f57b
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -35,7 +35,7 @@ ScriptedImporter:
     spriteMeshType: 1
     alignment: 0
     spritePivot: {x: 0.5, y: 0.5}
-    spritePixelsToUnits: 100
+    spritePixelsToUnits: 16
     spriteBorder: {x: 0, y: 0, z: 0, w: 0}
     spriteGenerateFallbackPhysicsShape: 0
     generateCubemap: 6
@@ -95,7 +95,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638689707553680928
+  platformSettingsDirtyTick: 638749777221525962
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -119,18 +119,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: black background
+  - name: PlayerDashBackward_Frame_0
     originalName: 
-    pivot: {x: 0.5, y: 0}
+    pivot: {x: 0.39130434, y: -0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 1920
-      height: 1080
-    spriteID: 9e708899af7345044814861a3341f699
+      width: 23
+      height: 22
+    spriteID: 7d82dd689fce9df43a3e49870a69ff64
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -139,23 +139,51 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+  - name: PlayerDashBackward_Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: -0.72727275}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 34
+      width: 18
+      height: 22
+    spriteID: 53626f68a418c9a458441d44a47e9b72
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 34}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1026668539
-    name: black background
+    guid: -846370946
+    name: PlayerDashBackward
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: black background
+    - name: PlayerDashBackward_Frame_0
       frameIndex: 0
       cellRect:
-        x: 0
-        y: 0
-        width: 1920
-        height: 1080
-      spriteId: 9e708899af7345044814861a3341f699
+        x: 23
+        y: 16
+        width: 23
+        height: 22
+      spriteId: 7d82dd689fce9df43a3e49870a69ff64
+    - name: PlayerDashBackward_Frame_1
+      frameIndex: 1
+      cellRect:
+        x: 23
+        y: 16
+        width: 18
+        height: 22
+      spriteId: 53626f68a418c9a458441d44a47e9b72
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -197,4 +225,4 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 1920, y: 1080}
+  canvasSize: {x: 64, y: 64}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.LowLevel;
+using UnityEngine.AI;
 
 public abstract class EnemyClass : MonoBehaviour
 {
@@ -13,16 +14,19 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected float maxHealth;
     protected float currentHealth;
     [SerializeField] protected float damage;
-    [SerializeField] protected float attackSpeed;
-    [SerializeField] protected float knockbackForce;
-    [SerializeField] protected float stunDuration;
-    [SerializeField] protected float movementSpeed;   
-    [SerializeField] protected LayerMask detectableLayerMask;
-    [SerializeField] protected Vector2 parryBoxSize;
-    [SerializeField] protected Vector2 visionBoxSize;
-    [SerializeField] protected Vector2 detectionBoxSize;
-    [SerializeField] protected Vector2 attackBoxSize;
-    protected Collider2D attackBox;
+    [SerializeField] protected float speedPerTick;
+    [SerializeField] protected Vector2 parryArea;
+    [SerializeField] protected Vector2 visionArea;
+    [SerializeField] protected float effectiveRangeRadius;
+    [SerializeField] protected Vector2 detectableArea;
+    [SerializeField] protected LayerMask playerLayer;
+    protected Collider2D parryCollider;
+    protected Collider2D visionCollider;
+    protected Collider2D effectiveRangeCollider;
+    protected Collider2D detectableCollider;
+    protected Collider2D obstacleFrontCollider;
+    protected Collider2D obstacleBackCollider;
+    protected Transform target;
 
     [Header("---Cooldowns---")]
     [SerializeField] protected Cooldown attackCooldown;
@@ -30,118 +34,116 @@ public abstract class EnemyClass : MonoBehaviour
 
     //Component References
     [Header("---Component References---")]
-    [SerializeField] protected Transform attackBoxTransform;
-    [SerializeField] protected Transform attackRangeBoxTransform;
-    [SerializeField] protected Transform parryBoxTransform;
+    [SerializeField] protected Transform attackRangeTransform;
+    [SerializeField] protected Transform parryAreaTransform;
+    [SerializeField] protected Transform visionAreaTransform;
+    [SerializeField] protected Transform effectiveRangeTransform;
+    [SerializeField] protected Transform detectionAreaTransform;
     [SerializeField] protected Transform playerTransform;
-    [SerializeField] protected Transform visionBoxTransform;
-    [SerializeField] protected Transform detectionBoxTransform;
-    [SerializeField] protected LayerMask playerLayer;
-    [SerializeField] protected Collider2D neutralAttackCollider;
 
+    [SerializeField] protected Rigidbody2D enemyRigidBody;
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
     [SerializeField] protected PlayerStats playerStats;
 
+
+    
     //Bools
     protected bool playerDetected;
-    protected bool canAttack;
     protected bool parriedByPlayer;
-
-    //Others
-    protected GameObject target;
+    protected bool canAttack;
+    protected bool canParry;
+    protected bool isStaggered;
+    protected bool isNearPlayer;
 
     public float Health { get { return currentHealth; } set { currentHealth = value; } }
     public float Damage { get { return damage; } set { damage = value; } }
-    public float AttackSpeed { get { return attackSpeed; } set { attackSpeed = value; } }
-    public float KnockbackForce { get { return knockbackForce; } set { knockbackForce = value; } }
-    public float StunDuration { get { return stunDuration; } set { stunDuration = value; } }
-    public float MovementSpeed { get { return movementSpeed; } set { attackSpeed = value; } }
 
     protected void Start()
     {
         currentHealth = maxHealth;
-
-        playerMovement = FindObjectOfType<PlayerMovement>();
-        playerCombat = FindObjectOfType<PlayerCombat>();
-        playerStats = FindObjectOfType<PlayerStats>();
     }
 
     protected virtual void Update()
     {
-        EnemyMoveset();
-        AggroPlayer();
+        VisionCheck();
+        DetectionCheck();
+        EffectiveRangeCheck();
 
-        PlayerDetection();
+        EnemyMoveset();
+        EnemyState();
+        AggroPlayer();
     }
 
-    //-------------
+    //===========================Collision Check===========================
+    protected virtual void VisionCheck()
+    {
+        visionCollider = Physics2D.OverlapBox(visionAreaTransform.position, visionArea, 0, playerLayer);
+    }
+
+    protected virtual void DetectionCheck()
+    {
+        detectableCollider = Physics2D.OverlapBox(detectionAreaTransform.position, detectableArea, 0, playerLayer);
+    }
+
+    protected virtual void ParryCheck()
+    {
+        parryCollider = Physics2D.OverlapBox(parryAreaTransform.position, parryArea, 0, playerLayer);
+
+        if (parryCollider == true)
+        {
+            canParry = true;
+        }
+        else
+        {
+            canParry = false;
+        }
+    }
+
+    protected virtual void EffectiveRangeCheck()
+    {
+        effectiveRangeCollider = Physics2D.OverlapCircle(effectiveRangeTransform.position, effectiveRangeRadius, playerLayer);
+
+        if (effectiveRangeCollider)
+        {
+            isNearPlayer = true;
+            Debug.Log("Effective range");
+        }
+        else
+        {
+            isNearPlayer = false;
+        }
+    }
+
+    protected virtual void FrontCollisionCheck()
+    {
+
+    }
+
+    protected virtual void BackCollisionCheck()
+    {
+
+    }
+
+    //===========================================================================
     protected virtual void EnemyMoveset()
     {
-        if (playerDetected != true)
+        //Different for all
+    }
+
+    protected virtual void EnemyMovement()
+    {
+        if (canAttack == true)
             return;
 
-        //Move 1: Basic Swing
-        if (attackCooldown.CurrentProgress is Cooldown.Progress.Ready)
-        {
-            attackBox = Physics2D.OverlapBox(attackBoxTransform.position, attackBoxSize, 0, playerLayer);
-        }
+        
     }
 
     protected virtual void AggroPlayer()
     {
-        if (target == null)
-            return;
-
-        Debug.Log("Moving to player");
-    }
-
-    //---Effects---
-
-    //---States---
-    protected virtual void GuardUpState()
-    {
-
-    }
-
-    protected virtual void Staggered()
-    {
-        if (playerCombat.ParriedAttack)
+        if (visionCollider == true && detectableCollider == true)
         {
-            staggeredDuration.StartCooldown();
-        }
-
-        if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            staggeredDuration.ResetCooldown();
-        }
-    }
-
-    protected void TakeDamage()
-    {
-        currentHealth -= playerStats.PlayerCurrentDamage;
-
-        if (currentHealth <= 0)
-        {
-            Destroy(this.gameObject);
-        }
-    }
-
-    protected void DealDamage()
-    {
-        if (playerStats == null)
-            return;
-
-        playerStats.PlayerCurrentHealth -= damage;
-    }
-
-    //---Collision/Trigger Check---
-    protected void PlayerDetection()
-    {
-        //Detect player
-        if (Physics2D.OverlapBox(detectionBoxTransform.position, detectionBoxSize, 0, detectableLayerMask) && Physics2D.OverlapBox(visionBoxTransform.position, visionBoxSize, 0, detectableLayerMask))
-        {
-            target = GameObject.FindWithTag("Player");
+            target = visionCollider.transform;
             playerDetected = true;
             Debug.Log("Sees player");
         }
@@ -152,10 +154,65 @@ public abstract class EnemyClass : MonoBehaviour
         }
     }
 
+    protected virtual void EnemyState()
+    {
+        if (playerDetected == false)
+        {
+            canAttack = false;
+        }
+        else if (playerDetected == true)
+        {
+            if (isNearPlayer == true)
+            {
+                Debug.Log("Near");
+                canAttack = true;
+            }
+            else if (isNearPlayer == false)
+            {
+                Debug.Log("Not Near");
+                canAttack = false;
+            }
+        }
+    }
 
-    protected virtual void AnimationHandler()
+    protected virtual void GuardUpState()
     {
 
+    }
+
+    protected virtual void Staggered()
+    {
+        if (playerCombat.ParriedAttack)
+        {
+            isStaggered = true;
+            staggeredDuration.StartCooldown();
+        }
+
+        if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isStaggered = false;
+            staggeredDuration.ResetCooldown();
+        }
+    }
+
+    protected virtual void TakeDamage()
+    {
+        currentHealth -= playerStats.PlayerCurrentDamage;
+        Debug.Log("Took damage");
+
+        if (currentHealth <= 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    protected virtual void DealDamage()
+    {
+        if (playerStats == null)
+            return;
+
+        Debug.Log("Deal damage");
+        playerStats.PlayerCurrentHealth -= damage;
     }
 
     protected void OnCollisionEnter2D(Collision2D collision)
@@ -163,11 +220,16 @@ public abstract class EnemyClass : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             DealDamage();
+            Debug.Log("Collision");
         }
+    }
 
+    protected void OnTriggerEnter2D(Collider2D collision)
+    {
         if (collision.gameObject.CompareTag("PlayerWeapon"))
         {
             TakeDamage();
+            Debug.Log("Trigger collision");
         }
     }
 
@@ -175,17 +237,17 @@ public abstract class EnemyClass : MonoBehaviour
     {
         if (gizmoToggleOn != true)
             return;
-        //Attack box
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(attackBoxTransform.position, attackBoxSize);
         //Parry box
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(parryBoxTransform.position, parryBoxSize);
+        Gizmos.DrawWireCube(parryAreaTransform.position, parryArea);
         //Vision box
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(visionBoxTransform.position, visionBoxSize);
+        Gizmos.DrawWireCube(visionAreaTransform.position, visionArea);
+        //Parry box
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(effectiveRangeTransform.position, effectiveRangeRadius);
         //Detection zone
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(detectionBoxTransform.position, detectionBoxSize);
+        Gizmos.DrawWireCube(detectionAreaTransform.position, detectableArea);
     }
 }
