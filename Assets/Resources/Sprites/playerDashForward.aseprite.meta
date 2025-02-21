@@ -130,11 +130,7 @@ ScriptedImporter:
       y: 4
       width: 30
       height: 26
-<<<<<<< HEAD
-    spriteID: 4a3059315be450642aa064d7695c1bee
-=======
-    spriteID: e707e323877178e428d279c581222932
->>>>>>> adam
+    spriteID: 00c7ff30d0d8018418c4989074312811
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -154,11 +150,7 @@ ScriptedImporter:
       y: 38
       width: 42
       height: 13
-<<<<<<< HEAD
-    spriteID: ea86f9518c3a7ab4590cd1a0cb9f7301
-=======
-    spriteID: 65bd911f399cead49a316c20c934011a
->>>>>>> adam
+    spriteID: c22f2043d1e836d43a670008725ba872
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -183,11 +175,7 @@ ScriptedImporter:
         y: 16
         width: 30
         height: 26
-<<<<<<< HEAD
-      spriteId: 4a3059315be450642aa064d7695c1bee
-=======
-      spriteId: e707e323877178e428d279c581222932
->>>>>>> adam
+      spriteId: 00c7ff30d0d8018418c4989074312811
     - name: playerDashForward_Frame_1
       frameIndex: 1
       cellRect:
@@ -195,50 +183,10 @@ ScriptedImporter:
         y: 25
         width: 42
         height: 13
-<<<<<<< HEAD
-      spriteId: ea86f9518c3a7ab4590cd1a0cb9f7301
-=======
-      spriteId: 65bd911f399cead49a316c20c934011a
->>>>>>> adam
+      spriteId: c22f2043d1e836d43a670008725ba872
     linkedCells: []
     parentIndex: -1
-  platformSettings:
-  - name: DefaultTexturePlatform
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Standalone
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Server
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
+  platformSettings: []
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 64}
