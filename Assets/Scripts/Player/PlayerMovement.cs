@@ -79,7 +79,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected Collider2D mainCollider;
     [SerializeField] protected GameObject playerGraphic;
     [SerializeField] protected PlayerCombat playerCombat;
-    [SerializeField] protected PlayerInputTally playerInputTally;
 
     //Vectors
     protected Vector2 savedScale;
@@ -265,7 +264,7 @@ public class PlayerMovement : MonoBehaviour
             isFalling = false;
         }
 
-        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished && isGrappling == false) //Freeze player after dash for short duration for cleaner effect
+        if (dashDuration.CurrentProgress is Cooldown.Progress.Finished && keepGrappleMomentum == false && isGrappling == false) //Freeze player after dash for short duration for cleaner effect
         {
             playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 2, playerRigidbody.velocity.y);
         }
@@ -331,6 +330,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrappling = false;
             keepGrappleMomentum = true;
+            Debug.Log("Leaving grapple point");
         }
     }
 
@@ -420,7 +420,7 @@ public class PlayerMovement : MonoBehaviour
             //Jump when grounded or when coyote time is active and jump input is not pressed
             if (isGrounded == true || coyoteTime.CurrentProgress is Cooldown.Progress.InProgress && jumpInputPressed == false)
             {
-                if (playerInputTally.DownInputTally > 0) //Super Jump
+                if (isSubmerged == true) //Super Jump
                 {
                     Debug.Log("Super Jump");
                     playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, jumpPower * 1.3f);
@@ -687,6 +687,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void GrappleCheck()
     {
+        if (isDashingForward == true || isDashingBackward == true)
+            return;
+
         grappleOverlapCircle = Physics2D.OverlapCircle(grappleDetector.position, grappleRadius, grappleLayer);
         grappleInvalidCircle = Physics2D.OverlapCircle(grappleDetector.position, grappleInvalidRadius, grappleLayer);
 
@@ -724,9 +727,6 @@ public class PlayerMovement : MonoBehaviour
                 targetedGrapplePoint = grappleOverlapCircle.transform;
             }
 
-            if (isDashingForward == true || isDashingBackward == true)
-                return;
-
             if (Input.GetKey(KeyCode.L) && tooCloseToGrapplePoint == false) //Grapple when not too close to grapple point
             {
                 if (keepGrappleMomentum == false && isGrappling == false)
@@ -745,11 +745,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         //Y velocity power set to opposite direction of attack contact point
-        if (playerCombat.OverheadAttack == true)
+        if (playerCombat.AirOverheadAttack == true)
         {
             playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, -pogoPower);
         }
-        else if (playerCombat.LowAttack == true)
+        else if (playerCombat.AirLowAttack == true)
         {
             playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, pogoPower);
             Debug.Log("Pogo Up");

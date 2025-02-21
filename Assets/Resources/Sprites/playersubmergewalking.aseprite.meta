@@ -130,7 +130,11 @@ ScriptedImporter:
       y: 4
       width: 32
       height: 11
+<<<<<<< HEAD
     spriteID: 23e891a18f223e647b256e82d0ac92a3
+=======
+    spriteID: d382410475736f8428cdb5f22f067e6c
+>>>>>>> adam
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -150,7 +154,11 @@ ScriptedImporter:
       y: 23
       width: 30
       height: 10
+<<<<<<< HEAD
     spriteID: 160cbc50d0c09d6478c41930f44e5439
+=======
+    spriteID: d35e1bae5a3102e4f85d2b8fc6317f34
+>>>>>>> adam
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -175,7 +183,11 @@ ScriptedImporter:
         y: 12
         width: 32
         height: 11
+<<<<<<< HEAD
       spriteId: 23e891a18f223e647b256e82d0ac92a3
+=======
+      spriteId: d382410475736f8428cdb5f22f067e6c
+>>>>>>> adam
     - name: playersubmergewalking_Frame_1
       frameIndex: 1
       cellRect:
@@ -183,7 +195,11 @@ ScriptedImporter:
         y: 12
         width: 30
         height: 10
+<<<<<<< HEAD
       spriteId: 160cbc50d0c09d6478c41930f44e5439
+=======
+      spriteId: d35e1bae5a3102e4f85d2b8fc6317f34
+>>>>>>> adam
     linkedCells: []
     parentIndex: -1
   platformSettings:

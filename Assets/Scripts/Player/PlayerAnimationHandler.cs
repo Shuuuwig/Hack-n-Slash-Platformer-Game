@@ -57,6 +57,16 @@ public class PlayerAnimationHandler : MonoBehaviour
             }
         }
 
+        else if (playerMovement.IsClimbingWall)
+        {
+            ChangeAnimation("playerWallClimb");
+        }
+
+        else if (playerCombat.SubmergedNeutralAttack == true)
+        {
+            ChangeAnimation("playerSubmergeNeutralAttack");
+        }
+
         else if (playerMovement.IsSubmerged)
         {
             if (playerMovement.IsMovingForward)
@@ -121,14 +131,15 @@ public class PlayerAnimationHandler : MonoBehaviour
             Debug.Log("Final Combo");
         }
 
+        else if (playerCombat.Parrying)
+        {
+            ChangeAnimation("playerParryNeutral");
+        }
+
         else
         {
             ChangeAnimation("playerIdle");
         }
-        
-
-
-
     }
 
     private void ChangeAnimation(string animation)

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3c9a0a89ae12d32468b387fcff62af08
+guid: 819ac5b4f5acc0c4d8630844f774083d
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -95,7 +95,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638730053760293640
+  platformSettingsDirtyTick: 638749790137975714
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -119,22 +119,38 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: playerDashForward_Frame_0
+  - name: playerWallCling_Frame_0
     originalName: 
-    pivot: {x: 0.6, y: -0.61538464}
+    pivot: {x: 0.3888889, y: -0.54838705}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 4
+      width: 18
+      height: 31
+    spriteID: 76a0697da0fda7e489dd2900b8716e9c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 31, y: 4}
+  - name: playerWallCling_Frame_1
+    originalName: 
+    pivot: {x: 0.36842105, y: -0.516129}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 30
-      height: 26
-<<<<<<< HEAD
-    spriteID: 4a3059315be450642aa064d7695c1bee
-=======
-    spriteID: e707e323877178e428d279c581222932
->>>>>>> adam
+      width: 19
+      height: 31
+    spriteID: 728f02c878e73104f927711e8761bdf0
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -143,63 +159,31 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: playerDashForward_Frame_1
-    originalName: 
-    pivot: {x: 0.61904764, y: -1.923077}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 38
-      width: 42
-      height: 13
-<<<<<<< HEAD
-    spriteID: ea86f9518c3a7ab4590cd1a0cb9f7301
-=======
-    spriteID: 65bd911f399cead49a316c20c934011a
->>>>>>> adam
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 38}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 154516972
-    name: playerDashForward
+    guid: 1419878216
+    name: playerWallCling
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: playerDashForward_Frame_0
+    - name: playerWallCling_Frame_0
       frameIndex: 0
       cellRect:
-        x: 14
-        y: 16
-        width: 30
-        height: 26
-<<<<<<< HEAD
-      spriteId: 4a3059315be450642aa064d7695c1bee
-=======
-      spriteId: e707e323877178e428d279c581222932
->>>>>>> adam
-    - name: playerDashForward_Frame_1
+        x: 25
+        y: 17
+        width: 18
+        height: 31
+      spriteId: 76a0697da0fda7e489dd2900b8716e9c
+    - name: playerWallCling_Frame_1
       frameIndex: 1
       cellRect:
-        x: 6
-        y: 25
-        width: 42
-        height: 13
-<<<<<<< HEAD
-      spriteId: ea86f9518c3a7ab4590cd1a0cb9f7301
-=======
-      spriteId: 65bd911f399cead49a316c20c934011a
->>>>>>> adam
+        x: 25
+        y: 16
+        width: 19
+        height: 31
+      spriteId: 728f02c878e73104f927711e8761bdf0
     linkedCells: []
     parentIndex: -1
   platformSettings:
