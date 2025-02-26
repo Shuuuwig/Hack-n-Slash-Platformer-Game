@@ -234,7 +234,7 @@ public class PlayerCombat : MonoBehaviour
     //Combat Effects
     private void HitStop()
     {
-        if (hitEnemy == false)
+        if (hitEnemy == false && parriedAttack == false)
             return;
 
         if (hitstopDuration.CurrentProgress is Cooldown.Progress.Ready)
@@ -248,7 +248,6 @@ public class PlayerCombat : MonoBehaviour
             Time.timeScale = 1;
             hitstopDuration.ResetCooldown();
             Debug.Log("hitstop ended");
-            hitEnemy = false;
         }
     }
 

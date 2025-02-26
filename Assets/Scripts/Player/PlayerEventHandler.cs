@@ -19,4 +19,23 @@ public class PlayerEventHandler : MonoBehaviour
     {
         
     }
+
+    private void NeutralSlash()
+    {
+        if (playerCombat.NeutralAttack == true)
+        {
+            if (playerCombat.ComboTally == 1)
+            {
+                
+            }
+            else if (playerCombat.ComboTally == 2)
+            {
+
+            }
+            else if (playerCombat.ComboTally == 3)
+            {
+
+            }
+        }
+    }
 }

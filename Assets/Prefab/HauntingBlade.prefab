@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2875168049813026288}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AttackCollider
   m_TagString: EnemyWeapon
   m_Icon: {fileID: 0}
@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 4490775375371808176}
   - component: {fileID: 2784678874733593636}
   - component: {fileID: 6633971590315602079}
+  - component: {fileID: 9042429634744022650}
   m_Layer: 0
   m_Name: Graphic
   m_TagString: Enemy
@@ -231,6 +232,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &9042429634744022650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5195241652046076150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee22f6b99595d7b4884750cd33fb36d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HauntingBlade: {fileID: 5554838046131100537}
 --- !u!1 &6172527547045874523
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4815490768560383240}
   - component: {fileID: 1241164080599127693}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Slash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -338,15 +352,15 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.7537241, y: 2.0248294}
-      - {x: 0.24070454, y: 2.0140672}
-      - {x: 0.7661152, y: 1.4790769}
+    - - {x: -0.47192, y: 1.4259953}
+      - {x: 0.3463812, y: 1.3800076}
+      - {x: 0.6956644, y: 1.1972727}
       - {x: 0.516799, y: 1.0166427}
       - {x: -0.34345156, y: 0.9763472}
       - {x: -0.3242659, y: -1.0006171}
-      - {x: -1.3709124, y: -0.86652064}
-      - {x: -1.7900434, y: 0.0069293976}
-      - {x: -1.615232, y: 1.4265343}
+      - {x: -1.3877815, y: -1.0007479}
+      - {x: -1.455401, y: 0.0069293976}
+      - {x: -1.0340109, y: 1.2151811}
   m_UseDelaunayMesh: 0
 --- !u!1 &8532360989536812288
 GameObject:
@@ -552,4 +566,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 5

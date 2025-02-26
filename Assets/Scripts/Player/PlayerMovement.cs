@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
     //Vectors
     protected Vector2 savedScale;
     protected Vector2 inputDirection;
+    protected Vector2 knockbackDirection;
     protected Vector2 storedPlayerMomentum;
 
     //Float
@@ -159,9 +160,8 @@ public class PlayerMovement : MonoBehaviour
         Pogo();
         Grapple();
 
-        //Rigidbody Manipulation
         RigidbodyManipulator();
-
+        KnockedBackState();
         //State Check
         //CheckState();
         
@@ -198,14 +198,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isClimbingWall == true || isGrappling == true)
             return;
-
+        
+        //Prevent movement when attacking
         if (playerCombat.NeutralAttack == true)
         {
             inputDirection = Vector2.zero;
             return;
         }
             
-
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
@@ -229,17 +229,38 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //==================== PLAYER KNOCKEDBACK ====================//
-    //private void KnockedBackState()
-    //{
-    //    isKnockedBack = true; //Change knockedback bool to true
-    //    Vector2 knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, 1); //Determine knockback direction by comparing player and enemy position
-    //    playerRigidbody.velocity = knockbackDirection * knockedbackForce; //Multiply knockback with knockback force
-    //    storedPlayerMomentum = playerRigidbody.velocity;
+    private void KnockedBackState()
+    {
+        if (isKnockedBack == false)
+            return;
 
-    //    knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            isKnockedBack = true;
+            knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+            //Determine knockback direction by comparing player and enemy position
+            knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, 0); 
+        }
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.InProgress)
+        {
+            if (knockbackDirection.x > 0)
+            {
+                playerRigidbody.velocity = new Vector2(knockedbackForce, 0); 
+            }
+            else if (knockbackDirection.x < 0)
+            {
+                playerRigidbody.velocity = new Vector2(-knockedbackForce, 0);
+            }
+            storedPlayerMomentum = playerRigidbody.velocity;
+        }
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isKnockedBack = false;
+            knockedbackTimer.ResetCooldown();
+        }
 
-    //    Debug.Log("Knocked Back");
-    //}
+        Debug.Log("Knocked Back");
+    }
 
     //==================== RIGIDBODY MANIPULATOR ====================//
     private void RigidbodyManipulator()
@@ -320,7 +341,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             enemyCollisionPoint = collision.transform.position;
-            //KnockedBackState();
+            isKnockedBack = true;
         }
     }
 
