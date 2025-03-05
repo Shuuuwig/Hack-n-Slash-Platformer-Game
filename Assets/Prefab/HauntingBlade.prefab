@@ -470,7 +470,7 @@ MonoBehaviour:
   effectiveRangeTransform: {fileID: 4684527654925289129}
   detectionAreaTransform: {fileID: 489742310497529334}
   playerTransform: {fileID: 0}
-  enemyRigidBody: {fileID: 0}
+  enemyRigidBody: {fileID: 6418422075384145247}
   playerMovement: {fileID: 0}
   playerCombat: {fileID: 0}
   playerStats: {fileID: 0}

@@ -14,28 +14,41 @@ public class PlayerEventHandler : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
 
-    private void NeutralSlash()
+    private void NeutralAttack()
     {
         if (playerCombat.NeutralAttack == true)
         {
+            playerCombat.NeutralAttackCollider1.enabled = false;
+            playerCombat.NeutralAttackCollider2.enabled = false;
+            playerCombat.NeutralAttackCollider3.enabled = false;
+
             if (playerCombat.ComboTally == 1)
             {
-                
+                playerCombat.NeutralAttackCollider1.enabled = true;
             }
             else if (playerCombat.ComboTally == 2)
             {
-
+                playerCombat.NeutralAttackCollider2.enabled = true;
             }
             else if (playerCombat.ComboTally == 3)
             {
-
+                playerCombat.NeutralAttackCollider3.enabled = true;
             }
         }
+    }
+
+    private void SubmergedAttack()
+    {
+
+    }
+
+    private void AirAttack()
+    {
+
     }
 }

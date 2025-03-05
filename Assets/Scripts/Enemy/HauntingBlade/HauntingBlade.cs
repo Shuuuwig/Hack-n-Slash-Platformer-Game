@@ -40,4 +40,9 @@ public class HauntingBlade : EnemyClass
             slashAttackCooldown.ResetCooldown();
         }
     }
+
+    protected override void EnemyMovement()
+    {
+        enemyRigidBody.velocity = new Vector2((target.position.x - transform.position.x) * speed, 0);
+    }
 }

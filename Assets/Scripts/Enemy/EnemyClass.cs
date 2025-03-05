@@ -14,7 +14,7 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected float maxHealth;
     protected float currentHealth;
     [SerializeField] protected float damage;
-    [SerializeField] protected float speedPerTick;
+    [SerializeField] protected float speed;
     [SerializeField] protected Vector2 parryArea;
     [SerializeField] protected Vector2 visionArea;
     [SerializeField] protected float effectiveRangeRadius;
@@ -39,14 +39,13 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected Transform visionAreaTransform;
     [SerializeField] protected Transform effectiveRangeTransform;
     [SerializeField] protected Transform detectionAreaTransform;
-    [SerializeField] protected Transform playerTransform;
-
     [SerializeField] protected Rigidbody2D enemyRigidBody;
+
+    //Player References
+    [SerializeField] protected Transform playerTransform;
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
     [SerializeField] protected PlayerStats playerStats;
-
-
     
     //Bools
     protected bool playerDetected;
@@ -62,6 +61,15 @@ public abstract class EnemyClass : MonoBehaviour
     protected void Start()
     {
         currentHealth = maxHealth;
+        GameObject Player = GameObject.FindWithTag("Player");
+        if (Player == null)
+        {
+            Debug.Log("NO PLAYER FOUND");
+        }
+        playerMovement = Player.GetComponentInParent<PlayerMovement>();
+        playerCombat = Player.GetComponentInParent<PlayerCombat>();
+        playerStats = Player.GetComponentInParent<PlayerStats>();
+        playerTransform = Player.transform;
     }
 
     protected virtual void Update()
@@ -144,6 +152,7 @@ public abstract class EnemyClass : MonoBehaviour
         if (visionCollider == true && detectableCollider == true)
         {
             target = visionCollider.transform;
+            Debug.Log(target);
             playerDetected = true;
             Debug.Log("Sees player");
         }

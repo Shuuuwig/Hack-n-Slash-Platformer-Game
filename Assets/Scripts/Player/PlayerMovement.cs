@@ -44,34 +44,38 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Cooldown knockedbackTimer;
     private Vector2 enemyCollisionPoint;
 
+    //Collision Check
     [Header("===Collision/Trigger Checks Configuration===")]
     [Header("---Ground Check---")]
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
     [SerializeField] private LayerMask groundLayer;
-    RaycastHit2D groundBoxcast;
+    private RaycastHit2D groundBoxcast;
     [Header("---Submerge Overhead Check---")]
     [SerializeField] private Transform submergeOverheadDetector;
     [SerializeField] private Vector2 boxSizeSubmergeOverhead;
     [SerializeField] private LayerMask submergeOverheadDetectableLayer;
-    Collider2D submergeOverheadOverlapBox;
+    private Collider2D submergeOverheadOverlapBox;
     [Header("---Wall Check---")]
-    [SerializeField] private Transform wallDetector;
-    [SerializeField] private Vector2 boxSizeWall;
+    [SerializeField] private Transform wallCheckFront;
+    [SerializeField] private Transform wallCheckBack;
+    [SerializeField] private Vector2 boxSizeWallCheckFront;
+    [SerializeField] private Vector2 boxSizeWallCheckBack;
     [SerializeField] private LayerMask wallLayer;
-    Collider2D wallOverlapBox;
+    private Collider2D wallOverlapBoxFront;
+    private Collider2D wallOverlapBoxBack;
     [Header("---Grapple Check---")]
     [SerializeField] private Transform grappleDetector;
     [SerializeField] private float grappleRadius;
+    [SerializeField] private float grappleInvalidRadius;
     [SerializeField] private LayerMask grappleLayer;
     [SerializeField] private LayerMask grappleObstacleLayers;
-    [SerializeField] private float grappleInvalidRadius;
+    private float grappleRaycastDistance;
+    private Vector2 grappleRaycastDirection;
+    private RaycastHit2D grappleRaycast;
+    private Transform targetedGrapplePoint;
     private Collider2D grappleOverlapCircle;
     private Collider2D grappleInvalidCircle;
-    private Transform targetedGrapplePoint;
-    private RaycastHit2D grappleRaycast;
-    private Vector2 grappleRaycastDirection;
-    private float grappleRaycastDistance;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -111,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isKnockedBack;
     protected bool isGrounded;
    
+    //Public References
     public bool IsFacingRight {  get { return isFacingRight; } }
     public bool IsMovingForward { get { return isMovingForward; } }
     public bool IsMovingBackward { get { return isMovingBackward; } }
@@ -124,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsSubmerged { get { return isSubmerged; } }
     public bool IsGrappling { get { return isGrappling; } }
     public bool IsGrounded { get { return isGrounded; } }
+
     public Vector2 InputDirection { get { return inputDirection; } }
 
 
@@ -180,12 +186,13 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         //Makes the Check Box Visible
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround); //Ground wire cube
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(submergeOverheadDetector.position, boxSizeSubmergeOverhead); //Submerge Overhead wire cube
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
+        Gizmos.DrawWireCube(wallCheckFront.position, boxSizeWallCheckFront); //Wall Check wire cube
+        Gizmos.DrawWireCube(wallCheckBack.position, boxSizeWallCheckBack);
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(grappleDetector.position, grappleRadius); //Grapple wire sphere
         Gizmos.DrawRay(grappleDetector.position, grappleRaycastDirection); //Grapple ray
@@ -335,7 +342,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //==================== GENERAL PLAYER COLLISION CHECK ====================//
+    //==================== GENERAL PLAYER COLLISION CHECKS ====================//
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -638,9 +645,10 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded == true || isClimbingWall == true)
             return;
 
-        wallOverlapBox = Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer);
+        wallOverlapBoxFront = Physics2D.OverlapBox(wallCheckFront.position, boxSizeWallCheckFront, 0, wallLayer);
+        wallOverlapBoxBack = Physics2D.OverlapBox(wallCheckBack.position, boxSizeWallCheckBack, 0, wallLayer);
 
-        if (wallOverlapBox)
+        if (wallOverlapBoxFront)
         {
             //Requires button input to climb
             if (Input.GetKeyDown(KeyCode.U))
