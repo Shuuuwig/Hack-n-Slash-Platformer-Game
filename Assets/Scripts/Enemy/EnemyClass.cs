@@ -79,6 +79,7 @@ public abstract class EnemyClass : MonoBehaviour
         EffectiveRangeCheck();
 
         EnemyMoveset();
+        EnemyMovement();
         EnemyState();
         AggroPlayer();
     }
@@ -141,7 +142,7 @@ public abstract class EnemyClass : MonoBehaviour
 
     protected virtual void EnemyMovement()
     {
-        if (canAttack == true)
+        if (canAttack == true || playerDetected == false)
             return;
 
         

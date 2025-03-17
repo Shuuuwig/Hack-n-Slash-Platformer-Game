@@ -43,6 +43,8 @@ public class HauntingBlade : EnemyClass
 
     protected override void EnemyMovement()
     {
+        base.EnemyMovement();
+
         enemyRigidBody.velocity = new Vector2((target.position.x - transform.position.x) * speed, 0);
     }
 }
