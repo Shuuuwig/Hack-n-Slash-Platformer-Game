@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &281778346942446956
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2784678874733593636, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 6794369513415034282, guid: f00951fab6881e744bae591ed72399db, type: 3}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.109459
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.9928753
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.056934256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9042429634744022650, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: HauntingBlade
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Name
+      value: HauntingBlade (1) Variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+    - {fileID: 5228183762769000452, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 2159584047056437594}
+  m_SourcePrefab: {fileID: 100100000, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+--- !u!1 &9041174191427484913 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2159584047056437594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9041174191427484913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eaeb1c1f4a24b442b804692cc47fdca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gizmoToggleOn: 1
+  maxHealth: 0
+  damage: 0
+  speed: 0
+  parryArea: {x: 0, y: 0}
+  visionArea: {x: 0, y: 0}
+  effectiveRangeRadius: 0
+  detectableArea: {x: 0, y: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  attackCooldown:
+    CurrentProgress: 0
+    Duration: 0
+  staggeredDuration:
+    CurrentProgress: 0
+    Duration: 0
+  attackRangeTransform: {fileID: 0}
+  parryAreaTransform: {fileID: 0}
+  visionAreaTransform: {fileID: 0}
+  effectiveRangeTransform: {fileID: 0}
+  detectionAreaTransform: {fileID: 0}
+  enemyRigidBody: {fileID: 0}
+  playerTransform: {fileID: 0}
+  playerMovement: {fileID: 0}
+  playerCombat: {fileID: 0}
+  playerStats: {fileID: 0}
+  chompCollider: {fileID: 0}
+  chompAttackDuration:
+    CurrentProgress: 0
+    Duration: 0
+  chompAttackCooldown:
+    CurrentProgress: 0
+    Duration: 0

@@ -46,5 +46,6 @@ public class HauntingBlade : EnemyClass
         base.EnemyMovement();
 
         enemyRigidBody.velocity = new Vector2((target.position.x - transform.position.x) * speed, 0);
+        Debug.Log("Moving");
     }
 }
