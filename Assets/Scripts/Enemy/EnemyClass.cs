@@ -39,14 +39,17 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected Transform visionAreaTransform;
     [SerializeField] protected Transform effectiveRangeTransform;
     [SerializeField] protected Transform detectionAreaTransform;
-    [SerializeField] protected Rigidbody2D enemyRigidBody;
+    [SerializeField] protected Rigidbody2D enemyRigidbody;
 
     //Player References
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
     [SerializeField] protected PlayerStats playerStats;
-    
+
+    //
+    protected Vector2 movementDirection;
+
     //Bools
     protected bool playerDetected;
     protected bool parriedByPlayer;
@@ -142,10 +145,20 @@ public abstract class EnemyClass : MonoBehaviour
 
     protected virtual void EnemyMovement()
     {
-        if (canAttack == true || playerDetected == false)
+        if (playerDetected == false || canAttack == true)
             return;
 
-        
+        movementDirection = new Vector2(transform.position.x - playerTransform.position.x, 0);
+        Debug.Log(movementDirection.x);
+
+        if (movementDirection.x > 0)
+        {
+            enemyRigidbody.velocity = new Vector2(-speed, enemyRigidbody.velocity.y);
+        }
+        else if (movementDirection.x < 0)
+        {
+            enemyRigidbody.velocity = new Vector2(speed, enemyRigidbody.velocity.y);
+        }
     }
 
     protected virtual void AggroPlayer()

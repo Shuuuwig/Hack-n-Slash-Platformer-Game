@@ -433,6 +433,11 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!50 &376189088 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6418422075384145247, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 1831182910}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &655237158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,6 +449,18 @@ PrefabInstance:
     - target: {fileID: 1115979995829133763, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
       propertyPath: m_Name
       value: PlayerCharacter
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: wallCheck
+      value: 
+      objectReference: {fileID: 908432234}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: boxSizeWallCheck.x
+      value: 0.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 7698823367271624722, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+      propertyPath: boxSizeWallCheck.y
+      value: 1.33
       objectReference: {fileID: 0}
     - target: {fileID: 7926815632849815710, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5826,6 +5843,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee710b6867d853843b3e74b8da6982a9, type: 3}
+--- !u!4 &908432234 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8595561290232331772, guid: 4aca4c979b511394ab201cacc111db2f, type: 3}
+  m_PrefabInstance: {fileID: 655237158}
+  m_PrefabAsset: {fileID: 0}
 --- !u!223 &967671877 stripped
 Canvas:
   m_CorrespondingSourceObject: {fileID: 6735844650910056655, guid: 909bdccf44e0fb74eba99b0e719b6688, type: 3}
@@ -25614,7 +25636,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.393554
+      value: 8.09
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.y
@@ -25653,6 +25675,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: speed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: rigidbody
+      value: 
+      objectReference: {fileID: 376189088}
+    - target: {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 1551195116}
@@ -25661,6 +25691,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1551195118}
     - target: {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: enemyRigidbody
+      value: 
+      objectReference: {fileID: 376189088}
+    - target: {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: playerMovement
       value: 
       objectReference: {fileID: 1551195119}
@@ -25668,6 +25702,10 @@ PrefabInstance:
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 1551195114}
+    - target: {fileID: 6418422075384145247, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Name
       value: HauntingBlade

@@ -8,17 +8,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Size.y
+      value: 0.9539136
+      objectReference: {fileID: 0}
+    - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.24346974
+      objectReference: {fileID: 0}
     - target: {fileID: 2784678874733593636, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 6794369513415034282, guid: f00951fab6881e744bae591ed72399db, type: 3}
+    - target: {fileID: 4490775375371808176, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.109459
+      value: 2.26
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.9928753
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.z
@@ -58,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Name
-      value: HauntingBlade (1) Variant
+      value: Chompy
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5554838046131100537, guid: f32c335fe43791545815e6dfd385b936, type: 3}

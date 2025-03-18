@@ -57,10 +57,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask submergeOverheadDetectableLayer;
     private Collider2D submergeOverheadOverlapBox;
     [Header("---Wall Check---")]
-    [SerializeField] private Transform wallCheckFront;
-    [SerializeField] private Transform wallCheckBack;
-    [SerializeField] private Vector2 boxSizeWallCheckFront;
-    [SerializeField] private Vector2 boxSizeWallCheckBack;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private Vector2 boxSizeWallCheck;
     [SerializeField] private LayerMask wallLayer;
     private Collider2D wallOverlapBoxFront;
     private Collider2D wallOverlapBoxBack;
@@ -150,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
         HandleInput();
 
         //Overlap Checks
-        WallCheck();
+        //WallCheck();
         GroundCheck();
         SubmergeOverheadCheck();
         GrappleCheck();
@@ -162,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
         //Special Movement
         Submerge();
         Dash();
-        WallJump();
+        //WallJump();
         Pogo();
         Grapple();
 
@@ -191,8 +189,7 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(submergeOverheadDetector.position, boxSizeSubmergeOverhead); //Submerge Overhead wire cube
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(wallCheckFront.position, boxSizeWallCheckFront); //Wall Check wire cube
-        Gizmos.DrawWireCube(wallCheckBack.position, boxSizeWallCheckBack);
+        Gizmos.DrawWireCube(wallCheck.position, boxSizeWallCheck); //Wall Check wire cube
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(grappleDetector.position, grappleRadius); //Grapple wire sphere
         Gizmos.DrawRay(grappleDetector.position, grappleRaycastDirection); //Grapple ray
@@ -597,78 +594,77 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //==================== WALL CLING ====================//
-    private void WallJump()
-    {
-        if (isClimbingWall == true)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("Wall Jump enabled");
-                isClimbingWall = false;
-                isJumpingOffWall = true;
+    //private void WallJump()
+    //{
+    //    if (isClimbingWall == true)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.Space))
+    //        {
+    //            Debug.Log("Wall Jump enabled");
+    //            isClimbingWall = false;
+    //            isJumpingOffWall = true;
 
-                //Unfreeze position
-                playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                playerRigidbody.gravityScale = defaultGravityScale;
+    //            //Unfreeze position
+    //            playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+    //            playerRigidbody.gravityScale = defaultGravityScale;
 
-                wallJumpAppliedForceDuration.StartCooldown();
-            }
-        }
-        else if (isJumpingOffWall == true && wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.InProgress)
-        {
-            if (transform.localScale.x < 0) //Facing left
-            {
-                Debug.Log("Jumped to left");
-                playerRigidbody.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
-            }
-            if (transform.localScale.x > 0) //Facing right
-            {
-                Debug.Log("Jumped to right");
-                playerRigidbody.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
-            }
-            storedPlayerMomentum = playerRigidbody.velocity;
-        }
-        else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, playerRigidbody.velocity.y);
-            isJumpingOffWall = false;
+    //            wallJumpAppliedForceDuration.StartCooldown();
+    //        }
+    //    }
+    //    else if (isJumpingOffWall == true && wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.InProgress)
+    //    {
+    //        if (transform.localScale.x < 0) //Facing left
+    //        {
+    //            Debug.Log("Jumped to left");
+    //            playerRigidbody.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
+    //        }
+    //        if (transform.localScale.x > 0) //Facing right
+    //        {
+    //            Debug.Log("Jumped to right");
+    //            playerRigidbody.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
+    //        }
+    //        storedPlayerMomentum = playerRigidbody.velocity;
+    //    }
+    //    else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
+    //    {
+    //        playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, playerRigidbody.velocity.y);
+    //        isJumpingOffWall = false;
 
-            if (isGrounded == true || isClimbingWall == true)
-            {
-                wallJumpAppliedForceDuration.ResetCooldown();
-            }
-        }
-    }
+    //        if (isGrounded == true || isClimbingWall == true)
+    //        {
+    //            wallJumpAppliedForceDuration.ResetCooldown();
+    //        }
+    //    }
+    //}
 
-    private void WallCheck()
-    {
-        if (isGrounded == true || isClimbingWall == true)
-            return;
+    //private void WallCheck()
+    //{
+    //    if (isGrounded == true || isClimbingWall == true)
+    //        return;
 
-        wallOverlapBoxFront = Physics2D.OverlapBox(wallCheckFront.position, boxSizeWallCheckFront, 0, wallLayer);
-        wallOverlapBoxBack = Physics2D.OverlapBox(wallCheckBack.position, boxSizeWallCheckBack, 0, wallLayer);
+    //    wallOverlapBoxFront = Physics2D.OverlapBox(wallCheck.position, boxSizeWallCheck, 0, wallLayer);
 
-        if (wallOverlapBoxFront)
-        {
-            //Requires button input to climb
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                isClimbingWall = true;
-                isJumpingOffWall = false;
+    //    if (wallOverlapBoxFront)
+    //    {
+    //        isClimbingWall = true;
+    //        //Requires button input to climb
+    //        if (Input.GetKeyDown(KeyCode.U))
+    //        {
+    //            isJumpingOffWall = false;
 
-                playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
+    //            playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
 
-                transform.localScale *= new Vector2(-1, 1);
+    //            transform.localScale *= new Vector2(-1, 1);
 
-                wallJumpAppliedForceDuration.ResetCooldown();
-                Debug.Log("Climbing Wall");
-            }
-        }
-        else
-        {
-            isClimbingWall = false;
-        }
-    }
+    //            wallJumpAppliedForceDuration.ResetCooldown();
+    //            Debug.Log("Climbing Wall");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        isClimbingWall = false;
+    //    }
+    //}
 
     //==================== GRAPPLE ====================//
     private void Grapple()

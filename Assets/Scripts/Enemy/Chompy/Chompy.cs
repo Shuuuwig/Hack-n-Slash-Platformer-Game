@@ -43,6 +43,6 @@ public class Chompy : EnemyClass
     {
         base.EnemyMovement();
 
-        enemyRigidBody.velocity = new Vector2((target.position.x - transform.position.x) * speed, 0);
+        enemyRigidbody.velocity = new Vector2((target.position.x - transform.position.x) * speed, 0);
     }
 }
