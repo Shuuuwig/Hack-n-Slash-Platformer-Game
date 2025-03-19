@@ -14,7 +14,7 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected float maxHealth;
     protected float currentHealth;
     [SerializeField] protected float damage;
-    [SerializeField] protected float speedPerTick;
+    [SerializeField] protected float speed;
     [SerializeField] protected Vector2 parryArea;
     [SerializeField] protected Vector2 visionArea;
     [SerializeField] protected float effectiveRangeRadius;
@@ -39,15 +39,17 @@ public abstract class EnemyClass : MonoBehaviour
     [SerializeField] protected Transform visionAreaTransform;
     [SerializeField] protected Transform effectiveRangeTransform;
     [SerializeField] protected Transform detectionAreaTransform;
-    [SerializeField] protected Transform playerTransform;
+    [SerializeField] protected Rigidbody2D enemyRigidbody;
 
-    [SerializeField] protected Rigidbody2D enemyRigidBody;
+    //Player References
+    [SerializeField] protected Transform playerTransform;
     [SerializeField] protected PlayerMovement playerMovement;
     [SerializeField] protected PlayerCombat playerCombat;
     [SerializeField] protected PlayerStats playerStats;
 
+    //
+    protected Vector2 movementDirection;
 
-    
     //Bools
     protected bool playerDetected;
     protected bool parriedByPlayer;
@@ -62,6 +64,15 @@ public abstract class EnemyClass : MonoBehaviour
     protected void Start()
     {
         currentHealth = maxHealth;
+        GameObject Player = GameObject.FindWithTag("Player");
+        if (Player == null)
+        {
+            Debug.Log("NO PLAYER FOUND");
+        }
+        playerMovement = Player.GetComponentInParent<PlayerMovement>();
+        playerCombat = Player.GetComponentInParent<PlayerCombat>();
+        playerStats = Player.GetComponentInParent<PlayerStats>();
+        playerTransform = Player.transform;
     }
 
     protected virtual void Update()
@@ -71,6 +82,7 @@ public abstract class EnemyClass : MonoBehaviour
         EffectiveRangeCheck();
 
         EnemyMoveset();
+        EnemyMovement();
         EnemyState();
         AggroPlayer();
     }
@@ -133,10 +145,20 @@ public abstract class EnemyClass : MonoBehaviour
 
     protected virtual void EnemyMovement()
     {
-        if (canAttack == true)
+        if (playerDetected == false || canAttack == true)
             return;
 
-        
+        movementDirection = new Vector2(transform.position.x - playerTransform.position.x, 0);
+        Debug.Log(movementDirection.x);
+
+        if (movementDirection.x > 0)
+        {
+            enemyRigidbody.velocity = new Vector2(-speed, enemyRigidbody.velocity.y);
+        }
+        else if (movementDirection.x < 0)
+        {
+            enemyRigidbody.velocity = new Vector2(speed, enemyRigidbody.velocity.y);
+        }
     }
 
     protected virtual void AggroPlayer()
@@ -144,6 +166,7 @@ public abstract class EnemyClass : MonoBehaviour
         if (visionCollider == true && detectableCollider == true)
         {
             target = visionCollider.transform;
+            Debug.Log(target);
             playerDetected = true;
             Debug.Log("Sees player");
         }

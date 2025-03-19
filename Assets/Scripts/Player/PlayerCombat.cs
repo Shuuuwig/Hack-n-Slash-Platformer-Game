@@ -62,6 +62,39 @@ public class PlayerCombat : MonoBehaviour
     public bool AirLowAttack { get { return airLowAttack; } }
     public bool Parrying { get { return isParrying; } }
     public bool ParriedAttack { get { return parriedAttack; } }
+    public Collider2D NeutralAttackCollider1 
+    { 
+        get { return neutralAttackCollider1; }
+        set
+        {
+            if (NeutralAttack == true)
+            {
+                neutralAttackCollider1 = value;
+            }
+        }  
+    }
+    public Collider2D NeutralAttackCollider2 
+    { 
+        get { return neutralAttackCollider2; }
+        set
+        {
+            if (NeutralAttack == true)
+            {
+                neutralAttackCollider2 = value;
+            }
+        }
+    }
+    public Collider2D NeutralAttackCollider3 
+    {  
+        get { return neutralAttackCollider3; }
+        set
+        {
+            if (NeutralAttack == true)
+            {
+                neutralAttackCollider3 = value;
+            }
+        }
+    }
     
 
     private void Update()
@@ -75,6 +108,19 @@ public class PlayerCombat : MonoBehaviour
         AttackTally();
     }
 
+    //-------------------------------------------------------- EDITOR DISPLAY --------------------------------------------------------//
+    //==================== GIZMOS ====================//
+    private void OnDrawGizmos()
+    {
+        if (gizmoToggleOn != true)
+            return;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(parryTransform.position, parryBoxSize);
+
+    }
+    //-------------------------------------------------------- GENERAL FUNCTIONS --------------------------------------------------------//
+    //==================== DIRECTION LOCK ====================//
     private void DirectionLock()
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -88,6 +134,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    //==================== ATTACK TALLY ====================//
     private void AttackTally()
     {
         if (comboActiveTimer.CurrentProgress is Cooldown.Progress.Finished)
@@ -97,7 +144,33 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    //----------------Combat Functions------------------
+    //==================== GENERAL PLAYER COLLISION CHECKS ====================//
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Enemy"))
+        {
+            hitEnemy = true;
+            knockbackTimer.StartCooldown();
+        }
+
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit Obstacle");
+            hitObstacle = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Hit Obstacle");
+            hitObstacle = false;
+        }
+    }
+
+    //-------------------------------------------------------- COMBAT FUNCTIONS --------------------------------------------------------//
+    //==================== DIRECTIONAL ATTACK ====================//
     private void DirectionalAttack()
     {
         if (Input.GetKeyDown(KeyCode.J) && attackCooldown.CurrentProgress is Cooldown.Progress.Ready && attackDuration.CurrentProgress is Cooldown.Progress.Ready)
@@ -194,6 +267,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    //==================== PARRY ====================//
     private void Parry()
     {
         if (Input.GetKeyDown (KeyCode.F) && parryActiveTime.CurrentProgress is Cooldown.Progress.Ready)
@@ -230,11 +304,12 @@ public class PlayerCombat : MonoBehaviour
             isParrying = false;
         }
     }
-    //-----------------------------------------------------------------
-    //Combat Effects
+
+    //-------------------------------------------------------- COMBAT EFFECTS --------------------------------------------------------//
+    //==================== PARRY ====================//
     private void HitStop()
     {
-        if (hitEnemy == false)
+        if (hitEnemy == false && parriedAttack == false)
             return;
 
         if (hitstopDuration.CurrentProgress is Cooldown.Progress.Ready)
@@ -248,41 +323,6 @@ public class PlayerCombat : MonoBehaviour
             Time.timeScale = 1;
             hitstopDuration.ResetCooldown();
             Debug.Log("hitstop ended");
-            hitEnemy = false;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (gizmoToggleOn != true)
-            return;
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(parryTransform.position, parryBoxSize);
-        
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Enemy"))
-        {
-            hitEnemy = true;
-            knockbackTimer.StartCooldown();
-        }
-
-        if (collision.CompareTag("Obstacle"))
-        {
-            Debug.Log("Hit Obstacle");
-            hitObstacle = true;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Obstacle"))
-        {
-            Debug.Log("Hit Obstacle");
-            hitObstacle = false;
         }
     }
 }

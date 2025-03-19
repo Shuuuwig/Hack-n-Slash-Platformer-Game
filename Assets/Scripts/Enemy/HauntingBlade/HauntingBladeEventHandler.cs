@@ -4,15 +4,28 @@ using UnityEngine;
 
 public class HauntingBladeEventHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private HauntingBlade HauntingBlade;
+
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void HauntingBladeSlash()
+    {
+        if (HauntingBlade.SlashCollider.enabled == false)
+        {
+            HauntingBlade.SlashCollider.enabled = true;
+        }
+        else
+        {
+            HauntingBlade.SlashCollider.enabled = false;
+        }
     }
 }

@@ -44,34 +44,36 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Cooldown knockedbackTimer;
     private Vector2 enemyCollisionPoint;
 
+    //Collision Check
     [Header("===Collision/Trigger Checks Configuration===")]
     [Header("---Ground Check---")]
     [SerializeField] private float castDistanceGround;
     [SerializeField] private Vector2 boxSizeGround;
     [SerializeField] private LayerMask groundLayer;
-    RaycastHit2D groundBoxcast;
+    private RaycastHit2D groundBoxcast;
     [Header("---Submerge Overhead Check---")]
     [SerializeField] private Transform submergeOverheadDetector;
     [SerializeField] private Vector2 boxSizeSubmergeOverhead;
     [SerializeField] private LayerMask submergeOverheadDetectableLayer;
-    Collider2D submergeOverheadOverlapBox;
+    private Collider2D submergeOverheadOverlapBox;
     [Header("---Wall Check---")]
-    [SerializeField] private Transform wallDetector;
-    [SerializeField] private Vector2 boxSizeWall;
+    [SerializeField] private Transform wallCheck;
+    [SerializeField] private Vector2 boxSizeWallCheck;
     [SerializeField] private LayerMask wallLayer;
-    Collider2D wallOverlapBox;
+    private Collider2D wallOverlapBoxFront;
+    private Collider2D wallOverlapBoxBack;
     [Header("---Grapple Check---")]
     [SerializeField] private Transform grappleDetector;
     [SerializeField] private float grappleRadius;
+    [SerializeField] private float grappleInvalidRadius;
     [SerializeField] private LayerMask grappleLayer;
     [SerializeField] private LayerMask grappleObstacleLayers;
-    [SerializeField] private float grappleInvalidRadius;
+    private float grappleRaycastDistance;
+    private Vector2 grappleRaycastDirection;
+    private RaycastHit2D grappleRaycast;
+    private Transform targetedGrapplePoint;
     private Collider2D grappleOverlapCircle;
     private Collider2D grappleInvalidCircle;
-    private Transform targetedGrapplePoint;
-    private RaycastHit2D grappleRaycast;
-    private Vector2 grappleRaycastDirection;
-    private float grappleRaycastDistance;
 
     //Player Component Reference
     [Header("---Component Reference---")]
@@ -83,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
     //Vectors
     protected Vector2 savedScale;
     protected Vector2 inputDirection;
+    protected Vector2 knockbackDirection;
     protected Vector2 storedPlayerMomentum;
 
     //Float
@@ -110,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool isKnockedBack;
     protected bool isGrounded;
    
+    //Public References
     public bool IsFacingRight {  get { return isFacingRight; } }
     public bool IsMovingForward { get { return isMovingForward; } }
     public bool IsMovingBackward { get { return isMovingBackward; } }
@@ -123,6 +127,7 @@ public class PlayerMovement : MonoBehaviour
     public bool IsSubmerged { get { return isSubmerged; } }
     public bool IsGrappling { get { return isGrappling; } }
     public bool IsGrounded { get { return isGrounded; } }
+
     public Vector2 InputDirection { get { return inputDirection; } }
 
 
@@ -143,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
         HandleInput();
 
         //Overlap Checks
-        WallCheck();
+        //WallCheck();
         GroundCheck();
         SubmergeOverheadCheck();
         GrappleCheck();
@@ -155,13 +160,12 @@ public class PlayerMovement : MonoBehaviour
         //Special Movement
         Submerge();
         Dash();
-        WallJump();
+        //WallJump();
         Pogo();
         Grapple();
 
-        //Rigidbody Manipulation
         RigidbodyManipulator();
-
+        KnockedBackState();
         //State Check
         //CheckState();
         
@@ -180,12 +184,12 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         //Makes the Check Box Visible
-        Gizmos.color = Color.green;
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireCube(transform.position - transform.up * castDistanceGround, boxSizeGround); //Ground wire cube
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(submergeOverheadDetector.position, boxSizeSubmergeOverhead); //Submerge Overhead wire cube
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(wallDetector.position, boxSizeWall); //Wall wire cube
+        Gizmos.DrawWireCube(wallCheck.position, boxSizeWallCheck); //Wall Check wire cube
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(grappleDetector.position, grappleRadius); //Grapple wire sphere
         Gizmos.DrawRay(grappleDetector.position, grappleRaycastDirection); //Grapple ray
@@ -198,14 +202,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isClimbingWall == true || isGrappling == true)
             return;
-
+        
+        //Prevent movement when attacking
         if (playerCombat.NeutralAttack == true)
         {
             inputDirection = Vector2.zero;
             return;
         }
             
-
         //Get input from x and y input
         inputDirection = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
     }
@@ -229,17 +233,38 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //==================== PLAYER KNOCKEDBACK ====================//
-    //private void KnockedBackState()
-    //{
-    //    isKnockedBack = true; //Change knockedback bool to true
-    //    Vector2 knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, 1); //Determine knockback direction by comparing player and enemy position
-    //    playerRigidbody.velocity = knockbackDirection * knockedbackForce; //Multiply knockback with knockback force
-    //    storedPlayerMomentum = playerRigidbody.velocity;
+    private void KnockedBackState()
+    {
+        if (isKnockedBack == false)
+            return;
 
-    //    knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            isKnockedBack = true;
+            knockedbackTimer.StartCooldown(); //Start cooldown that acts as stun timer
+            //Determine knockback direction by comparing player and enemy position
+            knockbackDirection = new Vector2(transform.position.x - enemyCollisionPoint.x, 0); 
+        }
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.InProgress)
+        {
+            if (knockbackDirection.x > 0)
+            {
+                playerRigidbody.velocity = new Vector2(knockedbackForce, 0); 
+            }
+            else if (knockbackDirection.x < 0)
+            {
+                playerRigidbody.velocity = new Vector2(-knockedbackForce, 0);
+            }
+            storedPlayerMomentum = playerRigidbody.velocity;
+        }
+        if (knockedbackTimer.CurrentProgress is Cooldown.Progress.Finished)
+        {
+            isKnockedBack = false;
+            knockedbackTimer.ResetCooldown();
+        }
 
-    //    Debug.Log("Knocked Back");
-    //}
+        Debug.Log("Knocked Back");
+    }
 
     //==================== RIGIDBODY MANIPULATOR ====================//
     private void RigidbodyManipulator()
@@ -314,13 +339,13 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //==================== GENERAL PLAYER COLLISION CHECK ====================//
+    //==================== GENERAL PLAYER COLLISION CHECKS ====================//
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
             enemyCollisionPoint = collision.transform.position;
-            //KnockedBackState();
+            isKnockedBack = true;
         }
     }
 
@@ -569,77 +594,77 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //==================== WALL CLING ====================//
-    private void WallJump()
-    {
-        if (isClimbingWall == true)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("Wall Jump enabled");
-                isClimbingWall = false;
-                isJumpingOffWall = true;
+    //private void WallJump()
+    //{
+    //    if (isClimbingWall == true)
+    //    {
+    //        if (Input.GetKeyDown(KeyCode.Space))
+    //        {
+    //            Debug.Log("Wall Jump enabled");
+    //            isClimbingWall = false;
+    //            isJumpingOffWall = true;
 
-                //Unfreeze position
-                playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                playerRigidbody.gravityScale = defaultGravityScale;
+    //            //Unfreeze position
+    //            playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX & RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+    //            playerRigidbody.gravityScale = defaultGravityScale;
 
-                wallJumpAppliedForceDuration.StartCooldown();
-            }
-        }
-        else if (isJumpingOffWall == true && wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.InProgress)
-        {
-            if (transform.localScale.x < 0) //Facing left
-            {
-                Debug.Log("Jumped to left");
-                playerRigidbody.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
-            }
-            if (transform.localScale.x > 0) //Facing right
-            {
-                Debug.Log("Jumped to right");
-                playerRigidbody.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
-            }
-            storedPlayerMomentum = playerRigidbody.velocity;
-        }
-        else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, playerRigidbody.velocity.y);
-            isJumpingOffWall = false;
+    //            wallJumpAppliedForceDuration.StartCooldown();
+    //        }
+    //    }
+    //    else if (isJumpingOffWall == true && wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.InProgress)
+    //    {
+    //        if (transform.localScale.x < 0) //Facing left
+    //        {
+    //            Debug.Log("Jumped to left");
+    //            playerRigidbody.velocity = new Vector2(-wallJumpPower.x, wallJumpPower.y);
+    //        }
+    //        if (transform.localScale.x > 0) //Facing right
+    //        {
+    //            Debug.Log("Jumped to right");
+    //            playerRigidbody.velocity = new Vector2(wallJumpPower.x, wallJumpPower.y);
+    //        }
+    //        storedPlayerMomentum = playerRigidbody.velocity;
+    //    }
+    //    else if (wallJumpAppliedForceDuration.CurrentProgress is Cooldown.Progress.Finished)
+    //    {
+    //        playerRigidbody.velocity = new Vector2(storedPlayerMomentum.x / 1.3f, playerRigidbody.velocity.y);
+    //        isJumpingOffWall = false;
 
-            if (isGrounded == true || isClimbingWall == true)
-            {
-                wallJumpAppliedForceDuration.ResetCooldown();
-            }
-        }
-    }
+    //        if (isGrounded == true || isClimbingWall == true)
+    //        {
+    //            wallJumpAppliedForceDuration.ResetCooldown();
+    //        }
+    //    }
+    //}
 
-    private void WallCheck()
-    {
-        if (isGrounded == true || isClimbingWall == true)
-            return;
+    //private void WallCheck()
+    //{
+    //    if (isGrounded == true || isClimbingWall == true)
+    //        return;
 
-        wallOverlapBox = Physics2D.OverlapBox(wallDetector.position, boxSizeWall, 0, wallLayer);
+    //    wallOverlapBoxFront = Physics2D.OverlapBox(wallCheck.position, boxSizeWallCheck, 0, wallLayer);
 
-        if (wallOverlapBox)
-        {
-            //Requires button input to climb
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                isClimbingWall = true;
-                isJumpingOffWall = false;
+    //    if (wallOverlapBoxFront)
+    //    {
+    //        isClimbingWall = true;
+    //        //Requires button input to climb
+    //        if (Input.GetKeyDown(KeyCode.U))
+    //        {
+    //            isJumpingOffWall = false;
 
-                playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
+    //            playerRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; //Freeze position
 
-                transform.localScale *= new Vector2(-1, 1);
+    //            transform.localScale *= new Vector2(-1, 1);
 
-                wallJumpAppliedForceDuration.ResetCooldown();
-                Debug.Log("Climbing Wall");
-            }
-        }
-        else
-        {
-            isClimbingWall = false;
-        }
-    }
+    //            wallJumpAppliedForceDuration.ResetCooldown();
+    //            Debug.Log("Climbing Wall");
+    //        }
+    //    }
+    //    else
+    //    {
+    //        isClimbingWall = false;
+    //    }
+    //}
 
     //==================== GRAPPLE ====================//
     private void Grapple()
