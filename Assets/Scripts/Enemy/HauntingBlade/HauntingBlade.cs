@@ -13,13 +13,17 @@ public class HauntingBlade : EnemyClass
     private bool neutralSlash;
 
     public bool NeutralSlash { get { return neutralSlash; } }
+    public Collider2D SlashCollider
+    {
+        get { return slashCollider; }
+        set { slashCollider = value; }
+    }
 
     protected override void EnemyMoveset()
     {
         if (canAttack == true && slashAttackDuration.CurrentProgress is Cooldown.Progress.Ready && slashAttackCooldown.CurrentProgress is Cooldown.Progress.Ready)
         {
             neutralSlash = true;
-            slashCollider.enabled = true;
             slashAttackDuration.StartCooldown();
             Debug.Log("Slashing");
         }
@@ -27,7 +31,6 @@ public class HauntingBlade : EnemyClass
         if (slashAttackDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
             neutralSlash = false;
-            slashCollider.enabled = false;
             slashAttackCooldown.StartCooldown();
             slashAttackDuration.ResetCooldown();
         }
@@ -36,5 +39,12 @@ public class HauntingBlade : EnemyClass
         {
             slashAttackCooldown.ResetCooldown();
         }
+    }
+
+    protected override void EnemyMovement()
+    {
+        base.EnemyMovement();
+
+        
     }
 }
