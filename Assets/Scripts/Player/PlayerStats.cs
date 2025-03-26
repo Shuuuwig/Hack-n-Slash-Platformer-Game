@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-
+    [SerializeField] private float maxHealth;
     [SerializeField] private float currentHealth;
     [SerializeField] private float currentDamage;
     [SerializeField] private Cooldown InvulnerabilityDuration;
+    [SerializeField] private HealthBar healthbar;
 
     private bool canTakeDamage = true;
 
@@ -26,13 +27,19 @@ public class PlayerStats : MonoBehaviour
     public float PlayerCurrentDamage { get { return currentDamage; } }
     void Start()
     {
-        
+        healthbar.SetMaxHealth(maxHealth);
     }
 
     void Update()
     {
+        UpdateHealthBar();
         OnDeath();
         InvulnerabilityFrames();    
+    }
+
+    private void UpdateHealthBar()
+    {
+        healthbar.SetHealthBar(currentHealth);
     }
 
     private void OnDeath()

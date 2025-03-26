@@ -56,12 +56,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Vector2 boxSizeSubmergeOverhead;
     [SerializeField] private LayerMask submergeOverheadDetectableLayer;
     private Collider2D submergeOverheadOverlapBox;
-    [Header("---Wall Check---")]
-    [SerializeField] private Transform wallCheck;
-    [SerializeField] private Vector2 boxSizeWallCheck;
-    [SerializeField] private LayerMask wallLayer;
-    private Collider2D wallOverlapBoxFront;
-    private Collider2D wallOverlapBoxBack;
+    //[Header("---Wall Check---")]
+    //[SerializeField] private Transform wallCheck;
+    //[SerializeField] private Vector2 boxSizeWallCheck;
+    //[SerializeField] private LayerMask wallLayer;
+    //private Collider2D wallOverlapBoxFront;
+    //private Collider2D wallOverlapBoxBack;
     [Header("---Grapple Check---")]
     [SerializeField] private Transform grappleDetector;
     [SerializeField] private float grappleRadius;
@@ -189,8 +189,8 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(submergeOverheadDetector.position, boxSizeSubmergeOverhead); //Submerge Overhead wire cube
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(wallCheck.position, boxSizeWallCheck); //Wall Check wire cube
-        Gizmos.color = Color.magenta;
+        //Gizmos.DrawWireCube(wallCheck.position, boxSizeWallCheck); //Wall Check wire cube
+        //Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(grappleDetector.position, grappleRadius); //Grapple wire sphere
         Gizmos.DrawRay(grappleDetector.position, grappleRaycastDirection); //Grapple ray
         Gizmos.color = Color.white;
