@@ -203,20 +203,20 @@ public abstract class EnemyClass : MonoBehaviour
 
     }
 
-    protected virtual void Staggered()
-    {
-        if (playerCombat.ParriedAttack)
-        {
-            isStaggered = true;
-            staggeredDuration.StartCooldown();
-        }
+    //protected virtual void Staggered()
+    //{
+    //    if (playerCombat.ParriedAttack)
+    //    {
+    //        isStaggered = true;
+    //        staggeredDuration.StartCooldown();
+    //    }
 
-        if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            isStaggered = false;
-            staggeredDuration.ResetCooldown();
-        }
-    }
+    //    if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
+    //    {
+    //        isStaggered = false;
+    //        staggeredDuration.ResetCooldown();
+    //    }
+    //}
 
     protected virtual void TakeDamage()
     {
