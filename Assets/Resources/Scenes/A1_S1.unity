@@ -1025,7 +1025,6 @@ GameObject:
   - component: {fileID: 726622582}
   - component: {fileID: 726622583}
   - component: {fileID: 726622584}
-  - component: {fileID: 726622585}
   m_Layer: 0
   m_Name: test
   m_TagString: Untagged
@@ -1102,6 +1101,7 @@ Transform:
   - {fileID: 713204794}
   - {fileID: 374711744}
   - {fileID: 1568378325}
+  - {fileID: 1588888303}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &726622580
@@ -1201,13 +1201,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gizmoToggleOn: 1
-  damage: 0
-  knockbackPower: 0
-  parryTransform: {fileID: 0}
-  parryBoxSize: {x: 0, y: 0}
+  damage: 1
+  knockbackPower: 1
+  attackDuration:
+    CurrentProgress: 0
+    Duration: 0
+  attackCooldown:
+    CurrentProgress: 0
+    Duration: 0
+  parryActiveTime:
+    CurrentProgress: 0
+    Duration: 0
+  parrySuccessTime:
+    CurrentProgress: 0
+    Duration: 0
+  parryTransform: {fileID: 1588888303}
+  parryBoxSize: {x: 0.68, y: 0.44}
   parryableLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
 --- !u!114 &726622584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1222,28 +1234,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraSpeed: 4
   mainCamera: {fileID: 0}
-  xAxisOffset: 3
+  viewPoint: {fileID: 1568378325}
   yAxisOffset: 3
---- !u!114 &726622585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726622577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 829f703187978474e9aaad0f4bb76dbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gizmoToggleOn: 1
-  damage: 0
-  knockbackPower: 0
-  parryTransform: {fileID: 0}
-  parryBoxSize: {x: 0, y: 0}
-  parryableLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!1 &818712729
 GameObject:
   m_ObjectHideFlags: 0
@@ -2681,6 +2673,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.12, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 726622579}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1588888302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588888303}
+  m_Layer: 0
+  m_Name: parrycheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588888303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588888302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
