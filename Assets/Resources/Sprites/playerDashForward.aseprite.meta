@@ -130,7 +130,7 @@ ScriptedImporter:
       y: 4
       width: 30
       height: 26
-    spriteID: 47272ab0d59517147a08220474b81dab
+    spriteID: 00c7ff30d0d8018418c4989074312811
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -150,7 +150,7 @@ ScriptedImporter:
       y: 38
       width: 42
       height: 13
-    spriteID: e613f9725bea5ea4cbcc4ae8b4097468
+    spriteID: c22f2043d1e836d43a670008725ba872
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -175,7 +175,7 @@ ScriptedImporter:
         y: 16
         width: 30
         height: 26
-      spriteId: 47272ab0d59517147a08220474b81dab
+      spriteId: 00c7ff30d0d8018418c4989074312811
     - name: playerDashForward_Frame_1
       frameIndex: 1
       cellRect:
@@ -183,46 +183,10 @@ ScriptedImporter:
         y: 25
         width: 42
         height: 13
-      spriteId: e613f9725bea5ea4cbcc4ae8b4097468
+      spriteId: c22f2043d1e836d43a670008725ba872
     linkedCells: []
     parentIndex: -1
-  platformSettings:
-  - name: DefaultTexturePlatform
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Standalone
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Server
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
+  platformSettings: []
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 64}

@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - Wall
   - PlayerWeapon
+  - EnemyWeapon
   layers:
   - Default
   - TransparentFX
@@ -22,9 +23,9 @@ TagManager:
   - Ground
   - Wall
   - Tunnel
-  - Parryable
   - GrapplePoint
-  - 
+  - Player
+  - Parryable
   - 
   - 
   - 

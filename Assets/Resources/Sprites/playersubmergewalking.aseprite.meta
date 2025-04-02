@@ -130,7 +130,7 @@ ScriptedImporter:
       y: 4
       width: 32
       height: 11
-    spriteID: 094c237c08f288648b41e683cad03fb2
+    spriteID: 63f0e52dede16e340aaba5168bdc5026
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -150,7 +150,7 @@ ScriptedImporter:
       y: 23
       width: 30
       height: 10
-    spriteID: f59926473a5cf624e864821822c97e9e
+    spriteID: 5c561470e342a2d4480f41e83cdeee5e
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -175,7 +175,7 @@ ScriptedImporter:
         y: 12
         width: 32
         height: 11
-      spriteId: 094c237c08f288648b41e683cad03fb2
+      spriteId: 63f0e52dede16e340aaba5168bdc5026
     - name: playersubmergewalking_Frame_1
       frameIndex: 1
       cellRect:
@@ -183,46 +183,10 @@ ScriptedImporter:
         y: 12
         width: 30
         height: 10
-      spriteId: f59926473a5cf624e864821822c97e9e
+      spriteId: 5c561470e342a2d4480f41e83cdeee5e
     linkedCells: []
     parentIndex: -1
-  platformSettings:
-  - name: DefaultTexturePlatform
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Standalone
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
-  - name: Server
-    overridden: 0
-    ignorePlatformSupport: 0
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 0
-    compressionQuality: 50
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    androidETC2FallbackOverride: 0
+  platformSettings: []
   secondarySpriteTextures: []
   spritePackingTag: 
   canvasSize: {x: 64, y: 64}

@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+
     [SerializeField] private float currentHealth;
     [SerializeField] private float currentDamage;
     [SerializeField] private Cooldown InvulnerabilityDuration;
 
-    private bool tookDamage;
+    private bool canTakeDamage = true;
 
     public float PlayerCurrentHealth
     {
         get { return currentHealth; }
         set 
-        { 
-            if (tookDamage == true && InvulnerabilityDuration.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            if (canTakeDamage == true)
             {
+                Debug.Log("Health change");
                 currentHealth = value;
             }
         }
@@ -30,7 +32,7 @@ public class PlayerStats : MonoBehaviour
     void Update()
     {
         OnDeath();
-        InvulnerabilityFrames();
+        InvulnerabilityFrames();    
     }
 
     private void OnDeath()
@@ -43,7 +45,7 @@ public class PlayerStats : MonoBehaviour
 
     private void InvulnerabilityFrames()
     {
-        if (tookDamage == false)
+        if (canTakeDamage == true)
             return;
 
         if (InvulnerabilityDuration.CurrentProgress is Cooldown.Progress.Ready)
@@ -51,19 +53,22 @@ public class PlayerStats : MonoBehaviour
             InvulnerabilityDuration.StartCooldown();
             Debug.Log("Currently Invulnerable");
         }
-        else if (InvulnerabilityDuration.CurrentProgress is Cooldown.Progress.Finished)
+
+        if (InvulnerabilityDuration.CurrentProgress is Cooldown.Progress.Finished)
         {
             InvulnerabilityDuration.ResetCooldown();
             Debug.Log("No longer Invulnerable");
-            tookDamage = false;
+            canTakeDamage = true;
         }
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Obstacle"))
         {
-            tookDamage = true;
+            if (canTakeDamage == true)
+            {
+                canTakeDamage = false;
+            }
         }
     }
 }
