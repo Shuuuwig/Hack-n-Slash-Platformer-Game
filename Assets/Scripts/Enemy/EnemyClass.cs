@@ -220,7 +220,6 @@ public abstract class EnemyClass : MonoBehaviour
 
     protected virtual void TakeDamage()
     {
-        currentHealth -= playerStats.PlayerCurrentDamage;
         Debug.Log("Took damage");
 
         if (currentHealth <= 0)

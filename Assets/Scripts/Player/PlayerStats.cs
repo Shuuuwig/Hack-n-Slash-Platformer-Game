@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : Stats
 {
-    [SerializeField] private float maxHealth;
-    [SerializeField] private float currentHealth;
-    [SerializeField] private float currentDamage;
     [SerializeField] private Cooldown InvulnerabilityDuration;
     [SerializeField] private HealthBar healthbar;
 
@@ -24,10 +21,11 @@ public class PlayerStats : MonoBehaviour
             }
         }
     }
-    public float PlayerCurrentDamage { get { return currentDamage; } }
-    void Start()
+    protected void Start()
     {
         healthbar.SetMaxHealth(maxHealth);
+
+        moveset.Add("SludgeProjectile", true);
     }
 
     void Update()

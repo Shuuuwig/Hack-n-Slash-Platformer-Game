@@ -26,12 +26,24 @@ public class PlayerMovement : Movement
     //[SerializeField] protected float grapplePower;
     //[SerializeField] protected Cooldown linkToGrapplePointTime;
 
+    //Additional Jump Checks
+    [Header("--- Additional Jump Checks ---")]
+    [SerializeField] protected Cooldown coyoteTime;
+    [SerializeField] protected float bufferJumpCastDistance;
+    [SerializeField] protected Cooldown bufferJumpWindow;
+    [SerializeField] protected Transform bufferJumpTransform;
+    [SerializeField] protected Vector2 bufferJumpBoxSize;
+    [SerializeField] protected LayerMask bufferJumpLayer;
+    protected RaycastHit2D bufferJumpBoxcast;
+
+
     // Collision Checks
     [Header("--- Submerge Overhead Check ---")]
-    [SerializeField] protected Transform overheadCheck;
+    [SerializeField] protected float overheadCastDistance;
+    [SerializeField] protected Transform overheadTransform;
     [SerializeField] protected Vector2 overheadBoxSize;
     [SerializeField] protected LayerMask overheadCheckLayer;
-    protected Collider2D overheadOverlapBox;
+    protected RaycastHit2D overheadOverlapBox;
 
     // Movement States
     protected bool isInputLeft;
@@ -47,11 +59,14 @@ public class PlayerMovement : Movement
 
     protected bool objectAbove;
     protected bool coyoteStandbyActive;
+    protected bool bufferedJump;
 
     // Input Handling
     private Vector2 inputDirection;
 
-    protected override AnimationHandler animationHandler { get; set; }
+    protected bool IsInputLeft { get { return isInputLeft; } }
+    protected bool IsInputRight { get { return isInputRight; } }
+
     // Component References
     //[SerializeField] protected PlayerStatus status;
     //[SerializeField] protected PlayerStats stats;
@@ -60,7 +75,12 @@ public class PlayerMovement : Movement
     protected override void OnDrawGizmos()
     {
         base.OnDrawGizmos();
-        Gizmos.DrawWireCube(overheadCheck.position, overheadBoxSize);
+        Gizmos.DrawWireCube(overheadTransform.position + transform.up * (overheadCastDistance / 2), overheadBoxSize * 2);
+        Gizmos.DrawLine(overheadTransform.position, overheadTransform.position + transform.up * overheadCastDistance);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(bufferJumpTransform.position + -transform.up * (bufferJumpCastDistance / 2), bufferJumpBoxSize * 2);
+        Gizmos.DrawLine(bufferJumpTransform.position, bufferJumpTransform.position + -transform.up * bufferJumpCastDistance);
     }
 
     //============================================= INPUT =============================================//
@@ -88,8 +108,11 @@ public class PlayerMovement : Movement
     protected override void Update()
     { 
         base.Update();
+        BufferJumpCheck();
         SubmergeOverheadCheck();
 
+        CoyoteTime();
+        Debug.Log(coyoteStandbyActive);
         HandleInput();
         HorizontalMovement();
         VerticalMovement();
@@ -116,20 +139,43 @@ public class PlayerMovement : Movement
         }
     }
 
-    private void SubmergeOverheadCheck()
+    protected void BufferJumpCheck()
+    {
+        bufferJumpBoxcast = Physics2D.BoxCast(bufferJumpTransform.position, bufferJumpBoxSize, 0, -transform.up, bufferJumpCastDistance, bufferJumpLayer);
+
+        if (bufferJumpBoxcast)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && isFalling) 
+            {
+                Debug.Log("Buffered");
+                bufferedJump = true;
+            }
+        }
+    }
+
+    protected void SubmergeOverheadCheck()
     {
         if (isSubmerging)
             return;
 
-        overheadOverlapBox = Physics2D.OverlapBox(overheadCheck.position, overheadBoxSize, 0, overheadCheckLayer);
+        overheadOverlapBox = Physics2D.BoxCast(overheadTransform.position, overheadBoxSize, 0, transform.up, overheadCastDistance, overheadCheckLayer);
+        objectAbove = overheadOverlapBox;
+    }
 
-        if (overheadOverlapBox)
+    //============================================= COOLDOWN/DURATION =============================================//
+    protected void CoyoteTime()
+    {
+        if (isJumping)
+            coyoteStandbyActive = false;
+
+        if (!isGrounded && coyoteStandbyActive && coyoteTime.CurrentProgress == Cooldown.Progress.Ready)
         {
-            objectAbove = true;
+            coyoteTime.StartCooldown();
         }
-        else
+
+        if (isGrounded && coyoteTime.CurrentProgress == Cooldown.Progress.Finished)
         {
-            objectAbove = false;
+            coyoteTime.ResetCooldown();
         }
     }
 
@@ -156,43 +202,30 @@ public class PlayerMovement : Movement
     protected override void VerticalMovement()
     {
         bool returnCondition = isJumping;
+       
 
         if (returnCondition)
             return;
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGrounded || bufferJumpTime.CurrentProgress == Cooldown.Progress.InProgress || coyoteTime.CurrentProgress == Cooldown.Progress.InProgress)
+            if (isGrounded || coyoteTime.CurrentProgress == Cooldown.Progress.InProgress)
             {
                 attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower);
-                coyoteStandbyActive = false;
+
+                bufferedJump = false;
             }
-
-            //Buffer Jump
-            if (isFalling && bufferJumpTime.CurrentProgress == Cooldown.Progress.Ready)
-            {
-                bufferJumpTime.StartCooldown();
-            }
-        }
-
-        //Coyote time
-        if (!isGrounded && coyoteStandbyActive && coyoteTime.CurrentProgress == Cooldown.Progress.Ready)
-        {
-            coyoteTime.StartCooldown();
-        }
-
-        if (bufferJumpTime.CurrentProgress == Cooldown.Progress.Finished)
-        {
-            bufferJumpTime.ResetCooldown();
-        }
-
-        if (isGrounded && coyoteTime.CurrentProgress == Cooldown.Progress.Finished)
-        {
-            coyoteTime.ResetCooldown();
         }
 
         
-       
+
+        if (isGrounded && bufferedJump)
+        {
+            attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower);
+
+            coyoteStandbyActive = false;
+            bufferedJump = false;
+        }
     }
 
     //============================================= SPECIAL MOVEMENT =============================================//

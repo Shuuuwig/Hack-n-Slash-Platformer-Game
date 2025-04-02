@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerAnimationHandler : AnimationHandler
 {
-    protected override Movement movement { get; set; }
-    protected override Combat combat { get; set; }
-
     protected override void Start()
     {
         if (movement == null)

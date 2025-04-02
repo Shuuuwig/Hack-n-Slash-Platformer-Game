@@ -5,15 +5,14 @@ using UnityEngine;
 public abstract class AnimationHandler : MonoBehaviour
 {
     protected bool isFacingRight;
-    protected bool isMoving;
     protected bool isMovingForward;
     protected bool isFlipLocked;
 
     public bool IsFacingRight {  get { return isFacingRight; } }
     public bool IsMovingForward { get { return isMovingForward; } }
 
-    protected virtual Movement movement { get; set; }
-    protected virtual Combat combat { get; set; }
+    protected Movement movement;
+    protected Combat combat;
 
     protected virtual void Start()
     {
@@ -37,10 +36,9 @@ public abstract class AnimationHandler : MonoBehaviour
     protected virtual void DirectionCheck()
     {
         isFacingRight = transform.localScale.x > 0;
-        isMoving = movement.IsMoving;
         isMovingForward = (movement.AttachedRigidBody.velocity.x > 0.1f && isFacingRight || movement.AttachedRigidBody.velocity.x < -0.1f && !isFacingRight);
 
-        if (isMoving && !isMovingForward && !isFlipLocked)
+        if (Mathf.Abs(movement.AttachedRigidBody.velocity.x) > 0.1f && !isMovingForward && !isFlipLocked)
             Flip();
     }
 

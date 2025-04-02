@@ -5,29 +5,16 @@ using UnityEngine;
 
 public class PlayerCombat : Combat
 {
-    //[Header("---Gizmo Configuration---")]
-    //[SerializeField] private bool gizmoToggleOn = true;
-
-    //[Header("===Combat Configuration===")]
-    //[SerializeField] private float weaponDamage;
-    //[SerializeField] private float playerKnockbackPower;
-    //[SerializeField] private float playerKnockedbackPower;
-    //[SerializeField] private Vector2 parryBoxSize;
-    //[SerializeField] private LayerMask parryableLayer;
-
     ////Timer
     //[Header("---Timer Duration---")]
-    //[SerializeField] private Cooldown attackDuration;
-    //[SerializeField] private Cooldown attackCooldown;
+
     //[SerializeField] private Cooldown comboActiveTimer;
     //[SerializeField] private Cooldown knockbackTimer;
-    //[SerializeField] private Cooldown parryActiveTime;
-    //[SerializeField] private Cooldown parrySuccessTime;
+
     //[SerializeField] private Cooldown hitstopDuration;
 
     ////Player Component Reference
     //[Header("---Component Reference---")]
-    //[SerializeField] private Transform parryTransform;
     //[SerializeField] private Collider2D neutralAttackCollider1;
     //[SerializeField] private Collider2D neutralAttackCollider2;
     //[SerializeField] private Collider2D neutralAttackCollider3;
@@ -38,17 +25,13 @@ public class PlayerCombat : Combat
 
     //private int comboTally;
 
-    ////Boolean conditions
-    //private bool flipLocked;
-    //private bool submergedNeutralAttack;
-    //private bool submergedForwardAttack;
-    //private bool neutralAttack;
-    //private bool airOverheadAttack;
-    //private bool airLowAttack;
-    //private bool isParrying;
-    //private bool parriedAttack;
-    //private bool hitEnemy;
-    //private bool hitObstacle;
+    //Bools
+    protected bool submergedNeutralAttack;
+    protected bool submergedForwardAttack;
+    protected bool airOverheadAttack;
+    protected bool airLowAttack;    
+
+    //protected bool hitObstacle;
 
     //public int ComboTally {  get { return comboTally; } }
     //public float WeaponDamage { get { return weaponDamage; } }
@@ -96,8 +79,19 @@ public class PlayerCombat : Combat
     //    }
     //}
 
+    protected override void Start()
+    {
+        if (stats == null)
+        {
+            stats = GetComponent<PlayerStats>();
+        }
 
-    private void Update()
+        if (movement == null)
+        {
+            movement = GetComponent<PlayerMovement>();
+        }
+    }
+    protected override void Update()
     {
         //Basic Attacks
         //DirectionalAttack();
@@ -108,19 +102,11 @@ public class PlayerCombat : Combat
         DirectionLock();
     }
 
-    ////-------------------------------------------------------- EDITOR DISPLAY --------------------------------------------------------//
-    ////==================== GIZMOS ====================//
-    //private void OnDrawGizmos()
-    //{
-    //    if (gizmoToggleOn != true)
-    //        return;
+    protected override void UpdateMovementStates()
+    {
 
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawWireCube(parryTransform.position, parryBoxSize);
+    }
 
-    //}
-    ////-------------------------------------------------------- GENERAL FUNCTIONS --------------------------------------------------------//
-    ////==================== DIRECTION LOCK ====================//
     protected override void DirectionLock()
     {
         if (Input.GetKeyDown(KeyCode.V))
@@ -267,42 +253,14 @@ public class PlayerCombat : Combat
     //}
 
     //==================== PARRY ====================//
-    //private void Parry()
-    //{
-    //    if (Input.GetKeyDown (KeyCode.F) && parryActiveTime.CurrentProgress is Cooldown.Progress.Ready)
-    //    {
-    //        parryActiveTime.StartCooldown();
-    //        isParrying = true;
-    //    }
-
-    //    if (parryActiveTime.CurrentProgress is Cooldown.Progress.InProgress)
-    //    {
-    //        if (Physics2D.OverlapBox(parryTransform.position, parryBoxSize, 0, parryableLayer))
-    //        {
-    //            parriedAttack = true;
-    //            Debug.Log("Parried");
-    //        }
-    //    }
-
-    //    if (parriedAttack == true)
-    //    {
-    //        attackCooldown.ResetCooldown();
-    //        parrySuccessTime.StartCooldown();
-    //    }
-
-    //    if (parrySuccessTime.CurrentProgress is Cooldown.Progress.Finished)
-    //    {
-    //        parriedAttack = false;
-    //        parrySuccessTime.ResetCooldown();
-    //    }
-
-    //    //Reset time
-    //    if (parryActiveTime.CurrentProgress is Cooldown.Progress.Finished)
-    //    {
-    //        parryActiveTime.ResetCooldown();
-    //        isParrying = false;
-    //    }
-    //}
+    protected override void Parry()
+    {
+        if (Input.GetKeyDown(KeyCode.F) && parryActiveTime.CurrentProgress is Cooldown.Progress.Ready)
+        {
+            parryActiveTime.StartCooldown();
+        }
+        base.Parry();
+    }
 
     ////-------------------------------------------------------- COMBAT EFFECTS --------------------------------------------------------//
     ////==================== PARRY ====================//

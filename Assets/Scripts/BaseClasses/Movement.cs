@@ -17,15 +17,13 @@ public abstract class Movement : MonoBehaviour
 
     [Header("--- Jump ---")]
     [SerializeField] protected float jumpPower;
-    [SerializeField] protected Cooldown coyoteTime;
-    [SerializeField] protected Cooldown bufferJumpTime;
-
+    
     // Collision Check
     [Header("--- Ground Check ---")]
     [SerializeField] protected float groundCastDistance;
+    [SerializeField] protected Transform groundTransform;
     [SerializeField] protected Vector2 groundBoxSize;
     [SerializeField] protected LayerMask groundLayer;
-    [SerializeField] protected Transform groundTransform;
     protected RaycastHit2D groundBoxcast;
 
     // Knockback
@@ -54,8 +52,9 @@ public abstract class Movement : MonoBehaviour
     //private Stats stats;
 
     public bool IsMoving {  get { return isMoving; } }
-    
-    protected virtual AnimationHandler animationHandler { get; set; }
+    public bool IsIdle { get { return isIdle; } }
+
+    protected AnimationHandler animationHandler;
 
     //============================================= GIZMO =============================================//
     protected virtual void OnDrawGizmos()
@@ -64,7 +63,8 @@ public abstract class Movement : MonoBehaviour
             return;
 
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(groundTransform.position, groundBoxSize);
+        Gizmos.DrawWireCube(groundTransform.position + -transform.up * (groundCastDistance / 2), groundBoxSize * 2);
+        Gizmos.DrawLine(groundTransform.position, groundTransform.position + -transform.up * groundCastDistance);
     }
 
     //============================================= LIFE CYCLE =============================================//
@@ -100,7 +100,7 @@ public abstract class Movement : MonoBehaviour
     //============================================= COLLISION CHECK =============================================//
     protected virtual void GroundCheck()
     {
-        groundBoxcast = Physics2D.BoxCast(transform.position, groundBoxSize, 0, -transform.up, groundCastDistance, groundLayer);
+        groundBoxcast = Physics2D.BoxCast(groundTransform.position, groundBoxSize, 0, -transform.up, groundCastDistance, groundLayer);
 
         if (groundBoxcast)
         {
@@ -118,17 +118,12 @@ public abstract class Movement : MonoBehaviour
     protected virtual void UpdateMovementStates()
     {
         isFacingRight = animationHandler.IsFacingRight;
-        isMoving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.1f;
+        isMoving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
         isMovingForward = animationHandler.IsMovingForward;
         isMovingBackward = isMoving && !isMovingForward;
-        if (Input.GetKeyDown(KeyCode.Space) && attachedRigidbody.velocity.y > 0)
-            isJumping = true;
-        else
-            isJumping = false;
-        isFalling = attachedRigidbody.velocity.y < -0;
+        isJumping = attachedRigidbody.velocity.y > 0.01f;
+        isFalling = attachedRigidbody.velocity.y < -0.01f;
         isIdle = !isMoving && !isJumping && !isFalling;
-
-        Debug.Log(isJumping);
     }
 
     protected abstract void HorizontalMovement();
