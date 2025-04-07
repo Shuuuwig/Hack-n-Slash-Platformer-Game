@@ -121,15 +121,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: game bg
     originalName: 
-    pivot: {x: 4.129032, y: -1.9484979}
+    pivot: {x: 5.4, y: -1.9999999}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 155
-      height: 233
+      width: 110
+      height: 229
     spriteID: b1b2213384f41ca4eb1495efd033a234
     spriteBone: []
     spriteOutline: []
@@ -151,10 +151,10 @@ ScriptedImporter:
     - name: game bg
       frameIndex: 0
       cellRect:
-        x: 0
-        y: 454
-        width: 155
-        height: 233
+        x: 46
+        y: 458
+        width: 110
+        height: 229
       spriteId: b1b2213384f41ca4eb1495efd033a234
     linkedCells: []
     parentIndex: -1
