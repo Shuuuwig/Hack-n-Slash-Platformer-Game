@@ -450,7 +450,7 @@ MonoBehaviour:
   gizmoToggleOn: 1
   maxHealth: 15
   damage: 3
-  speedPerTick: 0.0001
+  speed: 5
   parryArea: {x: 0.76, y: 1.99}
   visionArea: {x: 7.92, y: 2}
   effectiveRangeRadius: 1.5
@@ -469,8 +469,8 @@ MonoBehaviour:
   visionAreaTransform: {fileID: 3355155813687217523}
   effectiveRangeTransform: {fileID: 4684527654925289129}
   detectionAreaTransform: {fileID: 489742310497529334}
+  enemyRigidbody: {fileID: 6418422075384145247}
   playerTransform: {fileID: 0}
-  enemyRigidBody: {fileID: 6418422075384145247}
   playerMovement: {fileID: 0}
   playerCombat: {fileID: 0}
   playerStats: {fileID: 0}
@@ -552,7 +552,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -566,4 +566,4 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 5
+  m_Constraints: 4

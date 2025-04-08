@@ -5,8 +5,8 @@ using UnityEngine;
 public class Chompy : EnemyClass
 {
     [SerializeField] private Collider2D chompCollider;
-    [SerializeField] private Cooldown chompAttackDuration;
-    [SerializeField] private Cooldown chompAttackCooldown;
+    [SerializeField] private Timer chompAttackDuration;
+    [SerializeField] private Timer chompAttackCooldown;
 
     private bool neutralSlash;
 
@@ -19,21 +19,21 @@ public class Chompy : EnemyClass
 
     protected override void EnemyMoveset()
     {
-        if (canAttack == true && chompAttackDuration.CurrentProgress is Cooldown.Progress.Ready && chompAttackCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (canAttack == true && chompAttackDuration.CurrentProgress is Timer.Progress.Ready && chompAttackCooldown.CurrentProgress is Timer.Progress.Ready)
         {
             neutralSlash = true;
             chompAttackDuration.StartCooldown();
             Debug.Log("Slashing");
         }
 
-        if (chompAttackDuration.CurrentProgress is Cooldown.Progress.Finished)
+        if (chompAttackDuration.CurrentProgress is Timer.Progress.Finished)
         {
             neutralSlash = false;
             chompAttackCooldown.StartCooldown();
             chompAttackDuration.ResetCooldown();
         }
 
-        if (chompAttackCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        if (chompAttackCooldown.CurrentProgress is Timer.Progress.Finished)
         {
             chompAttackCooldown.ResetCooldown();
         }

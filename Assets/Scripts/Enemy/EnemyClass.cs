@@ -29,8 +29,8 @@ public abstract class EnemyClass : MonoBehaviour
     protected Transform target;
 
     [Header("---Cooldowns---")]
-    [SerializeField] protected Cooldown attackCooldown;
-    [SerializeField] protected Cooldown staggeredDuration;
+    [SerializeField] protected Timer attackCooldown;
+    [SerializeField] protected Timer staggeredDuration;
 
     //Component References
     [Header("---Component References---")]
@@ -203,24 +203,23 @@ public abstract class EnemyClass : MonoBehaviour
 
     }
 
-    protected virtual void Staggered()
-    {
-        if (playerCombat.ParriedAttack)
-        {
-            isStaggered = true;
-            staggeredDuration.StartCooldown();
-        }
+    //protected virtual void Staggered()
+    //{
+    //    if (playerCombat.ParriedAttack)
+    //    {
+    //        isStaggered = true;
+    //        staggeredDuration.StartCooldown();
+    //    }
 
-        if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
-        {
-            isStaggered = false;
-            staggeredDuration.ResetCooldown();
-        }
-    }
+    //    if (staggeredDuration.CurrentProgress is Cooldown.Progress.Finished)
+    //    {
+    //        isStaggered = false;
+    //        staggeredDuration.ResetCooldown();
+    //    }
+    //}
 
     protected virtual void TakeDamage()
     {
-        currentHealth -= playerStats.PlayerCurrentDamage;
         Debug.Log("Took damage");
 
         if (currentHealth <= 0)

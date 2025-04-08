@@ -2,152 +2,139 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnimationHandler : MonoBehaviour
+public class PlayerAnimationHandler : AnimationHandler
 {
-    private string currentAnimation;
-
-    //Player Component Reference
-    [Header("---Component Reference---")]
-    [SerializeField] private PlayerCombat playerCombat;
-    [SerializeField] private PlayerMovement playerMovement;
-    [SerializeField] private Animator playerAnimator;
-
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
 
+        if (movement == null)
+        {
+            movement = GetComponent<PlayerMovement>();
+        }
+
+        if (combat == null)
+        {
+            combat = GetComponent<PlayerCombat>();
+        }
     }
 
-    private void Update()
+    protected override void DirectionCheck()
     {
-        HandleAnimation();
-        Debug.Log($"Current animation: {currentAnimation}");
+        flipLocked = combat.IsDirectionLocked;
+        base.DirectionCheck();
     }
 
-    private void HandleAnimation()
+    protected override void MovementAnimation()
     {
-        if (playerMovement.IsJumping)
+        // Combat Animations
+
+        if (((PlayerCombat)combat).IsParry)
         {
-            if (playerMovement.IsMovingForward)
-            {
-                ChangeAnimation("playerJumpForward");
-            }
-            else if (playerMovement.IsMovingBackward)
-            {
-                ChangeAnimation("playerJumpBackward");
-            }
-            else
-            {
-                ChangeAnimation("playerJumpNeutral");
-            }
+            ChangeAnimation("playerParry");
+        }
+        else if (((PlayerCombat)combat).IsAirLightHigh)
+        {
+            ChangeAnimation("playerAirLightHigh");
+        }
+        else if (((PlayerCombat)combat).IsAirLightLow)
+        {
+            ChangeAnimation("playerAirLightLow");
+        }
+        else if (((PlayerCombat)combat).IsAirLight)
+        {
+            ChangeAnimation("playerAirLight");
+        }
+        else if (((PlayerCombat)combat).IsSubmergeLight)
+        {
+            ChangeAnimation("playerSubmergeLight");
+        }
+        else if (((PlayerCombat)combat).IsForwardLight)
+        {
+            ChangeAnimation("playerForwardLight");
+        }
+        else if (((PlayerCombat)combat).IsNeutralLight)
+        {
+            ChangeAnimation("playerLight");
+        }
+        else if (((PlayerCombat)combat).IsDashLight)
+        {
+            ChangeAnimation("playerDashLight");
+        }
+        else if (((PlayerCombat)combat).IsSludgeBomb)
+        {
+            ChangeAnimation("playerSludgeBomb");
         }
 
-        else if (playerMovement.IsSuperJumping)
-        {
-            if (playerMovement.IsMovingForward)
-            {
-                ChangeAnimation("playerSuperJumpForward");
-            }
-            else if (playerMovement.IsMovingBackward)
-            {
-                ChangeAnimation("playerSuperJumpBackward");
-            }
-            else
-            {
-                ChangeAnimation("playerSuperJumpNeutral");
-            }
-        }
+        // Movement Animations 
 
-        else if (playerMovement.IsClimbingWall)
+        else if (((PlayerMovement)movement).JumpingForward)
         {
-            ChangeAnimation("playerWallClimb");
+            ChangeAnimation("playerJumpForward");
         }
-
-        else if (playerCombat.SubmergedNeutralAttack == true)
+        else if (((PlayerMovement)movement).JumpingBackward)
         {
-            ChangeAnimation("playerSubmergeNeutralAttack");
+            ChangeAnimation("playerJumpBackward");
         }
-
-        else if (playerMovement.IsSubmerged)
+        else if (((PlayerMovement)movement).Jumping)
         {
-            if (playerMovement.IsMovingForward)
-            {
-                ChangeAnimation("playerSubmergeMoveForward");
-            }
-            else if (playerMovement.IsMovingBackward)
-            {
-                ChangeAnimation("playerSubmergeMoveBackward");
-            }
-            else
-            {
-                ChangeAnimation("playerSubmergeNeutral");
-            }
+            ChangeAnimation("playerJump");
         }
-
-        else if (playerMovement.IsDashingForward)
+        else if (((PlayerMovement)movement).AirDashingForward)
+        {
+            ChangeAnimation("playerAirDashForward");
+        }
+        else if (((PlayerMovement)movement).AirDashingBackward)
+        {
+            ChangeAnimation("playerAirDashBackward");
+        }
+        else if (((PlayerMovement)movement).DashingForward)
         {
             ChangeAnimation("playerDashForward");
         }
-        else if (playerMovement.IsDashingBackward)
+        else if (((PlayerMovement)movement).DashingBackward)
         {
             ChangeAnimation("playerDashBackward");
         }
-
-        else if (playerMovement.IsFalling)
+        else if (((PlayerMovement)movement).SubmergingForward)
         {
-            if (playerMovement.IsMovingForward)
-            {
-                ChangeAnimation("playerFallForward");
-            }
-            else if (playerMovement.IsMovingBackward)
-            {
-                ChangeAnimation("playerFallBackward");
-            }
-            else
-            {
-                ChangeAnimation("playerFallNeutral");
-            }
+            ChangeAnimation("playerSubmergeForward");
         }
-
-        else if (playerMovement.IsMovingForward)
+        else if (((PlayerMovement)movement).SubmergingBackward)
+        {
+            ChangeAnimation("playerSubmergeBackward");
+        }
+        else if (((PlayerMovement)movement).Submerging)
+        {
+            ChangeAnimation("playerSubmerge");
+        }
+        else if (((PlayerMovement)movement).Grappling)
+        {
+            ChangeAnimation("playerGrapple");
+        }
+        else if (((PlayerMovement)movement).FallingForward)
+        {
+            ChangeAnimation("playerFallForward");
+        }
+        else if (((PlayerMovement)movement).FallingBackward)
+        {
+            ChangeAnimation("playerFallBackward");
+        }
+        else if (((PlayerMovement)movement).Falling)
+        {
+            ChangeAnimation("playerFall");
+        }
+        else if (movingForward)
         {
             ChangeAnimation("playerMoveForward");
         }
-        else if (playerMovement.IsMovingBackward)
+        else if (movingBackward)
         {
             ChangeAnimation("playerMoveBackward");
         }
-
-        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 1)
-        {
-            ChangeAnimation("playerNeutralAttackCombo1");
-        }
-        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 2)
-        {
-            ChangeAnimation("playerNeutralAttackCombo2");
-        }
-        else if (playerCombat.NeutralAttack == true && playerCombat.ComboTally == 3)
-        {
-            ChangeAnimation("playerNeutralAttackCombo3");
-            Debug.Log("Final Combo");
-        }
-
-        else if (playerCombat.Parrying)
-        {
-            ChangeAnimation("playerParryNeutral");
-        }
-
         else
         {
             ChangeAnimation("playerIdle");
-        }
-    }
-
-    private void ChangeAnimation(string animation)
-    {
-        if (currentAnimation != animation)
-        {
-            currentAnimation = animation;
-            playerAnimator.Play(animation);
         }
     }
 }

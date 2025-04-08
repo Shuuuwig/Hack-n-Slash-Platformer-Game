@@ -8,9 +8,9 @@ public class TestDummy : MonoBehaviour
     [SerializeField] private bool toggleThrust;
     [SerializeField] private bool toggleParry;
 
-    [SerializeField] private Cooldown slashDuration;
-    [SerializeField] private Cooldown thrustDuration;
-    [SerializeField] private Cooldown attackCooldown;
+    [SerializeField] private Timer slashDuration;
+    [SerializeField] private Timer thrustDuration;
+    [SerializeField] private Timer attackCooldown;
 
     [SerializeField] private Animator animator;
 
@@ -36,13 +36,13 @@ public class TestDummy : MonoBehaviour
             return;
         }
 
-        if (attackCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (attackCooldown.CurrentProgress is Timer.Progress.Ready)
         {
             animator.Play("Slash");
             slashCollider.enabled = true;
             attackCooldown.StartCooldown();
         }
-        else if (attackCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        else if (attackCooldown.CurrentProgress is Timer.Progress.Finished)
         {
             slashCollider.enabled = false;
             attackCooldown.ResetCooldown();

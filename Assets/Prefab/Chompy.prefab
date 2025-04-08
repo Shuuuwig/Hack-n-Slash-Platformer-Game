@@ -9,12 +9,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Size.x
+      value: 0.6463922
+      objectReference: {fileID: 0}
+    - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Size.y
-      value: 0.9539136
+      value: 0.55406433
+      objectReference: {fileID: 0}
+    - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0215289
       objectReference: {fileID: 0}
     - target: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Offset.y
-      value: 0.24346974
+      value: 0.3101113
       objectReference: {fileID: 0}
     - target: {fileID: 2784678874733593636, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_Sprite
@@ -22,15 +30,15 @@ PrefabInstance:
       objectReference: {fileID: 6794369513415034282, guid: f00951fab6881e744bae591ed72399db, type: 3}
     - target: {fileID: 4490775375371808176, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.47
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.26
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.25
+      value: -1.04
       objectReference: {fileID: 0}
     - target: {fileID: 5433497152171295385, guid: f32c335fe43791545815e6dfd385b936, type: 3}
       propertyPath: m_LocalPosition.z
@@ -82,6 +90,41 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 2159584047056437594}
   m_SourcePrefab: {fileID: 100100000, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+--- !u!4 &370132862051651738 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 489742310497529334, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!61 &377037319032898754 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 491616492193003950, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3271578733517959199 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3355155813687217523, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4822188606170233797 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4684527654925289129, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5513200013582403057 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5722880894149376157, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5626919896169332612 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5620428824541299432, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &6556048323276085299 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 6418422075384145247, guid: f32c335fe43791545815e6dfd385b936, type: 3}
+  m_PrefabInstance: {fileID: 281778346942446956}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9041174191427484913 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9120255367531479453, guid: f32c335fe43791545815e6dfd385b936, type: 3}
@@ -116,17 +159,17 @@ MonoBehaviour:
   staggeredDuration:
     CurrentProgress: 0
     Duration: 0
-  attackRangeTransform: {fileID: 0}
-  parryAreaTransform: {fileID: 0}
-  visionAreaTransform: {fileID: 0}
-  effectiveRangeTransform: {fileID: 0}
-  detectionAreaTransform: {fileID: 0}
-  enemyRigidBody: {fileID: 0}
+  attackRangeTransform: {fileID: 5513200013582403057}
+  parryAreaTransform: {fileID: 5626919896169332612}
+  visionAreaTransform: {fileID: 3271578733517959199}
+  effectiveRangeTransform: {fileID: 4822188606170233797}
+  detectionAreaTransform: {fileID: 370132862051651738}
+  enemyRigidbody: {fileID: 6556048323276085299}
   playerTransform: {fileID: 0}
   playerMovement: {fileID: 0}
   playerCombat: {fileID: 0}
   playerStats: {fileID: 0}
-  chompCollider: {fileID: 0}
+  chompCollider: {fileID: 377037319032898754}
   chompAttackDuration:
     CurrentProgress: 0
     Duration: 0
