@@ -29,32 +29,49 @@ public abstract class Movement : MonoBehaviour
     // Knockback
     [Header("--- Knockback Effect ---")]
     [SerializeField] protected float knockedbackForce;
-    [SerializeField] protected Cooldown knockedbackTimer;
+    [SerializeField] protected Timer knockedbackTimer;
     protected Vector2 knockedbackDirection;
     protected Vector2 collisionPoint;
 
     // Movement States
-    protected bool isIdle;
-    protected bool isMoving;
-    protected bool isMovingForward;
-    protected bool isMovingBackward;
-    protected bool isJumping;
-    protected bool isFalling;
-    protected bool isFacingRight;
-    protected bool isKnockedback;
+    protected bool moving;
+    protected bool movingForward;
+    protected bool movingBackward;
+    protected bool jumping;
+    protected bool jumpingForward;
+    protected bool jumpingBackward;
+    protected bool falling;
+    protected bool fallingForward;
+    protected bool fallingBackward;
+
+    protected bool facingRight;
+    protected bool knockedback;
 
     // Collision States
-    protected bool isGrounded;
+    protected bool grounded;
 
     protected Rigidbody2D attachedRigidbody;
+
+    public bool Grounded {  get { return grounded; } }
     public Rigidbody2D AttachedRigidBody { get { return attachedRigidbody; } }
     //private Status status;
     //private Stats stats;
 
-    public bool IsMoving {  get { return isMoving; } }
-    public bool IsIdle { get { return isIdle; } }
+    public bool Moving {  get { return moving; } }
+    public bool MovingForward { get { return movingForward; } }
+    public bool MovingBackward { get { return movingBackward; } }
+    public bool Jumping { get { return jumping; } }
+    public bool JumpingForward { get { return jumpingForward; } }
+    public bool JumpingBackward { get { return jumpingBackward; } }
+    public bool Falling { get { return falling; } }
+    public bool FallingForward { get { return fallingForward; } }
+    public bool FallingBackward { get { return fallingBackward; } }
+    public bool FacingRight { get { return facingRight; } }
+    public bool Knockedback { get { return knockedback; } }
 
     protected AnimationHandler animationHandler;
+    protected Status status;
+    protected Combat combat;
 
     //============================================= GIZMO =============================================//
     protected virtual void OnDrawGizmos()
@@ -95,6 +112,36 @@ public abstract class Movement : MonoBehaviour
     {
         UpdateMovementStates();
         GroundCheck();
+
+        Timers();
+
+        HorizontalMovement();
+        VerticalMovement();
+    }
+
+    //============================================= OTHERS =============================================//
+    protected virtual void Timers()
+    {
+        if (knockedbackTimer.CurrentProgress == Timer.Progress.InProgress)
+        {
+            attachedRigidbody.velocity = new Vector2(knockedbackForce * Mathf.Sign(knockedbackDirection.x), 0);
+        }
+        else if (knockedbackTimer.CurrentProgress == Timer.Progress.Finished)
+        {
+            status.IsKnockedback = false;
+            knockedbackTimer.ResetCooldown();
+        }
+    }
+
+    protected virtual void KnockedbackState()
+    {
+        if (knockedbackTimer.CurrentProgress == Timer.Progress.Ready)
+        {
+            status.IsKnockedback = true;
+            knockedbackTimer.StartCooldown();
+            knockedbackDirection = new Vector2(transform.position.x - collisionPoint.x, 0);
+        }
+
     }
 
     //============================================= COLLISION CHECK =============================================//
@@ -104,48 +151,33 @@ public abstract class Movement : MonoBehaviour
 
         if (groundBoxcast)
         {
-            isGrounded = true;
-            isJumping = false;
-            isFalling = false;
+            grounded = true;
+            jumping = false;
+            falling = false;
         }
         else
         {
-            isGrounded = false;
+            grounded = false;
         }
     }
 
     //============================================= BASIC MOVEMENT =============================================//
     protected virtual void UpdateMovementStates()
     {
-        isFacingRight = animationHandler.IsFacingRight;
-        isMoving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
-        isMovingForward = animationHandler.IsMovingForward;
-        isMovingBackward = isMoving && !isMovingForward;
-        isJumping = attachedRigidbody.velocity.y > 0.01f;
-        isFalling = attachedRigidbody.velocity.y < -0.01f;
-        isIdle = !isMoving && !isJumping && !isFalling;
+        facingRight = animationHandler.FacingRight;
+        moving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
+        movingForward = animationHandler.MovingForward;
+        movingBackward = animationHandler.MovingBackward;
+        jumping = attachedRigidbody.velocity.y > 0.01f;
+        jumpingForward = jumping && movingForward;
+        jumpingBackward = jumping && movingBackward;
+        falling = attachedRigidbody.velocity.y < -0.01f;
+        fallingForward = falling && movingForward;
+        fallingBackward = falling && movingBackward;    
     }
 
     protected abstract void HorizontalMovement();
     protected abstract void VerticalMovement();
 
-    //============================================= DISPLACEMENT EFFECTS =============================================//
-    protected virtual void Knockedback()
-    {
-        if (knockedbackTimer.CurrentProgress == Cooldown.Progress.Ready)
-        {
-            //status.IsKnockedback = true;
-            knockedbackTimer.StartCooldown();
-            knockedbackDirection = new Vector2(transform.position.x - collisionPoint.x, 0);
-        }
-        else if (knockedbackTimer.CurrentProgress == Cooldown.Progress.InProgress)
-        {
-            attachedRigidbody.velocity = new Vector2(knockedbackForce * Mathf.Sign(knockedbackDirection.x), 0);
-        }
-        else if (knockedbackTimer.CurrentProgress == Cooldown.Progress.Finished)
-        {
-            //status.IsKnockedback = false;
-            knockedbackTimer.ResetCooldown();
-        }
-    }
+   
 }

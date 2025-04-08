@@ -9,10 +9,13 @@ public class Stats : MonoBehaviour
     [SerializeField] protected float currentHealth;
     [SerializeField] protected float baseDamage;
 
+    public float CurrentHealth {  get { return currentHealth; } }
+    public float BaseDamage { get { return baseDamage; } }
+
                       //Ability //Unlocked
-    protected Dictionary<string, bool> moveset = new Dictionary<string, bool>();
+    protected Dictionary<string, bool> skills = new Dictionary<string, bool>();
     
-    public Dictionary<string, bool> Moveset { get { return moveset; } }
+    public Dictionary<string, bool> Skills { get { return skills; } }
 
     protected virtual void Start()
     {

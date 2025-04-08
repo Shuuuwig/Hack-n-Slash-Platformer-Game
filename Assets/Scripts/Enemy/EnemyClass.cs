@@ -29,8 +29,8 @@ public abstract class EnemyClass : MonoBehaviour
     protected Transform target;
 
     [Header("---Cooldowns---")]
-    [SerializeField] protected Cooldown attackCooldown;
-    [SerializeField] protected Cooldown staggeredDuration;
+    [SerializeField] protected Timer attackCooldown;
+    [SerializeField] protected Timer staggeredDuration;
 
     //Component References
     [Header("---Component References---")]

@@ -4,41 +4,52 @@ using UnityEngine;
 
 public abstract class AnimationHandler : MonoBehaviour
 {
-    protected bool isFacingRight;
-    protected bool isMovingForward;
-    protected bool isFlipLocked;
+    private string currentAnimation;
 
-    public bool IsFacingRight {  get { return isFacingRight; } }
-    public bool IsMovingForward { get { return isMovingForward; } }
+    protected bool facingRight;
+    protected bool facingLeft;
+    protected bool movingForward;
+    protected bool movingBackward;
+    protected bool flipLocked;
+
+    public bool FacingRight {  get { return facingRight; } }
+    public bool FacingLeft { get { return facingLeft; } }
+    public bool MovingForward { get { return movingForward; } }
+    public bool MovingBackward {  get { return movingBackward; } }
 
     protected Movement movement;
     protected Combat combat;
+    [SerializeField] protected Animator graphicAnimator;
+    [SerializeField] protected Animator hitboxAnimator;
 
     protected virtual void Start()
     {
-        if (movement == null)
+        if (graphicAnimator == null)
         {
-            movement = GetComponent<Movement>();
+            graphicAnimator = transform.Find("Graphic").GetComponentInChildren<Animator>();
         }
 
-        if (combat == null)
+        if (hitboxAnimator == null)
         {
-            combat = GetComponent<Combat>();
+            hitboxAnimator = GetComponent<Animator>();
         }
-        
+
     }
 
     protected virtual void Update()
     {
         DirectionCheck();
+        MovementAnimation();
     }
 
     protected virtual void DirectionCheck()
     {
-        isFacingRight = transform.localScale.x > 0;
-        isMovingForward = (movement.AttachedRigidBody.velocity.x > 0.1f && isFacingRight || movement.AttachedRigidBody.velocity.x < -0.1f && !isFacingRight);
+        facingRight = transform.localScale.x > 0;
+        facingLeft = transform.localScale.x < 0;
+        movingForward = ((movement.AttachedRigidBody.velocity.x > 0.1f && facingRight) || (movement.AttachedRigidBody.velocity.x < -0.1f && facingLeft));
+        movingBackward = ((movement.AttachedRigidBody.velocity.x < -0.1f && facingRight) || (movement.AttachedRigidBody.velocity.x > 0.1f && facingLeft));
 
-        if (Mathf.Abs(movement.AttachedRigidBody.velocity.x) > 0.1f && !isMovingForward && !isFlipLocked)
+        if (Mathf.Abs(movement.AttachedRigidBody.velocity.x) > 0.1f && !movingForward && !flipLocked)
             Flip();
     }
 
@@ -46,4 +57,16 @@ public abstract class AnimationHandler : MonoBehaviour
     {
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
     }
+
+    protected virtual void ChangeAnimation(string animation)
+    {
+        if (currentAnimation != animation)
+        {
+            Debug.Log($"Changing animation from {currentAnimation} to {animation}");
+            currentAnimation = animation;
+            graphicAnimator.Play(animation);
+        }
+    }
+
+    protected abstract void MovementAnimation();
 }

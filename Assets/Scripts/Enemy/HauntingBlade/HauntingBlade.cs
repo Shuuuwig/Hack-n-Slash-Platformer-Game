@@ -7,8 +7,8 @@ using UnityEngine;
 public class HauntingBlade : EnemyClass
 {
     [SerializeField] private Collider2D slashCollider;
-    [SerializeField] private Cooldown slashAttackDuration;
-    [SerializeField] private Cooldown slashAttackCooldown;
+    [SerializeField] private Timer slashAttackDuration;
+    [SerializeField] private Timer slashAttackCooldown;
 
     private bool neutralSlash;
 
@@ -21,21 +21,21 @@ public class HauntingBlade : EnemyClass
 
     protected override void EnemyMoveset()
     {
-        if (canAttack == true && slashAttackDuration.CurrentProgress is Cooldown.Progress.Ready && slashAttackCooldown.CurrentProgress is Cooldown.Progress.Ready)
+        if (canAttack == true && slashAttackDuration.CurrentProgress is Timer.Progress.Ready && slashAttackCooldown.CurrentProgress is Timer.Progress.Ready)
         {
             neutralSlash = true;
             slashAttackDuration.StartCooldown();
             Debug.Log("Slashing");
         }
 
-        if (slashAttackDuration.CurrentProgress is Cooldown.Progress.Finished)
+        if (slashAttackDuration.CurrentProgress is Timer.Progress.Finished)
         {
             neutralSlash = false;
             slashAttackCooldown.StartCooldown();
             slashAttackDuration.ResetCooldown();
         }
 
-        if (slashAttackCooldown.CurrentProgress is Cooldown.Progress.Finished)
+        if (slashAttackCooldown.CurrentProgress is Timer.Progress.Finished)
         {
             slashAttackCooldown.ResetCooldown();
         }
