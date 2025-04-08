@@ -15,22 +15,22 @@ public class PlayerStats : Stats
 
         }
     }
-    protected override void Start()
-    {
-        healthbar.SetMaxHealth(maxHealth);
+    //protected override void Start()
+    //{
+    //    healthbar.SetMaxHealth(maxHealth);
 
-        skills.Add("SludgeProjectile", true);
-    }
+    //    skills.Add("SludgeProjectile", true);
+    //}
 
-    void Update()
-    {
-        UpdateHealthBar();
-    }
+    //void Update()
+    //{
+    //    UpdateHealthBar();
+    //}
 
-    private void UpdateHealthBar()
-    {
-        healthbar.SetHealthBar(currentHealth);
-    }
+    //private void UpdateHealthBar()
+    //{
+    //    healthbar.SetHealthBar(currentHealth);
+    //}
 
     
 }

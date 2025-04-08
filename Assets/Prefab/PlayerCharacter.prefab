@@ -159,10 +159,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c59a9792d7703148aa6ff4fbd09f1c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSpeed: 4
+  cameraSpeed: 6
+  lookAheadDistance: 2
+  lookAheadSpeed: 3.5
+  yAxisOffset: 3.5
   mainCamera: {fileID: 0}
   viewPoint: {fileID: 2743557413248819994}
-  yAxisOffset: 3
 --- !u!114 &5350827209436808433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +234,7 @@ MonoBehaviour:
   gizmoToggleOn: 1
   speedForwards: 10
   speedBackwards: 5
-  jumpPower: 20
+  jumpPower: 18
   groundCastDistance: 0.2
   groundTransform: {fileID: 4858590132046324471}
   groundBoxSize: {x: 0.55, y: 0.1}
@@ -342,7 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3099171172402303188}
   m_Layer: 10
-  m_Name: ForwardBasic
+  m_Name: ForwardLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,7 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 64901654857435601}
   m_Layer: 10
-  m_Name: DashBasic
+  m_Name: SludgeBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -435,7 +437,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3201193481602445914}
   m_Layer: 10
-  m_Name: AirLowBasic
+  m_Name: AirLowLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -466,7 +468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2003356280973256011}
   m_Layer: 10
-  m_Name: NeutralBasic
+  m_Name: NeutralLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,7 +698,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2766590726824820403}
   m_Layer: 10
-  m_Name: AirBasic
+  m_Name: AirLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -727,7 +729,7 @@ GameObject:
   m_Component:
   - component: {fileID: 467324637088572248}
   m_Layer: 10
-  m_Name: SubmergeBasic
+  m_Name: SubmergeLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -796,7 +798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2151759648588186492}
   m_Layer: 10
-  m_Name: AirHighBasic
+  m_Name: AirHighLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -842,7 +844,7 @@ Transform:
   m_GameObject: {fileID: 7226377209486460344}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.342521, y: -0.2150273, z: 0}
+  m_LocalPosition: {x: 2.29, y: -0.2150273, z: 0}
   m_LocalScale: {x: 1.2810658, y: 0.55618477, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
