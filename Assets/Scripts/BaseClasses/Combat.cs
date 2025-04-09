@@ -83,7 +83,7 @@ public abstract class Combat : MonoBehaviour
         Timers();
 
         Attack();
-        ParryState();
+        Parry();
     }
 
     protected virtual void DirectionLock()
@@ -122,7 +122,7 @@ public abstract class Combat : MonoBehaviour
         
     }
 
-    protected virtual void ParryState()
+    protected virtual void Parry()
     {
         //parryCollider = Physics2D.OverlapBox(parryTransform.position, parryBoxSize, 0, parryableLayer);
 
