@@ -21,4 +21,9 @@ public class Stats : MonoBehaviour
     {
      
     }
+
+    protected virtual void Update()
+    {
+
+    }
 }

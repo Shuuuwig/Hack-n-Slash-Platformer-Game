@@ -96,7 +96,7 @@ public class PlayerCombat : Combat
 
     protected override void DirectionLock()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(inputTracker.CameraLock))
         {
             isDirectionLocked = !isDirectionLocked;
         }

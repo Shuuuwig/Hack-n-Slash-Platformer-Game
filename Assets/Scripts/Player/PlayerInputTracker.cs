@@ -23,6 +23,7 @@ public class PlayerInputTracker : MonoBehaviour
 
     protected Vector2 playerDirectionalInput;
 
+    [SerializeField] protected KeyCode cameraLock;
     [SerializeField] protected KeyCode lightButton;
     [SerializeField] protected KeyCode mediumButton;
     [SerializeField] protected KeyCode heavyButton;
@@ -42,6 +43,7 @@ public class PlayerInputTracker : MonoBehaviour
 
     public Vector2 PlayerDirectionalInput { get { return playerDirectionalInput; } }
 
+    public KeyCode CameraLock { get { return cameraLock; } }
     public KeyCode LightButton { get { return lightButton; } }
     public KeyCode MediumButton {  get { return mediumButton; } }
     public KeyCode HeavyButton {  get { return heavyButton; } }

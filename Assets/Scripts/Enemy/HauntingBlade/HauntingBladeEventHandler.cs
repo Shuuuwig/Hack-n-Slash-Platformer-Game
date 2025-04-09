@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HauntingBladeEventHandler : MonoBehaviour
 {
-    [SerializeField] private HauntingBlade HauntingBlade;
+    [SerializeField] private HauntingBladeCombat combat;
 
 
     void Start()
@@ -19,13 +19,13 @@ public class HauntingBladeEventHandler : MonoBehaviour
 
     private void HauntingBladeSlash()
     {
-        if (HauntingBlade.SlashCollider.enabled == false)
+        if (combat.SlashCollider.enabled == false)
         {
-            HauntingBlade.SlashCollider.enabled = true;
+            combat.SlashCollider.enabled = true;
         }
         else
         {
-            HauntingBlade.SlashCollider.enabled = false;
+            combat.SlashCollider.enabled = false;
         }
     }
 }

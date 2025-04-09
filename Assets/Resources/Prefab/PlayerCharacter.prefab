@@ -40,13 +40,13 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7484320910919367461}
+  - {fileID: 8449513449216802019}
   - {fileID: 2431653240270840198}
   - {fileID: 4941370959921498126}
   - {fileID: 6688153252432618049}
   - {fileID: 5628894079753053823}
   - {fileID: 4858590132046324471}
   - {fileID: 2743557413248819994}
-  - {fileID: 8449513449216802019}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7964752652834704161
@@ -120,11 +120,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.06302118, y: 0.13127995}
-      - {x: -0.41537404, y: 0.06276563}
-      - {x: -0.6350511, y: -0.4738417}
-      - {x: 0.65080655, y: -0.47384158}
-      - {x: 0.47839516, y: -0.12876302}
+    - - {x: 0.3765436, y: -0.13295072}
+      - {x: 0.37186444, y: 0.008791061}
+      - {x: 0.2658291, y: 0.05872616}
+      - {x: 0.003189534, y: 0.059802704}
+      - {x: -0.13318467, y: -0.029011115}
+      - {x: -0.11378376, y: -0.30629236}
+      - {x: -0.5813931, y: -0.49650732}
+      - {x: 0.5361286, y: -0.4972715}
+      - {x: 0.3229126, y: -0.30072373}
+      - {x: 0.4308507, y: -0.19971798}
   m_UseDelaunayMesh: 0
 --- !u!95 &5704146090742838109
 Animator:
@@ -136,7 +141,7 @@ Animator:
   m_GameObject: {fileID: 1115979995829133763}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e7602332039687e4e81feffc14b8f502, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -214,6 +219,7 @@ MonoBehaviour:
   multipleInputPrevention:
     CurrentProgress: 0
     Duration: 0.05
+  cameraLock: 108
   lightButton: 117
   mediumButton: 105
   heavyButton: 111
@@ -234,7 +240,7 @@ MonoBehaviour:
   gizmoToggleOn: 1
   speedForwards: 10
   speedBackwards: 5
-  jumpPower: 18
+  jumpPower: 16
   groundCastDistance: 0.2
   groundTransform: {fileID: 4858590132046324471}
   groundBoxSize: {x: 0.55, y: 0.1}
@@ -625,7 +631,7 @@ SpriteRenderer:
   m_SortingLayerID: -2040132249
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2420595480475612060, guid: c3c2a1923047c9c4f949d297421a46c2, type: 3}
+  m_Sprite: {fileID: -6157502176949488172, guid: bc5844a8c7011ed438aeddd4d4b9f57b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -760,7 +766,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2431653240270840198}
   m_Layer: 10
-  m_Name: AttackCollider
+  m_Name: attackCollider
   m_TagString: PlayerWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

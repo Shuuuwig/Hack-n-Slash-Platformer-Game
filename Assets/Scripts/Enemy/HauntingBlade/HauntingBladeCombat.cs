@@ -5,12 +5,9 @@ using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.AI;
 
-public abstract class EnemyClass : MonoBehaviour
+public class HauntingBladeCombat : Combat
 {
-    [Header("---Gizmo Configuration---")]
-    [SerializeField] protected bool gizmoToggleOn = true;
-
-    [Header("---Enemy Configuration---")]
+    [Header("========== Additional Configuration ==========")]
     [SerializeField] protected float maxHealth;
     protected float currentHealth;
     [SerializeField] protected float damage;
@@ -58,11 +55,25 @@ public abstract class EnemyClass : MonoBehaviour
     protected bool isStaggered;
     protected bool isNearPlayer;
 
+    [SerializeField] private Collider2D slashCollider;
+    [SerializeField] private Timer slashAttackDuration;
+    [SerializeField] private Timer slashAttackCooldown;
+
+    private bool neutralSlash;
+
+    public bool NeutralSlash { get { return neutralSlash; } }
+    public Collider2D SlashCollider
+    {
+        get { return slashCollider; }
+        set { slashCollider = value; }
+    }
+
     public float Health { get { return currentHealth; } set { currentHealth = value; } }
     public float Damage { get { return damage; } set { damage = value; } }
 
-    protected void Start()
+    protected override void Start()
     {
+        stats = GetComponent<PlayerStats>();
         currentHealth = maxHealth;
         GameObject Player = GameObject.FindWithTag("Player");
         if (Player == null)
@@ -82,7 +93,6 @@ public abstract class EnemyClass : MonoBehaviour
         EffectiveRangeCheck();
 
         EnemyMoveset();
-        EnemyMovement();
         EnemyState();
         AggroPlayer();
     }
@@ -138,28 +148,28 @@ public abstract class EnemyClass : MonoBehaviour
     }
 
     //===========================================================================
-    protected virtual void EnemyMoveset()
+    protected void EnemyMoveset()
     {
-        //Different for all
+        if (canAttack == true && slashAttackDuration.CurrentProgress is Timer.Progress.Ready && slashAttackCooldown.CurrentProgress is Timer.Progress.Ready)
+        {
+            neutralSlash = true;
+            slashAttackDuration.StartCooldown();
+            Debug.Log("Slashing");
+        }
+
+        if (slashAttackDuration.CurrentProgress is Timer.Progress.Finished)
+        {
+            neutralSlash = false;
+            slashAttackCooldown.StartCooldown();
+            slashAttackDuration.ResetCooldown();
+        }
+
+        if (slashAttackCooldown.CurrentProgress is Timer.Progress.Finished)
+        {
+            slashAttackCooldown.ResetCooldown();
+        }
     }
 
-    protected virtual void EnemyMovement()
-    {
-        if (playerDetected == false || canAttack == true)
-            return;
-
-        movementDirection = new Vector2(transform.position.x - playerTransform.position.x, 0);
-        Debug.Log(movementDirection.x);
-
-        if (movementDirection.x > 0)
-        {
-            enemyRigidbody.velocity = new Vector2(-speed, enemyRigidbody.velocity.y);
-        }
-        else if (movementDirection.x < 0)
-        {
-            enemyRigidbody.velocity = new Vector2(speed, enemyRigidbody.velocity.y);
-        }
-    }
 
     protected virtual void AggroPlayer()
     {
@@ -272,4 +282,5 @@ public abstract class EnemyClass : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(detectionAreaTransform.position, detectableArea);
     }
+
 }

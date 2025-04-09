@@ -72,15 +72,7 @@ public abstract class Combat : MonoBehaviour
 
     protected virtual void Start()
     {
-        if (stats == null)
-        {
-            stats = GetComponent<Stats>();
-        }
 
-        if (movement == null)
-        {
-            movement = GetComponent<Movement>();
-        }
     }
 
     protected virtual void Update()

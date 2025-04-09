@@ -23,7 +23,7 @@ TagManager:
   - Ground
   - Wall
   - Tunnel
-  - GrapplePoint
+  - Enemy
   - Player
   - Parryable
   - 
