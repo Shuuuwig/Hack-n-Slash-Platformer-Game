@@ -19,8 +19,10 @@ public class NextSection : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("collission " + collision.gameObject);
         if (collision.CompareTag("Player"))
         {
+            Debug.Log(message: "loading next level");
             GameManager.Instance.ToNextLevel(nextSection);
         }
     }

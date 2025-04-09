@@ -1,54 +1,42 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class PlayerEventHandler : MonoBehaviour
-//{
-//    //Player Component Reference
-//    [Header("---Component Reference---")]
-//    [SerializeField] private PlayerCombat playerCombat;
-//    [SerializeField] private PlayerMovement playerMovement;
+public class PlayerEventHandler : MonoBehaviour
+{
+    [SerializeField] private Collider2D neutralLightCollider;
+    [SerializeField] private Collider2D airLightCollider;
+    [SerializeField] private Collider2D airLowLightCollider;
+    [SerializeField] private Collider2D airHighLightCollider;
+    [SerializeField] private Collider2D submergeLightCollider;
 
-//    void Start()
-//    {
-        
-//    }
+    //Player Component Reference
+    [Header("---Component Reference---")]
+    [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private PlayerMovement playerMovement;
 
-//    void Update()
-//    {
-        
-//    }
+    void Start()
+    {
 
-//    private void NeutralAttack()
-//    {
-//        if (playerCombat.NeutralAttack == true)
-//        {
-//            playerCombat.NeutralAttackCollider1.enabled = false;
-//            playerCombat.NeutralAttackCollider2.enabled = false;
-//            playerCombat.NeutralAttackCollider3.enabled = false;
+    }
 
-//            if (playerCombat.ComboTally == 1)
-//            {
-//                playerCombat.NeutralAttackCollider1.enabled = true;
-//            }
-//            else if (playerCombat.ComboTally == 2)
-//            {
-//                playerCombat.NeutralAttackCollider2.enabled = true;
-//            }
-//            else if (playerCombat.ComboTally == 3)
-//            {
-//                playerCombat.NeutralAttackCollider3.enabled = true;
-//            }
-//        }
-//    }
+    void Update()
+    {
 
-//    private void SubmergedAttack()
-//    {
+    }
 
-//    }
+    private void NeutralAttack()
+    {
+        neutralLightCollider.enabled = !neutralLightCollider.enabled;
+    }
 
-//    private void AirAttack()
-//    {
+    private void SubmergedAttack()
+    {
 
-//    }
-//}
+    }
+
+    private void AirAttack()
+    {
+
+    }
+}

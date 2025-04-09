@@ -19,19 +19,13 @@ public abstract class AnimationHandler : MonoBehaviour
 
     protected Movement movement;
     protected Combat combat;
-    [SerializeField] protected Animator graphicAnimator;
-    [SerializeField] protected Animator hitboxAnimator;
+    [SerializeField] protected Animator animator;
 
     protected virtual void Start()
     {
-        if (graphicAnimator == null)
+        if (animator == null)
         {
-            graphicAnimator = transform.Find("Graphic").GetComponentInChildren<Animator>();
-        }
-
-        if (hitboxAnimator == null)
-        {
-            hitboxAnimator = GetComponent<Animator>();
+            animator = transform.Find("Graphic").GetComponentInChildren<Animator>();
         }
 
     }
@@ -64,7 +58,7 @@ public abstract class AnimationHandler : MonoBehaviour
         {
             Debug.Log($"Changing animation from {currentAnimation} to {animation}");
             currentAnimation = animation;
-            graphicAnimator.Play(animation);
+            animator.Play(animation);
         }
     }
 

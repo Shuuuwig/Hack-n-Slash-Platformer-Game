@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        PauseGame();
+        //PauseGame();
         //ResetScene();
     }
 
@@ -101,15 +101,12 @@ public class GameManager : MonoBehaviour
 
     public void ToNextLevel(int nextSection)
     {
-        if(playerCharacter == null)
+        if (playerCharacter == null)
         {
             playerCharacter = GameObject.FindWithTag("Player");
         }
-        if (playerCharacter != null)
-        {
-            m_Instance.playerSavedPosition = playerCharacter.transform.position;
-        }
-        
+
+        Debug.Log("sjhdfhj");
         m_Instance.currentlevel = nextSection;
         SceneManager.LoadScene(m_Instance.currentlevel);
 

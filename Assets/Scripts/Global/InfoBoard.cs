@@ -11,11 +11,11 @@ public class InfoBoard : MonoBehaviour
    
     void Start()
     {
-        if (infoUI == null)
-        {
-            Debug.Log("Missing Reference");
-            return;
-        }
+        //if (infoUI == null)
+        //{
+        //    Debug.Log("Missing Reference");
+        //    return;
+        //}
     }
 
     

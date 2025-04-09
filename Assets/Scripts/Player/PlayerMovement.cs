@@ -139,6 +139,11 @@ public class PlayerMovement : Movement
         else
         {
             submerging = false;
+
+            if (falling && attachedRigidbody.velocity.y < -15f)
+            {
+                attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, -15f);
+            }
         }
     }
 
