@@ -44,12 +44,14 @@ public abstract class Movement : MonoBehaviour
     protected bool fallingForward;
     protected bool fallingBackward;
 
+    protected bool facingLeft;
     protected bool facingRight;
     protected bool knockedback;
 
     // Collision States
     protected bool grounded;
 
+    protected Collider2D hurtbox;
     protected Rigidbody2D attachedRigidbody;
 
     public bool Grounded {  get { return grounded; } }
@@ -87,25 +89,8 @@ public abstract class Movement : MonoBehaviour
     //============================================= LIFE CYCLE =============================================//
     protected virtual void Start()
     {
-        if (attachedRigidbody == null)
-        {
-            attachedRigidbody = GetComponent<Rigidbody2D>();
-        }
-        if (attachedRigidbody == null)
-        {
-            Debug.LogError("Component Attached Rigidbody not found", this);
-            return;
-        }
-
-        if (animationHandler == null)
-        {
-            animationHandler = GetComponent<AnimationHandler>();
-        }
-        if (animationHandler == null)
-        {
-            Debug.Log("Component Animation Handler not found");
-            return;
-        }
+        attachedRigidbody = GetComponent<Rigidbody2D>();
+        hurtbox = GetComponent<Collider2D>();
     }
 
     protected virtual void Update()
@@ -164,6 +149,7 @@ public abstract class Movement : MonoBehaviour
     //============================================= BASIC MOVEMENT =============================================//
     protected virtual void UpdateMovementStates()
     {
+        facingLeft = animationHandler.FacingLeft;
         facingRight = animationHandler.FacingRight;
         moving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
         movingForward = animationHandler.MovingForward;

@@ -47,6 +47,9 @@ public class PlayerMovement : Movement
     [SerializeField] protected LayerMask overheadCheckLayer;
     protected RaycastHit2D overheadOverlapBox;
 
+    [SerializeField] protected LayerMask playerLayer;
+    [SerializeField] protected LayerMask enemyLayer;
+
     // Movement States
     protected bool inputLeft;
     protected bool inputRight;
@@ -175,6 +178,7 @@ public class PlayerMovement : Movement
         if (dashDuration.CurrentProgress == Timer.Progress.Finished)
         {
             attachedRigidbody.gravityScale = 5f;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
             dashDuration.ResetCooldown();
         }
             
@@ -217,18 +221,28 @@ public class PlayerMovement : Movement
         airDashingBackward = dashingBackward && !grounded;
         submergingForward = submerging && movingForward;
         submergingBackward = submerging && movingBackward;
-        Debug.Log(dashing);
     }
 
     protected override void HorizontalMovement()
     {
-        if (combat.IsAttacking)
+        if (combat.IsAttacking && grounded)
+        {
+            attachedRigidbody.velocity = Vector2.zero;
             return;
+        }
+            
 
         if (dashing || jumping || falling)
             return;
 
-        attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * speedForwards, attachedRigidbody.velocity.y);
+        if (((PlayerCombat)combat).IsDirectionLocked && ((facingLeft && inputRight) || (facingRight && inputLeft)))
+        {
+            attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * speedBackwards, attachedRigidbody.velocity.y);
+        }
+        else
+        {
+            attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * speedForwards, attachedRigidbody.velocity.y);
+        }
     }
 
     protected override void VerticalMovement()
@@ -284,6 +298,7 @@ public class PlayerMovement : Movement
         {
             dashDuration.StartCooldown();
             attachedRigidbody.gravityScale = 0f;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
         }
 
         float alteredDashPower = dashPower;
@@ -339,7 +354,7 @@ public class PlayerMovement : Movement
         
     }
 
-
+    
 
     
 }

@@ -2,42 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HauntingBladeAnimationHandler : MonoBehaviour
+public class HauntingBladeAnimationHandler : AnimationHandler
 {
-    private string currentAnimation;
-
-    [SerializeField] private HauntingBlade HauntingBlade;
-    [SerializeField] private Animator hauntingBladeAnimator;
-    void Start()
+    //[SerializeField] private HauntingBlade hauntingBlade;
+    protected override void Start()
     {
-        
+        base.Start();
+        movement = GetComponent<HauntingBladeMovement>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        HandleAnimation();
+        base .Update();
     }
 
-    private void ChangeAnimation(string animation)
+    protected override void MovementAnimation()
     {
-        if (currentAnimation != animation)
+        if (((HauntingBladeMovement)movement).AwakingTime.CurrentProgress == Timer.Progress.InProgress)
         {
-            currentAnimation = animation;
-            hauntingBladeAnimator.Play(animation);
-        }
-    }
-
-    private void HandleAnimation()
-    {
-        if (HauntingBlade.NeutralSlash == true)
-        {
-            ChangeAnimation("hauntingBladeSlash");
+            ChangeAnimation("hauntingBladeAwake");
         }
 
-        else
+        if (((HauntingBladeMovement)movement).AwakingTime.CurrentProgress != Timer.Progress.Finished)
+            return;
+
+        if (((HauntingBladeMovement)movement).MovingForward)
         {
-            ChangeAnimation("hauntingBladeIdle");
+            ChangeAnimation("hauntingBladeMoveForward");
         }
     }
 }
