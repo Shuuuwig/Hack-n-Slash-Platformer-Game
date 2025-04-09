@@ -56,7 +56,7 @@ public class HauntingBladeCombat : Combat
     }
 
 
-    protected override void Parry()
+    protected override void ParryState()
     {
     
     }
