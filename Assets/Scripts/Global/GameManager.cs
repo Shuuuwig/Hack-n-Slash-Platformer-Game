@@ -106,10 +106,7 @@ public class GameManager : MonoBehaviour
             playerCharacter = GameObject.FindWithTag("Player");
         }
 
-        Debug.Log("sjhdfhj");
         m_Instance.currentlevel = nextSection;
         SceneManager.LoadScene(m_Instance.currentlevel);
-
-
     }
 }

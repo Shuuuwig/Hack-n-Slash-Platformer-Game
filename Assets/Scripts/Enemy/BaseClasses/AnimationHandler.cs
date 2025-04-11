@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AnimationHandler : MonoBehaviour
+public abstract class EnemyAnimationHandler : MonoBehaviour
 {
     private string currentAnimation;
 
@@ -17,8 +17,8 @@ public abstract class AnimationHandler : MonoBehaviour
     public bool MovingForward { get { return movingForward; } }
     public bool MovingBackward {  get { return movingBackward; } }
 
-    protected Movement movement;
-    protected Combat combat;
+    protected EnemyMovement movement;
+    protected EnemyCombat combat;
     [SerializeField] protected Animator animator;
 
     protected virtual void Start()
@@ -56,7 +56,7 @@ public abstract class AnimationHandler : MonoBehaviour
     {
         if (currentAnimation != animation)
         {
-            Debug.Log($"Changing animation from {currentAnimation} to {animation}");
+            //Debug.Log($"Changing animation from {currentAnimation} to {animation}");
             currentAnimation = animation;
             animator.Play(animation);
         }

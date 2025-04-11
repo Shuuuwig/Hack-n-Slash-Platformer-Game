@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HauntingBladeAnimationHandler : AnimationHandler
+public class HauntingBladeAnimationHandler : EnemyAnimationHandler
 {
     //[SerializeField] private HauntingBlade hauntingBlade;
     protected override void Start()
     {
         base.Start();
         movement = GetComponent<HauntingBladeMovement>();
+        combat = GetComponent<HauntingBladeCombat>();
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        base .Update();
+        base.Update();
     }
 
     protected override void MovementAnimation()
@@ -27,9 +28,15 @@ public class HauntingBladeAnimationHandler : AnimationHandler
         if (((HauntingBladeMovement)movement).AwakingTime.CurrentProgress != Timer.Progress.Finished)
             return;
 
-        if (((HauntingBladeMovement)movement).MovingForward)
+        if (((HauntingBladeCombat)combat).NeutralSlash)
         {
-            ChangeAnimation("hauntingBladeMoveForward");
+            ChangeAnimation("hauntingBladeNeutralSlash");
         }
+
+        else if (((HauntingBladeMovement)movement).WalkingForward)
+        {
+            ChangeAnimation("hauntingBladeWalkForward");
+        }
+
     }
 }

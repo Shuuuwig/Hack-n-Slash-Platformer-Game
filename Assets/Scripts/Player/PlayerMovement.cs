@@ -2,32 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : Movement
+public class PlayerMovement : MonoBehaviour
 {
-    [Header("========== Additional Configuration ==========")]
+    [Header("========== Configuration ==========")]
+    [Header("--- Gizmo Configuration ---")]
+    [SerializeField] protected bool gizmoToggleOn = true;
 
-    // Dash Configuration
-    [Header("--- Dash ---")]
-    [SerializeField] protected float dashPower;
-    [SerializeField] protected Timer dashDuration;
-    [SerializeField] protected Timer dashCooldown;
+    [Header("--- Run ---")]
+    [SerializeField] protected float walkForwardMultiplier;
+    [SerializeField] protected float walkBackwardMultiplier;
+    [SerializeField] protected float runForwardMultiplier;
 
-    //// Pogo Configuration
-    //[Header("--- Pogo ---")]
-    //[SerializeField] protected float pogoPower;
-
-    //// Wall Jump Configuration
-    //[Header("--- Wall Jump ---")]
-    //[SerializeField] protected Vector2 wallJumpPower;
-    //[SerializeField] protected Cooldown wallJumpAppliedForceDuration;
-
-    //// Grapple Configuration
-    //[Header("--- Grapple ---")]
-    //[SerializeField] protected float grapplePower;
-    //[SerializeField] protected Cooldown linkToGrapplePointTime;
-
-    //Additional Jump Checks
-    [Header("--- Additional Jump Checks ---")]
+    [Header("--- Jump ---")]
+    [SerializeField] protected float jumpPowerMultiplier;
+    [SerializeField] protected float superJumpPowerMultiplier;
     [SerializeField] protected Timer coyoteTime;
     [SerializeField] protected float bufferJumpCastDistance;
     [SerializeField] protected Timer bufferJumpWindow;
@@ -36,11 +24,19 @@ public class PlayerMovement : Movement
     [SerializeField] protected LayerMask bufferJumpLayer;
     protected RaycastHit2D bufferJumpBoxcast;
 
+    [Header("--- Dash ---")]
+    [SerializeField] protected float dashPower;
+    [SerializeField] protected Timer dashDuration;
+    [SerializeField] protected Timer dashCooldown;
 
-    // Collision Checks
+    [Header("--- Ground Check ---")]
+    [SerializeField] protected float groundCastDistance;
+    [SerializeField] protected Transform groundTransform;
+    [SerializeField] protected Vector2 groundBoxSize;
+    [SerializeField] protected LayerMask groundLayer;
+    protected RaycastHit2D groundBoxcast;
+
     [Header("--- Submerge Overhead Check ---")]
-    [SerializeField] protected float maxSubmergeMeter;
-    [SerializeField] protected float submergeConsumptionPerSecond;
     [SerializeField] protected float overheadCastDistance;
     [SerializeField] protected Transform overheadTransform;
     [SerializeField] protected Vector2 overheadBoxSize;
@@ -50,94 +46,139 @@ public class PlayerMovement : Movement
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected LayerMask enemyLayer;
 
-    // Movement States
+    protected float finalizedSpeed;
+    protected float finalizedJump;
+
     protected bool inputLeft;
     protected bool inputRight;
 
+    protected bool moving;
+    protected bool walkingForward;
+    protected bool walkingBackward;
+    protected bool runningForward;
+    protected bool jumping;
+    protected bool jumpingForward;
+    protected bool jumpingBackward;
     protected bool superJumping;
-    protected bool dashing;
-    protected bool dashingForward;
-    protected bool dashingBackward;
-    protected bool airDashingForward;
-    protected bool airDashingBackward;
+    protected bool superJumpingForward;
+    protected bool superJumpingBackward;
+    protected bool falling;
+    protected bool fallingForward;
+    protected bool fallingBackward;
     protected bool submerging;
     protected bool submergingForward;
     protected bool submergingBackward;
-    protected bool grappling;
+    protected bool dashing;
+    protected bool submergingDashingForward;
+    protected bool submergingDashingBackward;
+    protected bool airDashingForward;
+    protected bool airDashingBackward;
 
+    protected bool facingLeft;
+    protected bool facingRight;
+    protected bool knockedback;
     protected bool objectAbove;
     protected bool coyoteStandbyActive;
     protected bool bufferedJump;
+    protected bool grounded;
 
-    public bool Dashing { get { return dashing; } }
-    public bool DashingForward { get { return dashingForward; } }
-    public bool DashingBackward { get { return dashingBackward; } }
-    public bool AirDashingForward {  get { return airDashingForward; } }
-    public bool AirDashingBackward {  get { return airDashingBackward; } }
+    protected Vector2 knockedbackDirection;
+
+    protected Collider2D hurtbox;
+    protected Rigidbody2D attachedRigidbody;
+    protected PlayerInputTracker inputTracker;
+    protected PlayerAnimationHandler animationHandler;
+    protected PlayerStatus status;
+    protected PlayerStats stats;
+    protected PlayerCombat combat;
+
+    public float FinalizedSpeed { get { return finalizedSpeed; } }
+
+    public bool Moving { get { return moving; } }
+    public bool WalkingForward { get { return walkingForward; } }
+    public bool WalkingBackward { get { return walkingBackward; } }
+    public bool RunningForward { get { return runningForward; } }
+    public bool Jumping { get { return jumping; } }
+    public bool JumpingForward { get { return jumpingForward; } }
+    public bool JumpingBackward { get { return jumpingBackward; } }
+    public bool SuperJumping { get { return superJumping; } }
+    public bool SuperJumpingForward { get { return superJumpingForward; } }
+    public bool SuperJumpingBackward { get { return superJumpingBackward; } }
+    public bool Falling { get { return falling; } }
+    public bool FallingForward { get { return fallingForward; } }
+    public bool FallingBackward { get { return fallingBackward; } }
     public bool Submerging { get { return submerging; } }
     public bool SubmergingForward { get { return submergingForward; } }
     public bool SubmergingBackward { get { return submergingBackward; } }
-    public bool Grappling { get { return grappling; } }
+    public bool Dashing { get { return dashing; } }
+    public bool SubmergingDashingForward { get { return submergingDashingForward; } }
+    public bool SubmergingDashingBackward { get { return submergingDashingBackward; } }
+    public bool AirDashingForward { get { return airDashingForward; } }
+    public bool AirDashingBackward { get { return airDashingBackward; } }
 
-    protected PlayerInputTracker inputTracker;
+    public bool Knockedback { get { return knockedback; } }
+    public bool Grounded { get { return grounded; } }
+    public Rigidbody2D AttachedRigidBody { get { return attachedRigidbody; } }
 
-    //============================================= GIZMO =============================================//
-    protected override void OnDrawGizmos()
+
+    protected void OnDrawGizmos()
     {
-        base.OnDrawGizmos();
+        if (!gizmoToggleOn)
+            return;
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(groundTransform.position + -transform.up * (groundCastDistance / 2), groundBoxSize * 2);
+        Gizmos.DrawLine(groundTransform.position, groundTransform.position + -transform.up * groundCastDistance);
         Gizmos.DrawWireCube(overheadTransform.position + transform.up * (overheadCastDistance / 2), overheadBoxSize * 2);
         Gizmos.DrawLine(overheadTransform.position, overheadTransform.position + transform.up * overheadCastDistance);
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(bufferJumpTransform.position + -transform.up * (bufferJumpCastDistance / 2), bufferJumpBoxSize * 2);
         Gizmos.DrawLine(bufferJumpTransform.position, bufferJumpTransform.position + -transform.up * bufferJumpCastDistance);
     }
 
-    //============================================= LIFE CYCLE =============================================//
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
-        if (animationHandler == null)
-        {
-            animationHandler = GetComponent<PlayerAnimationHandler>();
-        }
-
-        if (inputTracker == null)
-        {
-            inputTracker = GetComponent<PlayerInputTracker>();
-        }
-
-        if (combat == null)
-        {
-            combat = GetComponent<PlayerCombat>();
-        }
+        attachedRigidbody = GetComponent<Rigidbody2D>();
+        hurtbox = GetComponent<Collider2D>();
+        animationHandler = GetComponent<PlayerAnimationHandler>();
+        inputTracker = GetComponent<PlayerInputTracker>();
+        combat = GetComponent<PlayerCombat>();
+        status = GetComponent<PlayerStatus>();
+        stats = GetComponent<PlayerStats>();
     }
 
-    protected override void Update()
-    { 
-        base.Update();
+    protected void Update()
+    {
+        UpdateMovementConditions();
+        GroundCheck();
         BufferJumpCheck();
         SubmergeOverheadCheck();
 
         CoyoteTime();
+        Timers();
 
+        HorizontalMovement();
+        VerticalMovement();
         Dash();
         Submerge();
     }
 
-    //============================================= COLLISION CHECK =============================================//
-    protected override void GroundCheck()
+
+    protected void GroundCheck()
     {
-        base.GroundCheck();
+        groundBoxcast = Physics2D.BoxCast(groundTransform.position, groundBoxSize, 0, -transform.up, groundCastDistance, groundLayer);
+
         if (groundBoxcast)
         {
+            grounded = true;
+            jumping = false;
             superJumping = true;
-
+            falling = false;
             coyoteStandbyActive = true;
         }
         else
         {
+            grounded = false;
             submerging = false;
 
             if (falling && attachedRigidbody.velocity.y < -15f)
@@ -170,12 +211,8 @@ public class PlayerMovement : Movement
         objectAbove = overheadOverlapBox;
     }
 
-    //============================================= OTHERS =============================================//
-
-    protected override void Timers()
+    protected void Timers()
     {
-        base.Timers();
-
         if (dashDuration.CurrentProgress == Timer.Progress.Finished)
         {
             dashCooldown.StartCooldown();
@@ -207,28 +244,33 @@ public class PlayerMovement : Movement
         }
     }
 
-    protected override void KnockedbackState()
-    {
-        base.KnockedbackState();
-    }
-
     //============================================= BASIC MOVEMENT =============================================//
-    protected override void UpdateMovementStates()
+    protected void UpdateMovementConditions()
     {
-        base.UpdateMovementStates();
         inputLeft = inputTracker.InputLeft;
         inputRight = inputTracker.InputRight;
+        facingLeft = animationHandler.FacingLeft;
+        facingRight = animationHandler.FacingRight;
 
+        moving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
+        walkingForward = animationHandler.MovingForward;
+        walkingBackward = animationHandler.MovingBackward;
+        jumping = attachedRigidbody.velocity.y > 0.01f;
+        jumpingForward = jumping && walkingForward;
+        jumpingBackward = jumping && walkingBackward;
+        falling = attachedRigidbody.velocity.y < -0.01f;
+        fallingForward = falling && walkingForward;
+        fallingBackward = falling && walkingBackward;
         dashing = dashDuration.CurrentProgress == Timer.Progress.InProgress;
-        dashingBackward = dashing && ((facingRight && inputLeft) || (!facingRight && inputRight));
-        dashingForward = dashing && !dashingBackward;
-        airDashingForward = dashingForward && !grounded;
-        airDashingBackward = dashingBackward && !grounded;
-        submergingForward = submerging && movingForward;
-        submergingBackward = submerging && movingBackward;
+        submergingDashingBackward = dashing && ((facingRight && inputLeft) || (!facingRight && inputRight));
+        submergingDashingForward = dashing && !submergingDashingBackward;
+        airDashingForward = submergingDashingForward && !grounded;
+        airDashingBackward = submergingDashingBackward && !grounded;
+        submergingForward = submerging && walkingForward;
+        submergingBackward = submerging && walkingBackward;
     }
 
-    protected override void HorizontalMovement()
+    protected void HorizontalMovement()
     {
         if (combat.IsAttacking && grounded)
         {
@@ -236,21 +278,38 @@ public class PlayerMovement : Movement
             return;
         }
             
+        if (status.IsKnockedback)
+        {
+            knockedbackDirection = new Vector2(transform.position.x - status.CollisionPoint.x, 0);
+            attachedRigidbody.velocity = new Vector2(status.KnockedbackForce * Mathf.Sign(knockedbackDirection.x), attachedRigidbody.velocity.y);
+            //Debug.Log($"Knockback Force: {status.KnockedbackForce}, Knockback Direction: {knockedbackDirection}, Rigibody Velocity: {attachedRigidbody.velocity}");
+        }
 
-        if (dashing || jumping || falling)
+        if (dashing || jumping || falling || status.IsKnockedback)
             return;
 
-        if (((PlayerCombat)combat).IsDirectionLocked && ((facingLeft && inputRight) || (facingRight && inputLeft)))
+        if (combat.IsDirectionLocked && ((facingLeft && inputRight) || (facingRight && inputLeft)))
         {
-            attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * speedBackwards, attachedRigidbody.velocity.y);
+            finalizedSpeed = stats.BaseSpeed * walkBackwardMultiplier;
+            attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * finalizedSpeed, attachedRigidbody.velocity.y);
         }
         else
         {
-            attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * speedForwards, attachedRigidbody.velocity.y);
+            if (combat.IsShowdown)
+            {
+                finalizedSpeed = stats.BaseSpeed * walkForwardMultiplier;
+                attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * finalizedSpeed, attachedRigidbody.velocity.y);
+            }
+            else
+            {
+                finalizedSpeed = stats.BaseSpeed * runForwardMultiplier;
+                attachedRigidbody.velocity = new Vector2(inputTracker.PlayerDirectionalInput.x * finalizedSpeed, attachedRigidbody.velocity.y);
+            }
+                
         }
     }
 
-    protected override void VerticalMovement()
+    protected void VerticalMovement()
     {
         if (combat.IsAttacking)
             return;
@@ -264,12 +323,14 @@ public class PlayerMovement : Movement
             {
                 if (inputTracker.InputDown)
                 {
-                    attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower * 1.3f);
+                    finalizedJump = stats.BaseJumpPower * superJumpPowerMultiplier;
+                    attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, finalizedJump);
                     superJumping = true;
                 }
                 else
                 {
-                    attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower);
+                    finalizedJump = stats.BaseJumpPower * jumpPowerMultiplier;
+                    attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, finalizedJump);
                 }
 
                 bufferedJump = false;
@@ -280,12 +341,14 @@ public class PlayerMovement : Movement
         {
             if (inputTracker.InputDown)
             {
-                attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower * 1.3f);
+                finalizedJump = stats.BaseJumpPower * superJumpPowerMultiplier;
+                attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, finalizedJump);
                 superJumping = true;
             }
             else
             {
-                attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, jumpPower);
+                finalizedJump = stats.BaseJumpPower * jumpPowerMultiplier;
+                attachedRigidbody.velocity = new Vector2(attachedRigidbody.velocity.x, finalizedJump);
             }
 
             coyoteStandbyActive = false;
@@ -317,16 +380,16 @@ public class PlayerMovement : Movement
             alteredDashPower = dashPower;
         }
 
-        if (dashingForward)
+        if (submergingDashingForward)
         {
             attachedRigidbody.velocity = new Vector2(alteredDashPower * transform.localScale.x, 0);
         }
-        else if (dashingBackward)
+        else if (submergingDashingBackward)
         {
             attachedRigidbody.velocity = new Vector2(alteredDashPower * -transform.localScale.x, 0);
         }
 
-        if (dashingBackward && dashDuration.CurrentDuration < dashDuration.Duration / 1.8f)
+        if (submergingDashingBackward && dashDuration.CurrentDuration < dashDuration.Duration / 1.8f)
         {
             dashDuration.EndCooldown();
             Debug.Log("Backdash ended early");
@@ -343,7 +406,7 @@ public class PlayerMovement : Movement
             submerging = true;
             Debug.Log("Submerged");
         }
-        else if (objectAbove || dashing || ((PlayerCombat)combat).IsSubmergeLight)
+        else if (objectAbove || dashing || combat.IsSubmergeLight)
         {
             submerging = true;
             Debug.Log("Forced Submerged");

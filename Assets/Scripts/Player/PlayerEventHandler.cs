@@ -4,39 +4,33 @@ using UnityEngine;
 
 public class PlayerEventHandler : MonoBehaviour
 {
-    [SerializeField] private Collider2D neutralLightCollider;
-    [SerializeField] private Collider2D airLightCollider;
-    [SerializeField] private Collider2D airLowLightCollider;
-    [SerializeField] private Collider2D airHighLightCollider;
-    [SerializeField] private Collider2D submergeLightCollider;
-
-    //Player Component Reference
     [Header("---Component Reference---")]
-    [SerializeField] private PlayerCombat playerCombat;
-    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerCombat combat;
+    [SerializeField] private PlayerMovement movement;
 
-    void Start()
+    private void NeutralLight()
     {
-
+        combat.NeutralLightCollider.enabled = !combat.NeutralLightCollider.enabled;
     }
 
-    void Update()
+    private void AirLight()
     {
-
+        combat.AirLightCollider.enabled = !combat.AirLightCollider.enabled;
     }
 
-    private void NeutralAttack()
+    private void AirLightLow()
     {
-        neutralLightCollider.enabled = !neutralLightCollider.enabled;
+        combat.AirLightLowCollider.enabled = !combat.AirLightLowCollider.enabled;
     }
 
-    private void SubmergedAttack()
+    private void AirLightHigh()
     {
-
+        combat.AirLightHighCollider.enabled = !combat.AirLightHighCollider.enabled;
     }
 
-    private void AirAttack()
+    private void SubmergedLight()
     {
-
+        combat.SubmergedLightCollider.enabled = !combat.SubmergedLightCollider.enabled;
     }
+
 }

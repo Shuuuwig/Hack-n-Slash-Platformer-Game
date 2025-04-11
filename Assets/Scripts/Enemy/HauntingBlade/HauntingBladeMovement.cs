@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class HauntingBladeMovement : Movement
+public class HauntingBladeMovement : EnemyMovement
 {
     [Header("========== Additional Configuration ==========")]
     [SerializeField] protected float detectorRadius;
@@ -16,16 +17,22 @@ public class HauntingBladeMovement : Movement
     [SerializeField] protected LayerMask obstacleLayer;
     protected RaycastHit2D obstacleCast;
 
-    [SerializeField] protected Transform playerTarget;
-
-    protected bool awoking;
+    protected bool awaking;
     [SerializeField] protected Timer awakingTime;
+    [SerializeField] protected bool aggressive;
+    [SerializeField] protected Timer defensiveTime;
 
     private List<Node> openList = new List<Node>();
     private List<Node> closedList = new List<Node>();
     [SerializeField] private Tilemap groundTilemap;
 
     public Timer AwakingTime { get { return awakingTime; } }
+    public bool Aggressive 
+    {
+        get { return aggressive; }
+        set { aggressive = value; }
+    }
+    public Timer DefensiveTime {  get { return defensiveTime; } }
 
     protected override void OnDrawGizmos()
     {
@@ -46,13 +53,14 @@ public class HauntingBladeMovement : Movement
         playerTarget = GameObject.FindWithTag("Player").transform;
         animationHandler = GetComponent<HauntingBladeAnimationHandler>();
 
+        combat = GetComponent<HauntingBladeCombat>();
+        stats = GetComponent<HauntingBladeStats>();
     }
 
     protected override void Update()
     {
         PlayerCheck();
         base.Update();
-
     }
 
     protected void PlayerCheck()
@@ -63,11 +71,50 @@ public class HauntingBladeMovement : Movement
 
         if (detectionCollider && !obstacleCast)
         {
-            awoking = true;
             if (awakingTime.CurrentProgress == Timer.Progress.Ready)
+            {
+                awaking = true;
+                detectorRadius /= 2.5f;
                 awakingTime.StartCooldown();
+            }
 
+            playerTooClose = true;
+            //BehaviourManager();
         }
+        else
+        {
+            playerTooClose = false;
+        }
+    }
+
+    protected override void BehaviourManager()
+    {
+        if (awakingTime.CurrentProgress != Timer.Progress.Finished)
+            return;
+
+        
+
+        //if (!behaviourDetermined)
+        //{
+        //    selectedBehaviour = Random.Range(0, 2);
+
+        //    if (selectedBehaviour == 0)
+        //    {
+        //        Debug.Log("Aggro");
+        //        aggressive = true;
+        //    }
+        //    else if (selectedBehaviour == 1 && defensiveTime.CurrentProgress == Timer.Progress.Ready)
+        //    {
+        //        defensiveTime.StartCooldown();
+        //    }
+
+        //    behaviourDetermined = true;
+        //}
+    }
+
+    protected void BehaviourReset()
+    {
+
     }
 
     protected override void HorizontalMovement()
@@ -75,7 +122,25 @@ public class HauntingBladeMovement : Movement
         if (playerTarget == null || awakingTime.CurrentProgress != Timer.Progress.Finished)
             return;
 
-        attachedRigidbody.velocity = new Vector2(Mathf.Sign(playerTarget.position.x - transform.position.x) * speedForwards, attachedRigidbody.velocity.y);
+        
+
+
+        if (combat.IsAttacking)
+        {
+            attachedRigidbody.velocity = Vector2.zero;
+            return;
+        }
+
+        if (playerTooClose)
+        {
+            finalizedSpeed = stats.BaseSpeed * speedBackwardsMultiplier;
+            attachedRigidbody.velocity = new Vector2(Mathf.Sign(playerTarget.position.x - transform.position.x) * -finalizedSpeed, attachedRigidbody.velocity.y);
+        }
+        else
+        {
+            finalizedSpeed = stats.BaseSpeed * speedForwardsMultiplier;
+            attachedRigidbody.velocity = new Vector2(Mathf.Sign(playerTarget.position.x - transform.position.x) * finalizedSpeed, attachedRigidbody.velocity.y);
+        }
     }
 
     protected override void VerticalMovement()

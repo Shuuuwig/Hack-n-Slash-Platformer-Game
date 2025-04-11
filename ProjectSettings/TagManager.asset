@@ -13,6 +13,11 @@ TagManager:
   - Wall
   - PlayerWeapon
   - EnemyWeapon
+  - Knockback
+  - Slow
+  - Stun
+  - Paralyze
+  - Burn
   layers:
   - Default
   - TransparentFX

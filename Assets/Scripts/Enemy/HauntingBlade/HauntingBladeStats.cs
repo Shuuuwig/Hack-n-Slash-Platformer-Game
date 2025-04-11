@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HauntingBladeStats : Stats
+public class HauntingBladeStats : EnemyStats
 {
-    // Start is called before the first frame update
     protected override void Start()
     {
-        
+        status = GetComponent<HauntingBladeStatus>();
     }
 
-    // Update is called once per frame
     protected override void Update()
     {
         

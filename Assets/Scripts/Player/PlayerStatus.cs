@@ -2,52 +2,175 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStatus : Status
+public class PlayerStatus : MonoBehaviour
 {
-    [SerializeField] protected Timer InvulnerabilityDuration;
+    [Header("--- Knockback Effect ---")]
+    [SerializeField] protected float knockedbackForce;
+    [SerializeField] protected Timer knockedbackTimer;
 
-    private bool canTakeDamage = true;
+    [SerializeField] protected Timer invulnerabilityDuration;
 
-    void Update()
+    protected bool isHit;
+    protected bool isKnockedback;
+    protected bool isSlowed;
+    protected bool isStunned;
+    protected bool isParalyzed;
+    protected bool isBurned;
+    protected bool isDead;
+
+    protected bool knockbackEnd;
+
+    protected Vector2 collisionPoint;
+
+    private PlayerMovement movement;
+    private PlayerCombat combat;
+    private PlayerInputTracker inputTracker;
+    private PlayerStats stats;
+    private EnemyCombat hostileCombat;
+
+    public float KnockedbackForce { get { return knockedbackForce; } }
+    public Timer KnockedbackTimer { get { return knockedbackTimer; } }
+
+    public bool IsHit {  get { return isHit; } }
+    public bool IsKnockedback
     {
-        //OnDeath();
-        InvulnerabilityFrames();
+        get { return isKnockedback; }
+        set { isKnockedback = value; }
+    }
+    public bool IsSlowed
+    {
+        get { return isSlowed; }
+        set { isSlowed = value; }
+    }
+    public bool IsStunned
+    {
+        get { return isStunned; }
+        set { isStunned = value; }
+    }
+    public bool IsParalyzed
+    {
+        get { return isParalyzed; }
+        set { isParalyzed = value; }
+    }
+    public bool IsBurned
+    {
+        get { return isBurned; }
+        set { isBurned = value; }
     }
 
-    //private void OnDeath()
-    //{
-    //    if (currentHealth <= 0)
-    //    {
-    //        Destroy(this.gameObject);
-    //    }
-    //}
+    public bool IsDead { get { return isDead; } }
 
-    private void InvulnerabilityFrames()
+    public bool KnockbackEnd { get { return knockbackEnd; } }
+
+    public Vector2 CollisionPoint { get { return collisionPoint; } }
+
+    private void Start()
     {
-        if (canTakeDamage == true)
-            return;
+        stats = GetComponent<PlayerStats>();
+        movement = GetComponent<PlayerMovement>();
+        combat = GetComponent<PlayerCombat>();
+        inputTracker = GetComponent<PlayerInputTracker>();
+    }
 
-        if (InvulnerabilityDuration.CurrentProgress is Timer.Progress.Ready)
+    private void Update()
+    {
+        InvulnerabilityFrames();
+        StateManager();
+    }
+
+    private void TakeDamage(float damageTaken)
+    {
+        //if (invulnerabilityDuration.CurrentProgress != Timer.Progress.Ready)
+        //    return;
+
+        stats.CurrentHealth -= damageTaken;
+        invulnerabilityDuration.StartCooldown();
+
+        if (stats.CurrentHealth <= 0)
         {
-            InvulnerabilityDuration.StartCooldown();
-            Debug.Log("Currently Invulnerable");
+            isDead = true;
+            movement.enabled = false;
+            combat.enabled = false;
+            inputTracker.enabled = false;
         }
 
-        if (InvulnerabilityDuration.CurrentProgress is Timer.Progress.Finished)
-        {
-            InvulnerabilityDuration.ResetCooldown();
-            Debug.Log("No longer Invulnerable");
-            canTakeDamage = true;
-        }
+        isHit = false;
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Obstacle"))
+        isHit = true;
+        hostileCombat = collision.gameObject.GetComponentInParent<EnemyCombat>();
+
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (canTakeDamage == true)
-            {
-                canTakeDamage = false;
-            }
+            collisionPoint = collision.gameObject.transform.position;
+            TakeDamage(hostileCombat.BodyDamage);
+        }
+
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isHit = true;
+        hostileCombat = collision.gameObject.GetComponentInParent<EnemyCombat>();
+
+        if (collision.gameObject.CompareTag("Knockback"))
+        {
+            isKnockedback = true;
+            knockedbackForce = hostileCombat.FinalizedKnockback;
+            collisionPoint = collision.gameObject.transform.position;
+            Debug.Log(collisionPoint);
+            TakeDamage(hostileCombat.FinalizedDamage);
+        }
+
+        if (collision.gameObject.CompareTag("Slow"))
+        {
+            isSlowed = true;
+        }
+
+        if (collision.gameObject.CompareTag("Stun"))
+        {
+            isStunned = true;
+        }
+
+        if (collision.gameObject.CompareTag("Paralyze"))
+        {
+            isParalyzed = true;
+        }
+
+        if (collision.gameObject.CompareTag("Burn"))
+        {
+            isBurned = true;
         }
     }
+
+    private void InvulnerabilityFrames()
+    {
+        if (invulnerabilityDuration.CurrentProgress == Timer.Progress.InProgress)
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), true);
+        }
+        else
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Enemy"), false);
+            invulnerabilityDuration.ResetCooldown();
+        }
+
+    }
+    
+    private void StateManager()
+    {
+        if (isKnockedback && knockedbackTimer.CurrentProgress == Timer.Progress.Ready)
+        {
+            knockedbackTimer.StartCooldown();
+            knockbackEnd = true;
+        }
+        else if (knockedbackTimer.CurrentProgress == Timer.Progress.Finished)
+        {
+            IsKnockedback = false;
+            knockbackEnd = true;
+            knockedbackTimer.ResetCooldown();
+        }
+    }
+
 }

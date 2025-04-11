@@ -6,7 +6,6 @@ public class HauntingBladeEventHandler : MonoBehaviour
 {
     [SerializeField] private HauntingBladeCombat combat;
 
-
     void Start()
     {
         
@@ -19,13 +18,6 @@ public class HauntingBladeEventHandler : MonoBehaviour
 
     private void HauntingBladeSlash()
     {
-        if (combat.SlashCollider.enabled == false)
-        {
-            combat.SlashCollider.enabled = true;
-        }
-        else
-        {
-            combat.SlashCollider.enabled = false;
-        }
+        combat.NeutralSlashCollider.enabled = !combat.NeutralSlashCollider.enabled;
     }
 }

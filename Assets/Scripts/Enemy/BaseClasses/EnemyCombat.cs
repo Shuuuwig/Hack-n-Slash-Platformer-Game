@@ -3,25 +3,18 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Combat : MonoBehaviour
+public abstract class EnemyCombat : MonoBehaviour
 {
     [Header("========== Base Configuration ==========")]
     [Header("--- Gizmo Configuration ---")]
     [SerializeField] protected bool gizmoToggleOn = true;
 
-    //[Header("--- Basic Config ---")]
-    //[SerializeField] protected float damage;
-    //[SerializeField] protected float knockbackPower;
-
     [Header("--- Attack Cooldown ---")]
-    [SerializeField] protected Timer attackCooldown;
-    [SerializeField] protected Timer comboActiveTime;
     [SerializeField] protected Timer attackTime;
-
-    [Header("--- Recovery Time ---")]
-    [SerializeField] protected Timer recoveryTime;
+    [SerializeField] protected Timer attackDowntime;
 
     [Header("--- Parry ---")]
+    [SerializeField] protected float parryDuration;
     [SerializeField] protected Timer parryActiveTime;
     [SerializeField] protected Timer parrySuccessTime;
     [SerializeField] protected Transform parryTransform;
@@ -32,35 +25,50 @@ public abstract class Combat : MonoBehaviour
     [Header("--- Hitstop ---")]
     [SerializeField] protected Timer hitstopDuration;
 
+    protected float finalizedDamage;
+    protected float finalizedKnockback;
+    protected float bodyDamage;
+
     protected float maxBasicCombo;
     protected float currentCombo;
 
+    protected bool aggroPlayer;
+    protected bool parriedByPlayer;
+    protected bool cancellable;
     protected bool hitTarget;
     protected bool parriedAttack;
 
     protected bool parry;
 
+    protected bool isNearPlayer;
     protected bool isAttacking;
     protected bool isDirectionLocked;
     protected bool isParry;
 
+    protected bool canAttack = true;
     protected bool canParry = true;
 
-    [Header("--- Parry Duration ---")]
-    
-    [SerializeField] protected float parryDuration;
+    protected EnemyMovement movement;
+    protected EnemyStats stats;
 
-    protected Movement movement;
-    protected Stats stats;
+    [SerializeField] protected Transform playerTransform;
+    [SerializeField] protected PlayerMovement playerMovement;
+    [SerializeField] protected PlayerCombat playerCombat;
+    [SerializeField] protected PlayerStats playerStats;
 
+    public Timer AttackDowntime {  get { return attackDowntime; } }
+    public float FinalizedDamage { get { return finalizedDamage; } }
+    public float FinalizedKnockback { get { return finalizedKnockback; } }
+    public float BodyDamage {  get { return bodyDamage; } }
     public bool IsAttacking { get { return isAttacking; } }
     public bool IsDirectionLocked { get { return isDirectionLocked; } }
     public bool IsParry { get { return isParry; } }
 
+    public bool AggroPlayer { get { return aggroPlayer; } }
     public bool Parry { get { return parry; } }
 
     //==================== GIZMOS ====================//
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         if (gizmoToggleOn != true)
             return;
@@ -72,7 +80,13 @@ public abstract class Combat : MonoBehaviour
 
     protected virtual void Start()
     {
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        playerTransform = playerObject.transform;
+        playerMovement = playerObject.GetComponent<PlayerMovement>();
+        playerCombat = playerObject.GetComponent<PlayerCombat>();
+        stats = GetComponent<EnemyStats>();
 
+        bodyDamage = stats.BodyDamage;
     }
 
     protected virtual void Update()
@@ -83,12 +97,11 @@ public abstract class Combat : MonoBehaviour
         Timers();
 
         Attack();
-        ParryState();
     }
 
     protected virtual void DirectionLock()
     {
-
+        
     }
 
     protected virtual void Timers()
@@ -96,18 +109,15 @@ public abstract class Combat : MonoBehaviour
         if (attackTime.CurrentProgress == Timer.Progress.Finished)
         {
             attackTime.ResetCooldown();
-            recoveryTime.StartCooldown();
+            attackDowntime.StartCooldown();
         }
 
-        if (recoveryTime.CurrentProgress == Timer.Progress.Finished)
+        if (attackDowntime.CurrentProgress == Timer.Progress.Finished)
         {
-            recoveryTime.ResetCooldown();
+            attackDowntime.ResetCooldown();
         }
+       
 
-        if (comboActiveTime.CurrentProgress == Timer.Progress.Finished)
-        {
-            comboActiveTime.ResetCooldown();
-        }
     }
 
     protected virtual void DetermineCombatState()
@@ -120,32 +130,6 @@ public abstract class Combat : MonoBehaviour
     protected virtual void Attack()
     {
         
-    }
-
-    protected virtual void ParryState()
-    {
-        //parryCollider = Physics2D.OverlapBox(parryTransform.position, parryBoxSize, 0, parryableLayer);
-
-        //if (parryActiveTime.CurrentProgress is Timer.Progress.Ready)
-        //{
-        //    parryActiveTime.StartCooldown();
-        //}
-
-        //if (parriedAttack)
-        //{
-        //    attackCooldown.ResetCooldown();
-        //    parrySuccessTime.StartCooldown();
-        //}
-
-        //if (parrySuccessTime.CurrentProgress is Timer.Progress.Finished)
-        //{
-        //    parrySuccessTime.ResetCooldown();
-        //}
-
-        //if (parryActiveTime.CurrentProgress is Timer.Progress.Finished)
-        //{
-        //    parryActiveTime.ResetCooldown();
-        //}
     }
 
     protected virtual void HitStop()

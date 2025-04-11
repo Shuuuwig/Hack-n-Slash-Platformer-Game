@@ -2,23 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Movement : MonoBehaviour
+public abstract class EnemyMovement : MonoBehaviour
 {
     [Header("========== Base Configuration ==========")]
-
-    // Gizmo Toggle
     [Header("--- Gizmo Configuration ---")]
     [SerializeField] protected bool gizmoToggleOn = true;
 
-    // Movement Configuration
     [Header("--- Run ---")]
-    [SerializeField] protected float speedForwards;
-    [SerializeField] protected float speedBackwards;
+    [SerializeField] protected float speedForwardsMultiplier;
+    [SerializeField] protected float speedBackwardsMultiplier;
 
     [Header("--- Jump ---")]
     [SerializeField] protected float jumpPower;
     
-    // Collision Check
     [Header("--- Ground Check ---")]
     [SerializeField] protected float groundCastDistance;
     [SerializeField] protected Transform groundTransform;
@@ -26,17 +22,19 @@ public abstract class Movement : MonoBehaviour
     [SerializeField] protected LayerMask groundLayer;
     protected RaycastHit2D groundBoxcast;
 
-    // Knockback
     [Header("--- Knockback Effect ---")]
     [SerializeField] protected float knockedbackForce;
     [SerializeField] protected Timer knockedbackTimer;
     protected Vector2 knockedbackDirection;
     protected Vector2 collisionPoint;
 
-    // Movement States
+    protected int selectedBehaviour;
+    protected float finalizedSpeed;
+
     protected bool moving;
-    protected bool movingForward;
-    protected bool movingBackward;
+    protected bool walkingForward;
+    protected bool walkingBackward;
+    protected bool runningForward;
     protected bool jumping;
     protected bool jumpingForward;
     protected bool jumpingBackward;
@@ -47,21 +45,26 @@ public abstract class Movement : MonoBehaviour
     protected bool facingLeft;
     protected bool facingRight;
     protected bool knockedback;
+    protected bool behaviourDetermined;
+    protected bool playerTooClose;
 
-    // Collision States
     protected bool grounded;
 
     protected Collider2D hurtbox;
     protected Rigidbody2D attachedRigidbody;
+    protected Transform playerTarget;
 
-    public bool Grounded {  get { return grounded; } }
-    public Rigidbody2D AttachedRigidBody { get { return attachedRigidbody; } }
-    //private Status status;
-    //private Stats stats;
+    protected EnemyAnimationHandler animationHandler;
+    protected EnemyStatus status;
+    protected EnemyStats stats;
+    protected EnemyCombat combat;
+
+    public float FinalizedSpeed { get { return finalizedSpeed; } }
 
     public bool Moving {  get { return moving; } }
-    public bool MovingForward { get { return movingForward; } }
-    public bool MovingBackward { get { return movingBackward; } }
+    public bool WalkingForward { get { return walkingForward; } }
+    public bool WalkingBackward { get { return walkingBackward; } }
+    public bool RunningForward {  get { return runningForward; } }
     public bool Jumping { get { return jumping; } }
     public bool JumpingForward { get { return jumpingForward; } }
     public bool JumpingBackward { get { return jumpingBackward; } }
@@ -71,11 +74,10 @@ public abstract class Movement : MonoBehaviour
     public bool FacingRight { get { return facingRight; } }
     public bool Knockedback { get { return knockedback; } }
 
-    protected AnimationHandler animationHandler;
-    protected Status status;
-    protected Combat combat;
+    public bool Grounded { get { return grounded; } }
+    public Rigidbody2D AttachedRigidBody { get { return attachedRigidbody; } }
 
-    //============================================= GIZMO =============================================//
+
     protected virtual void OnDrawGizmos()
     {
         if (!gizmoToggleOn)
@@ -86,7 +88,6 @@ public abstract class Movement : MonoBehaviour
         Gizmos.DrawLine(groundTransform.position, groundTransform.position + -transform.up * groundCastDistance);
     }
 
-    //============================================= LIFE CYCLE =============================================//
     protected virtual void Start()
     {
         attachedRigidbody = GetComponent<Rigidbody2D>();
@@ -95,7 +96,7 @@ public abstract class Movement : MonoBehaviour
 
     protected virtual void Update()
     {
-        UpdateMovementStates();
+        UpdateMovementConditions();
         GroundCheck();
 
         Timers();
@@ -104,32 +105,11 @@ public abstract class Movement : MonoBehaviour
         VerticalMovement();
     }
 
-    //============================================= OTHERS =============================================//
     protected virtual void Timers()
     {
-        if (knockedbackTimer.CurrentProgress == Timer.Progress.InProgress)
-        {
-            attachedRigidbody.velocity = new Vector2(knockedbackForce * Mathf.Sign(knockedbackDirection.x), 0);
-        }
-        else if (knockedbackTimer.CurrentProgress == Timer.Progress.Finished)
-        {
-            status.IsKnockedback = false;
-            knockedbackTimer.ResetCooldown();
-        }
-    }
-
-    protected virtual void KnockedbackState()
-    {
-        if (knockedbackTimer.CurrentProgress == Timer.Progress.Ready)
-        {
-            status.IsKnockedback = true;
-            knockedbackTimer.StartCooldown();
-            knockedbackDirection = new Vector2(transform.position.x - collisionPoint.x, 0);
-        }
 
     }
 
-    //============================================= COLLISION CHECK =============================================//
     protected virtual void GroundCheck()
     {
         groundBoxcast = Physics2D.BoxCast(groundTransform.position, groundBoxSize, 0, -transform.up, groundCastDistance, groundLayer);
@@ -146,20 +126,24 @@ public abstract class Movement : MonoBehaviour
         }
     }
 
-    //============================================= BASIC MOVEMENT =============================================//
-    protected virtual void UpdateMovementStates()
+    protected virtual void UpdateMovementConditions()
     {
         facingLeft = animationHandler.FacingLeft;
         facingRight = animationHandler.FacingRight;
         moving = Mathf.Abs(attachedRigidbody.velocity.x) > 0.01f;
-        movingForward = animationHandler.MovingForward;
-        movingBackward = animationHandler.MovingBackward;
+        walkingForward = animationHandler.MovingForward;
+        walkingBackward = animationHandler.MovingBackward;
         jumping = attachedRigidbody.velocity.y > 0.01f;
-        jumpingForward = jumping && movingForward;
-        jumpingBackward = jumping && movingBackward;
+        jumpingForward = jumping && walkingForward;
+        jumpingBackward = jumping && walkingBackward;
         falling = attachedRigidbody.velocity.y < -0.01f;
-        fallingForward = falling && movingForward;
-        fallingBackward = falling && movingBackward;    
+        fallingForward = falling && walkingForward;
+        fallingBackward = falling && walkingBackward;    
+    }
+
+    protected virtual void BehaviourManager()
+    {
+
     }
 
     protected abstract void HorizontalMovement();

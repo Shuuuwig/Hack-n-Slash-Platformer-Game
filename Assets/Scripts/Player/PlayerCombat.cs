@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerCombat : Combat
+public class PlayerCombat : MonoBehaviour
 {
-    [Header("========== Additional Configuration ==========")]
+    [Header("========== Configuration ==========")]
+    [Header("--- Gizmo Configuration ---")]
+    [SerializeField] protected bool gizmoToggleOn = true;
+
     [Header("--- Attack Duration ---")]
     [SerializeField] protected float neutralLightDuration;
     [SerializeField] protected float forwardLightDuration;
@@ -16,7 +19,54 @@ public class PlayerCombat : Combat
     [SerializeField] protected float airLightHighDuration;
     [SerializeField] protected float sludgeBombDuration;
 
-    //Bools
+    [Header("--- Attack Damage Modifier ---")]
+    [SerializeField] protected float neutralLightMultiplier;
+    [SerializeField] protected float forwardLightMultiplier;
+    [SerializeField] protected float submergedLightMultiplier;
+    [SerializeField] protected float dashLightMultiplier;
+    [SerializeField] protected float airLightMultiplier;
+    [SerializeField] protected float airLightLowMultiplier;
+    [SerializeField] protected float airLightHighMultiplier;
+    [SerializeField] protected float sludgeBombMultiplier;
+
+    [Header("--- Attack Cooldown ---")]
+    [SerializeField] protected Timer attackCooldown;
+    [SerializeField] protected Timer comboActiveTime;
+    [SerializeField] protected Timer attackTime;
+
+    [Header("--- Attack Colliders ---")]
+    [SerializeField] protected Collider2D neutralLightCollider;
+    [SerializeField] protected Collider2D forwardLightCollider;
+    [SerializeField] protected Collider2D submergedLightCollider;
+    [SerializeField] protected Collider2D dashLightCollider;
+    [SerializeField] protected Collider2D airLightCollider;
+    [SerializeField] protected Collider2D airLightLowCollider;
+    [SerializeField] protected Collider2D airLightHighCollider;
+
+    [Header("--- Recovery Time ---")]
+    [SerializeField] protected Timer recoveryTime;
+
+    [Header("--- Parry ---")]
+    [SerializeField] protected float parryDuration;
+    [SerializeField] protected Timer parryActiveTime;
+    [SerializeField] protected Timer parrySuccessTime;
+    [SerializeField] protected Transform parryTransform;
+    [SerializeField] protected Vector2 parryBoxSize;
+    [SerializeField] protected LayerMask parryableLayer;
+    protected Collider2D parryCollider;
+
+    [Header("--- Hitstop ---")]
+    [SerializeField] protected Timer hitstopDuration;
+
+    protected float finalizedDamage;
+    protected float maxBasicCombo;
+    protected float currentCombo;
+
+    protected bool cancellable;
+    protected bool hitTarget;
+    protected bool parriedAttack;
+
+    protected bool parry;
     protected bool neutralLight;
     protected bool forwardLight;
     protected bool submergeLight;
@@ -26,6 +76,10 @@ public class PlayerCombat : Combat
     protected bool airLightLow;
     protected bool sludgeBomb;
 
+    protected bool isShowdown;
+    protected bool isAttacking;
+    protected bool isDirectionLocked;
+    protected bool isParry;
     protected bool isNeutralLight;
     protected bool isForwardLight;
     protected bool isSubmergeLight;
@@ -35,6 +89,7 @@ public class PlayerCombat : Combat
     protected bool isAirLightLow;
     protected bool isSludgeBomb;
 
+    protected bool canParry = true;
     protected bool canNeutralLight = true;
     protected bool canForwardLight = true;
     protected bool canSubmergeLight = true;
@@ -44,6 +99,12 @@ public class PlayerCombat : Combat
     protected bool canAirLightLow = true;
     protected bool canSludgeBomb = true;
 
+    protected PlayerMovement movement;
+    protected PlayerStats stats;
+    protected PlayerStatus status;
+
+    public float FinalizedDamage { get { return finalizedDamage; } }
+    public bool Parry { get { return parry; } }
     public bool NeutralLight { get { return neutralLight; } }
     public bool ForwardLight { get { return forwardLight; } }
     public bool SubmergeLight { get { return submergeLight; } }
@@ -53,6 +114,14 @@ public class PlayerCombat : Combat
     public bool AirLightLow { get { return airLightLow; } }
     public bool SludgeBomb { get { return sludgeBomb; } }
 
+    public bool IsShowdown { get { return isShowdown; } }
+    public bool IsAttacking { get { return isAttacking; } }
+    public bool IsDirectionLocked 
+    { 
+        get { return isDirectionLocked; } 
+        set {  isDirectionLocked = value; }
+    }
+    public bool IsParry { get { return isParry; } }
     public bool IsNeutralLight { get { return isNeutralLight; } }
     public bool IsForwardLight { get { return isForwardLight; } }
     public bool IsSubmergeLight { get { return isSubmergeLight; } }
@@ -62,48 +131,126 @@ public class PlayerCombat : Combat
     public bool IsAirLightLow { get { return isAirLightLow; } }
     public bool IsSludgeBomb { get { return isSludgeBomb; } }
 
+    public Collider2D NeutralLightCollider
+    {
+        get { return neutralLightCollider; }
+        set { neutralLightCollider = value; }
+    }
+
+    public Collider2D ForwardLightCollider
+    {
+        get { return forwardLightCollider; }
+        set { forwardLightCollider = value; }
+    }
+
+    public Collider2D SubmergedLightCollider
+    {
+        get { return submergedLightCollider; }
+        set { submergedLightCollider = value; }
+    }
+
+    public Collider2D DashLightCollider
+    {
+        get { return dashLightCollider; }
+        set { dashLightCollider = value; }
+    }
+
+    public Collider2D AirLightCollider
+    {
+        get { return airLightCollider; }
+        set { airLightCollider = value; }
+    }
+
+    public Collider2D AirLightLowCollider
+    {
+        get { return airLightLowCollider; }
+        set { airLightLowCollider = value; }
+    }
+
+    public Collider2D AirLightHighCollider
+    {
+        get { return airLightHighCollider; }
+        set { airLightHighCollider = value; }
+    }
+
     protected PlayerInputTracker inputTracker;
     protected PlayerAnimationHandler animationHandler;
 
-    protected override void Start()
+    private void OnDrawGizmos()
     {
-        if (stats == null)
-        {
-            stats = GetComponent<PlayerStats>();
-        }
+        if (gizmoToggleOn != true)
+            return;
 
-        if (movement == null)
-        {
-            movement = GetComponent<PlayerMovement>();
-        }
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(parryTransform.position, parryBoxSize);
 
-        if (inputTracker == null)
-        {
-            inputTracker = GetComponent<PlayerInputTracker>();
-        }
-
-        if (animationHandler == null)
-        {
-            animationHandler = GetComponent<PlayerAnimationHandler>();
-        }
-
-        
-    }
-    protected override void Update()
-    {
-        base.Update();
     }
 
-    protected override void DirectionLock()
+    protected void Start()
     {
-        if (Input.GetKeyDown(inputTracker.CameraLock))
+        stats = GetComponent<PlayerStats>();
+        status = GetComponent<PlayerStatus>();
+        movement = GetComponent<PlayerMovement>();
+        inputTracker = GetComponent<PlayerInputTracker>();
+        animationHandler = GetComponent<PlayerAnimationHandler>();
+    }
+    protected void Update()
+    {
+        DetermineCombatState();
+        DirectionLock();
+
+        Timers();
+
+        Attack();
+        ParryState();
+    }
+
+    protected void DirectionLock()
+    {
+        if (!status.IsKnockedback && Input.GetKeyDown(inputTracker.CameraLock))
         {
             isDirectionLocked = !isDirectionLocked;
         }
+
+        if (status.IsKnockedback)
+        {
+            isDirectionLocked = true;
+        }
+
+        if (status.IsKnockedback)
+        {
+            isDirectionLocked = true;
+        }
+        else if (status.KnockbackEnd && Mathf.Abs(movement.AttachedRigidBody.velocity.x) < 0.01f)
+        {
+            isDirectionLocked = false;
+        }
     }
 
-    protected override void Timers()
+    protected void HitStop()
     {
+        if (hitstopDuration.CurrentProgress is Timer.Progress.Ready)
+        {
+            hitstopDuration.StartCooldownRealtime();
+            Time.timeScale = 0;
+            Debug.Log("hitstopped");
+        }
+        if (hitstopDuration.CurrentProgress is Timer.Progress.Finished)
+        {
+            hitstopDuration.ResetCooldown();
+            Time.timeScale = 1;
+            Debug.Log("hitstop ended");
+        }
+    }
+
+    protected void Timers()
+    {
+        if (attackTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            attackTime.ResetCooldown();
+            recoveryTime.StartCooldown();
+        }
+
         if (recoveryTime.CurrentProgress == Timer.Progress.Finished)
         {
             canForwardLight = true;
@@ -115,22 +262,29 @@ public class PlayerCombat : Combat
             canAirLightLow = true;
 
             canSludgeBomb = true;
+
+            recoveryTime.ResetCooldown();
         }
 
-        base.Timers();
+        if (comboActiveTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            comboActiveTime.ResetCooldown();
+        }
     }
 
-    protected override void DetermineCombatState()
+    protected void DetermineCombatState()
     {
-        base.DetermineCombatState();
+        isAttacking = attackTime.CurrentProgress == Timer.Progress.InProgress;
+        parry = parryActiveTime.CurrentProgress == Timer.Progress.InProgress;
+        parriedAttack = parryCollider;
 
         if (attackTime.CurrentProgress == Timer.Progress.InProgress)
             return;
 
         neutralLight = movement.Grounded && !inputTracker.InputLeft && !inputTracker.InputRight;
         forwardLight = movement.Grounded && ((inputTracker.InputLeft && animationHandler.FacingLeft) || (inputTracker.InputRight && animationHandler.FacingRight));
-        submergeLight = ((PlayerMovement)movement).Submerging && !inputTracker.InputLeft && !inputTracker.InputRight;
-        dashLight = ((PlayerMovement)movement).Dashing && movement.Grounded;
+        submergeLight = movement.Submerging && !inputTracker.InputLeft && !inputTracker.InputRight;
+        dashLight = movement.Dashing && movement.Grounded;
         airLightHigh = !movement.Grounded && inputTracker.InputUp;
         airLightLow = !movement.Grounded && inputTracker.InputDown;
         airLight = !movement.Grounded && !airLightHigh && !airLightLow;
@@ -160,11 +314,11 @@ public class PlayerCombat : Combat
         }
     }
 
-    protected override void Attack()
+    protected void Attack()
     {
         if (recoveryTime.CurrentProgress != Timer.Progress.Ready)
             return;
-        if (attackTime.CurrentProgress == Timer.Progress.InProgress)
+        if (isAttacking)
             return;
         //&& comboActiveTime.CurrentProgress != Timer.Progress.InProgress
         if (Input.GetKeyDown(inputTracker.LightButton))
@@ -177,6 +331,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = sludgeBombDuration;
                 attackTime.StartCooldown();
                 canSludgeBomb = false;
+                
             }
             else if (neutralLight && canNeutralLight)
             {
@@ -184,6 +339,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = neutralLightDuration;
                 attackTime.StartCooldown();
                 canNeutralLight = false;
+                finalizedDamage = stats.LightDamage * neutralLightMultiplier;
             }
             else if (forwardLight && canForwardLight)
             {
@@ -191,6 +347,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = forwardLightDuration;
                 attackTime.StartCooldown();
                 canForwardLight = false;
+                finalizedDamage = stats.LightDamage * forwardLightMultiplier;
             }
             else if (submergeLight && canSubmergeLight)
             {
@@ -198,6 +355,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = submergedLightDuration;
                 attackTime.StartCooldown();
                 canSubmergeLight = false;
+                finalizedDamage = stats.LightDamage * submergedLightMultiplier;
             }
             else if (dashLight && canDashLight)
             {
@@ -205,6 +363,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = dashLightDuration;
                 attackTime.StartCooldown();
                 canDashLight = false;
+                finalizedDamage = stats.LightDamage * dashLightMultiplier;
             }
             else if (airLight && canAirLight)
             {
@@ -212,6 +371,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = airLightDuration;
                 attackTime.StartCooldown();
                 canAirLight = false;
+                finalizedDamage = stats.LightDamage * airLightMultiplier;
             }
             else if (airLightHigh && canAirLightHigh)
             {
@@ -219,6 +379,7 @@ public class PlayerCombat : Combat
                 attackTime.Duration = airLightHighDuration;
                 attackTime.StartCooldown();
                 canAirLightHigh = false;
+                finalizedDamage = stats.LightDamage * airLightHighMultiplier;
             }
             else if (airLightLow && canAirLightLow)
             {
@@ -226,11 +387,17 @@ public class PlayerCombat : Combat
                 attackTime.Duration = airLightLowDuration;
                 attackTime.StartCooldown();
                 canAirLightLow = false;
+                finalizedDamage = stats.LightDamage * airLightLowMultiplier;
             }
         }
     }
 
-    protected override void ParryState()
+    protected void CheckCombo()
+    {
+        
+    }
+
+    protected void ParryState()
     {
         if (parryActiveTime.CurrentProgress != Timer.Progress.Ready)
             return;
