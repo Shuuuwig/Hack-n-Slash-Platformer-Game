@@ -121,15 +121,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: PlayerNeutralLight1_Frame_0
     originalName: 
-    pivot: {x: 0.61538464, y: -0.6666667}
+    pivot: {x: 0.6923078, y: -0.64000005}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 34
+      y: 94
       width: 26
-      height: 24
+      height: 25
     spriteID: d8ba867341d25a3428754f4f8644c8e6
     spriteBone: []
     spriteOutline: []
@@ -138,18 +138,18 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 34}
+    uvTransform: {x: 4, y: 94}
   - name: PlayerNeutralLight1_Frame_1
     originalName: 
-    pivot: {x: 0.59999996, y: -0.6956522}
+    pivot: {x: 0.67999995, y: -0.6666667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 38
-      y: 34
+      x: 68
+      y: 4
       width: 25
-      height: 23
+      height: 24
     spriteID: a49a90831782abc4d8e546b71cf0e09c
     spriteBone: []
     spriteOutline: []
@@ -158,16 +158,16 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 38, y: 34}
+    uvTransform: {x: 68, y: 4}
   - name: PlayerNeutralLight1_Frame_2
     originalName: 
-    pivot: {x: 0.54545456, y: -0.72727275}
+    pivot: {x: 0.6363636, y: -0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 71
-      y: 34
+      x: 38
+      y: 94
       width: 22
       height: 22
     spriteID: e7a38d555933b474c897e3aa2a932769
@@ -178,17 +178,17 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 71, y: 34}
+    uvTransform: {x: 38, y: 94}
   - name: PlayerNeutralLight1_Frame_3
     originalName: 
-    pivot: {x: 0.31428573, y: -0.72727275}
+    pivot: {x: 0.23214287, y: -0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 35
+      width: 56
       height: 22
     spriteID: b16a3b1338963ea4990909b4b54c0e88
     spriteBone: []
@@ -201,14 +201,14 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: PlayerNeutralLight1_Frame_4
     originalName: 
-    pivot: {x: 0.31428573, y: -0.72727275}
+    pivot: {x: 0.26000002, y: -0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 47
-      y: 4
-      width: 35
+      x: 4
+      y: 34
+      width: 50
       height: 22
     spriteID: 4df7fa911769beb4790650b5c0ff81aa
     spriteBone: []
@@ -218,16 +218,16 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 47, y: 4}
+    uvTransform: {x: 4, y: 34}
   - name: PlayerNeutralLight1_Frame_5
     originalName: 
-    pivot: {x: 0.32352942, y: -0.72727275}
+    pivot: {x: 0.38235295, y: -0.72727275}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 90
-      y: 4
+      x: 4
+      y: 64
       width: 34
       height: 22
     spriteID: ff74c0b1db1bb60428ca646e2509cb12
@@ -238,7 +238,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 90, y: 4}
+    uvTransform: {x: 4, y: 64}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -251,23 +251,23 @@ ScriptedImporter:
     - name: PlayerNeutralLight1_Frame_0
       frameIndex: 0
       cellRect:
-        x: 16
+        x: 38
         y: 16
         width: 26
-        height: 24
+        height: 25
       spriteId: d8ba867341d25a3428754f4f8644c8e6
     - name: PlayerNeutralLight1_Frame_1
       frameIndex: 1
       cellRect:
-        x: 17
+        x: 39
         y: 16
         width: 25
-        height: 23
+        height: 24
       spriteId: a49a90831782abc4d8e546b71cf0e09c
     - name: PlayerNeutralLight1_Frame_2
       frameIndex: 2
       cellRect:
-        x: 20
+        x: 42
         y: 16
         width: 22
         height: 22
@@ -275,23 +275,23 @@ ScriptedImporter:
     - name: PlayerNeutralLight1_Frame_3
       frameIndex: 3
       cellRect:
-        x: 21
+        x: 43
         y: 16
-        width: 35
+        width: 56
         height: 22
       spriteId: b16a3b1338963ea4990909b4b54c0e88
     - name: PlayerNeutralLight1_Frame_4
       frameIndex: 4
       cellRect:
-        x: 21
+        x: 43
         y: 16
-        width: 35
+        width: 50
         height: 22
       spriteId: 4df7fa911769beb4790650b5c0ff81aa
     - name: PlayerNeutralLight1_Frame_5
       frameIndex: 5
       cellRect:
-        x: 21
+        x: 43
         y: 16
         width: 34
         height: 22
@@ -337,4 +337,4 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 64, y: 64}
+  canvasSize: {x: 112, y: 80}
