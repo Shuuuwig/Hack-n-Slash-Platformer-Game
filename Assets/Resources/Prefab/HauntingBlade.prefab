@@ -292,8 +292,8 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -0.026601642, y: 1.6718103}
       - {x: -0.014899969, y: -1.030795}
-      - {x: -2.0461318, y: -1.0706825}
-      - {x: -2.061789, y: 0.682455}
+      - {x: 2.343454, y: -1.0249904}
+      - {x: 1.8280219, y: 0.8542058}
   m_UseDelaunayMesh: 0
 --- !u!1 &7036631612159486746
 GameObject:
@@ -563,7 +563,7 @@ MonoBehaviour:
     Duration: 0
   attackDowntime:
     CurrentProgress: 0
-    Duration: 1
+    Duration: 0.5
   parryDuration: 0
   parryActiveTime:
     CurrentProgress: 0

@@ -17,6 +17,11 @@ public class PlayerEventHandler : MonoBehaviour
         combat.NeutralLightCollider.enabled = !combat.NeutralLightCollider.enabled;
     }
 
+    private void ForwardLight()
+    {
+        combat.ForwardLightCollider.enabled = !combat.ForwardLightCollider.enabled;
+    }
+
     private void AirLight()
     {
         combat.AirLightCollider.enabled = !combat.AirLightCollider.enabled;

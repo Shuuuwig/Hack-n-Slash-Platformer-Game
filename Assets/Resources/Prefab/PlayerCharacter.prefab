@@ -307,7 +307,7 @@ MonoBehaviour:
   recoveryTime:
     CurrentProgress: 0
     Duration: 0.5
-  parryDuration: 1
+  parryDuration: 0.5
   parryActiveTime:
     CurrentProgress: 0
     Duration: 0

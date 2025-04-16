@@ -63,6 +63,12 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] protected float airLightLowHitstopDuration;
     [SerializeField] protected float airLightHighHitstopDuration;
 
+    [SerializeField] protected PlayerHitEnemy neutralLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy forwardLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy submergeLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightHighHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightLowHitEnemy;
 
     protected float finalizedDamage;
     protected float maxBasicCombo;
@@ -109,6 +115,7 @@ public class PlayerCombat : MonoBehaviour
     protected PlayerStats stats;
     protected PlayerStatus status;
     protected PlayerEventHandler eventHandler;
+    
 
     public Timer ParryActiveTime { get { return parryActiveTime; } }
 
@@ -260,8 +267,11 @@ public class PlayerCombat : MonoBehaviour
         {
             hitstopTime.ResetCooldown();
             Time.timeScale = 1;
-            canHitStop = false;
             Debug.Log("hitstop ended");
+            canHitStop = false;
+
+            neutralLightHitEnemy.HitEnemy = false;
+            forwardLightHitEnemy.HitEnemy = false;
         }
     }
 
@@ -301,6 +311,8 @@ public class PlayerCombat : MonoBehaviour
     protected void DetermineCombatState()
     {
         isAttacking = attackTime.CurrentProgress == Timer.Progress.InProgress;
+        if (neutralLightHitEnemy.HitEnemy || forwardLightHitEnemy.HitEnemy)
+            canHitStop = true;
 
         if (!isParry && !parriedAttack)
             parryCollider.enabled = false;
@@ -348,7 +360,7 @@ public class PlayerCombat : MonoBehaviour
         if (isAttacking || parryActiveTime.CurrentProgress != Timer.Progress.Ready)
             return;
         //&& comboActiveTime.CurrentProgress != Timer.Progress.InProgress
-        if (Input.GetKeyDown(inputTracker.ParryButton))
+        if (Input.GetKeyDown(inputTracker.ParryButton) && movement.Grounded)
         {
             if (parryActiveTime.CurrentProgress == Timer.Progress.Ready)
             {
@@ -374,6 +386,8 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = neutralLightDuration;
                 attackTime.StartCooldown();
                 canNeutralLight = false;
+                hitstopTime.Duration = neutralLightHitstopDuration;
+                
                 finalizedDamage = stats.LightDamage * neutralLightMultiplier;
             }
             else if (forwardLight && canForwardLight)
@@ -382,6 +396,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = forwardLightDuration;
                 attackTime.StartCooldown();
                 canForwardLight = false;
+                hitstopTime.Duration = forwardLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * forwardLightMultiplier;
             }
             else if (submergeLight && canSubmergeLight)
@@ -390,6 +405,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = submergedLightDuration;
                 attackTime.StartCooldown();
                 canSubmergeLight = false;
+                hitstopTime.Duration = submergedLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * submergedLightMultiplier;
             }
             else if (dashLight && canDashLight)
@@ -398,6 +414,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = dashLightDuration;
                 attackTime.StartCooldown();
                 canDashLight = false;
+                hitstopTime.Duration = dashLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * dashLightMultiplier;
             }
             else if (airLight && canAirLight)
@@ -406,6 +423,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightDuration;
                 attackTime.StartCooldown();
                 canAirLight = false;
+                hitstopTime.Duration = airLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightMultiplier;
             }
             else if (airLightHigh && canAirLightHigh)
@@ -414,6 +432,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightHighDuration;
                 attackTime.StartCooldown();
                 canAirLightHigh = false;
+                hitstopTime.Duration = airLightHighHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightHighMultiplier;
             }
             else if (airLightLow && canAirLightLow)
@@ -422,6 +441,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightLowDuration;
                 attackTime.StartCooldown();
                 canAirLightLow = false;
+                hitstopTime.Duration = airLightLowHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightLowMultiplier;
             }
         }

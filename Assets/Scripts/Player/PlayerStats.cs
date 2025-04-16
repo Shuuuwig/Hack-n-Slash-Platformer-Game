@@ -10,6 +10,8 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] private float baseSpeed;
     [SerializeField] private float baseJumpPower;
     [SerializeField] private float lightDamage;
+    [SerializeField] private float maxVoidMeter;
+    [SerializeField] private float currrentVoidMeter;
 
     //Ability //Unlocked
     private Dictionary<string, bool> skills = new Dictionary<string, bool>()

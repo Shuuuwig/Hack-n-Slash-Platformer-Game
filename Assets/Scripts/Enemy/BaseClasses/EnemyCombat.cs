@@ -50,6 +50,7 @@ public abstract class EnemyCombat : MonoBehaviour
 
     protected EnemyMovement movement;
     protected EnemyStats stats;
+    protected EnemyAnimationHandler animationHandler;
 
     [SerializeField] protected Transform playerTransform;
     [SerializeField] protected PlayerMovement playerMovement;

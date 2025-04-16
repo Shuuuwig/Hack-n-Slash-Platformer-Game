@@ -65,6 +65,7 @@ public abstract class EnemyMovement : MonoBehaviour
     public bool Falling { get { return falling; } }
     public bool FallingForward { get { return fallingForward; } }
     public bool FallingBackward { get { return fallingBackward; } }
+    public bool FacingLeft { get { return facingLeft; } }
     public bool FacingRight { get { return facingRight; } }
     public bool Knockedback { get { return knockedback; } }
 

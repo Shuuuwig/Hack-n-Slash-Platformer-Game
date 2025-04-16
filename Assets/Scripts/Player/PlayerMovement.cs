@@ -46,6 +46,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] protected LayerMask playerLayer;
     [SerializeField] protected LayerMask enemyLayer;
 
+    [Header("--- Hurtbox Colliders ---")]
+    [SerializeField] private GameObject hurtboxIdle;
+    [SerializeField] private GameObject hurtboxWalkForward;
+    [SerializeField] private GameObject hurtboxWalkBackward;
+    [SerializeField] private GameObject hurtboxRun;
+    [SerializeField] private GameObject hurtboxJump;
+    [SerializeField] private GameObject hurtboxFall;
+    [SerializeField] private GameObject hurtboxDash;
+    [SerializeField] private GameObject hurtboxSubmerge;
+
+    private GameObject currentHurtbox;
+
     protected float finalizedSpeed;
     protected float finalizedJump;
 
@@ -83,8 +95,7 @@ public class PlayerMovement : MonoBehaviour
     protected bool grounded;
 
     protected Vector2 knockedbackDirection;
-
-    protected Collider2D hurtbox;
+   
     protected Rigidbody2D attachedRigidbody;
     protected PlayerInputTracker inputTracker;
     protected PlayerAnimationHandler animationHandler;
@@ -139,7 +150,6 @@ public class PlayerMovement : MonoBehaviour
     protected void Start()
     {
         attachedRigidbody = GetComponent<Rigidbody2D>();
-        hurtbox = GetComponent<Collider2D>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputTracker = GetComponent<PlayerInputTracker>();
         combat = GetComponent<PlayerCombat>();
@@ -150,6 +160,7 @@ public class PlayerMovement : MonoBehaviour
     protected void Update()
     {
         UpdateMovementConditions();
+        UpdateHurtbox();
         GroundCheck();
         BufferJumpCheck();
         SubmergeOverheadCheck();
@@ -270,6 +281,40 @@ public class PlayerMovement : MonoBehaviour
         submergingBackward = submerging && walkingBackward;
     }
 
+    protected void UpdateHurtbox()
+    {
+        GameObject nextHurtbox = hurtboxIdle;
+
+        if (dashing)
+            nextHurtbox = hurtboxDash;
+        else if (submerging)
+            nextHurtbox = hurtboxSubmerge;
+        //else if (jumping)
+        //    nextHurtbox = hurtboxJump;
+        //else if (falling)
+        //    nextHurtbox = hurtboxFall;
+        else if (runningForward)
+            nextHurtbox = hurtboxRun;
+        else if (walkingForward)
+            nextHurtbox = hurtboxWalkForward;
+        else if (walkingBackward)
+            nextHurtbox = hurtboxWalkBackward;
+        else
+            nextHurtbox = hurtboxIdle;
+
+        Debug.Log(nextHurtbox.name);
+        // Only switch if different
+        if (currentHurtbox != nextHurtbox)
+        {
+            if (currentHurtbox != null)
+                currentHurtbox.SetActive(false);
+
+            if (nextHurtbox != null)
+                nextHurtbox.SetActive(true);
+
+            currentHurtbox = nextHurtbox;
+        }
+    }
     protected void HorizontalMovement()
     {
         if ((combat.IsAttacking && grounded) || combat.IsParry)

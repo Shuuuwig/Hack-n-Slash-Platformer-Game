@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -71,7 +72,12 @@ public class HauntingBladeMovement : EnemyMovement
             passiveTimer.ResetCooldown();
             passive = false;
         }
-    }
+        
+        if (awakingTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            hurtbox.enabled = true;
+        }
+    }  
 
     protected void PlayerCheck()
     {
@@ -145,6 +151,7 @@ public class HauntingBladeMovement : EnemyMovement
         {
             finalizedSpeed = stats.BaseSpeed * speedBackwardsMultiplier;
             attachedRigidbody.velocity = new Vector2(-direction * finalizedSpeed, attachedRigidbody.velocity.y);
+            aggressive = false;
         }
         else if (aggressive)
         {

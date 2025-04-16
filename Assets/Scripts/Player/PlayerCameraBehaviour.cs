@@ -86,8 +86,6 @@ public class PlayerCameraBehaviour : MonoBehaviour
                     viewPoint = GameObject.Find("viewPoint").transform;
                 }
                 mainCamera.orthographicSize = Mathf.Lerp(mainCamera.orthographicSize, 3.5f, Time.deltaTime * parryZoomOutSpeed);
-                mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, viewPoint.position.y + yAxisOffset, mainCamera.transform.position.z);
-
             }
             
         }
