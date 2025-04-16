@@ -121,7 +121,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: hauntingBladeSlash_Frame_0
     originalName: 
-    pivot: {x: 0.5090909, y: 0}
+    pivot: {x: 0.49090907, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -141,7 +141,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 116}
   - name: hauntingBladeSlash_Frame_1
     originalName: 
-    pivot: {x: 0.5090909, y: 0}
+    pivot: {x: 0.49090907, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -161,7 +161,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 179}
   - name: hauntingBladeSlash_Frame_2
     originalName: 
-    pivot: {x: 0.38636366, y: 0}
+    pivot: {x: 0.6136364, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -181,7 +181,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 239}
   - name: hauntingBladeSlash_Frame_3
     originalName: 
-    pivot: {x: 0.46296296, y: 0}
+    pivot: {x: 0.537037, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -201,7 +201,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 376}
   - name: hauntingBladeSlash_Frame_4
     originalName: 
-    pivot: {x: 0.44444445, y: 0}
+    pivot: {x: 0.5555556, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -221,7 +221,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 309}
   - name: hauntingBladeSlash_Frame_5
     originalName: 
-    pivot: {x: 0.24324325, y: -0.015873017}
+    pivot: {x: 0.7567568, y: -0.015873017}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -241,7 +241,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 433}
   - name: hauntingBladeSlash_Frame_6
     originalName: 
-    pivot: {x: 0.5362319, y: 0}
+    pivot: {x: 0.46376812, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -261,7 +261,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: hauntingBladeSlash_Frame_7
     originalName: 
-    pivot: {x: 0.5362319, y: 0}
+    pivot: {x: 0.46376812, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -311,7 +311,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_0
       frameIndex: 0
       cellRect:
-        x: 4
+        x: 5
         y: 0
         width: 55
         height: 55
@@ -319,7 +319,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_1
       frameIndex: 1
       cellRect:
-        x: 4
+        x: 5
         y: 0
         width: 55
         height: 52
@@ -327,7 +327,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_2
       frameIndex: 2
       cellRect:
-        x: 15
+        x: 5
         y: 0
         width: 44
         height: 62
@@ -335,7 +335,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_3
       frameIndex: 3
       cellRect:
-        x: 7
+        x: 3
         y: 0
         width: 54
         height: 49
@@ -343,7 +343,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_4
       frameIndex: 4
       cellRect:
-        x: 12
+        x: 7
         y: 0
         width: 45
         height: 59
@@ -351,7 +351,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_5
       frameIndex: 5
       cellRect:
-        x: 23
+        x: 4
         y: 1
         width: 37
         height: 63
@@ -359,7 +359,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_6
       frameIndex: 6
       cellRect:
-        x: -5
+        x: 0
         y: 0
         width: 69
         height: 48
@@ -367,7 +367,7 @@ ScriptedImporter:
     - name: hauntingBladeSlash_Frame_7
       frameIndex: 7
       cellRect:
-        x: -5
+        x: 0
         y: 0
         width: 69
         height: 48

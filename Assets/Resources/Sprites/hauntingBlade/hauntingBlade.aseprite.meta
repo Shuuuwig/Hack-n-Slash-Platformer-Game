@@ -121,7 +121,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: hauntingBlade_Frame_21
     originalName: 
-    pivot: {x: 0.5090909, y: 0.017857144}
+    pivot: {x: 0.49090907, y: 0.017857144}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -141,7 +141,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 68}
   - name: hauntingBlade_Frame_22
     originalName: 
-    pivot: {x: 0.5090909, y: 0.017857144}
+    pivot: {x: 0.49090907, y: 0.017857144}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -161,7 +161,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 132}
   - name: hauntingBlade_Frame_0
     originalName: 
-    pivot: {x: 0.5686275, y: 0}
+    pivot: {x: 0.43137255, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -181,7 +181,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 454}
   - name: hauntingBlade_Frame_1
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -201,7 +201,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 183}
   - name: hauntingBlade_Frame_2
     originalName: 
-    pivot: {x: 0.5686275, y: 0}
+    pivot: {x: 0.43137255, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -221,7 +221,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 132}
   - name: hauntingBlade_Frame_3
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -241,7 +241,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 234}
   - name: hauntingBlade_Frame_4
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -261,7 +261,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 285}
   - name: hauntingBlade_Frame_5
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -281,7 +281,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 336}
   - name: hauntingBlade_Frame_6
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -301,7 +301,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 387}
   - name: hauntingBlade_Frame_7
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -321,7 +321,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 438}
   - name: hauntingBlade_Frame_8
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -341,7 +341,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 4}
   - name: hauntingBlade_Frame_9
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -361,7 +361,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 55}
   - name: hauntingBlade_Frame_10
     originalName: 
-    pivot: {x: 0.58, y: 0}
+    pivot: {x: 0.42, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -381,7 +381,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 106}
   - name: hauntingBlade_Frame_11
     originalName: 
-    pivot: {x: 0.5909091, y: 0}
+    pivot: {x: 0.40909094, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -401,7 +401,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 221}
   - name: hauntingBlade_Frame_12
     originalName: 
-    pivot: {x: 0.5945946, y: -0.017857144}
+    pivot: {x: 0.4054054, y: -0.017857144}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -421,7 +421,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 157}
   - name: hauntingBlade_Frame_13
     originalName: 
-    pivot: {x: 0.5882353, y: -0.090909086}
+    pivot: {x: 0.4117647, y: -0.090909086}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -441,7 +441,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 276}
   - name: hauntingBlade_Frame_14
     originalName: 
-    pivot: {x: 0.5192308, y: -0.090909086}
+    pivot: {x: 0.48076925, y: -0.090909086}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -461,7 +461,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 391}
   - name: hauntingBlade_Frame_15
     originalName: 
-    pivot: {x: 0.49180326, y: -0.071428575}
+    pivot: {x: 0.5081967, y: -0.071428575}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -481,7 +481,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: hauntingBlade_Frame_16
     originalName: 
-    pivot: {x: 0.50980395, y: -0.071428575}
+    pivot: {x: 0.4901961, y: -0.071428575}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -501,7 +501,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 4}
   - name: hauntingBlade_Frame_17
     originalName: 
-    pivot: {x: 0.50980395, y: -0.071428575}
+    pivot: {x: 0.4901961, y: -0.071428575}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -521,7 +521,7 @@ ScriptedImporter:
     uvTransform: {x: 73, y: 68}
   - name: hauntingBlade_Frame_18
     originalName: 
-    pivot: {x: 0.50980395, y: -0.016949153}
+    pivot: {x: 0.4901961, y: -0.016949153}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -541,7 +541,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 324}
   - name: hauntingBlade_Frame_19
     originalName: 
-    pivot: {x: 0.5090909, y: 0.017857144}
+    pivot: {x: 0.49090907, y: 0.017857144}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -561,7 +561,7 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 196}
   - name: hauntingBlade_Frame_20
     originalName: 
-    pivot: {x: 0.5090909, y: 0.017857144}
+    pivot: {x: 0.49090907, y: 0.017857144}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -591,7 +591,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_21
       frameIndex: 21
       cellRect:
-        x: 4
+        x: 5
         y: -1
         width: 55
         height: 56
@@ -599,7 +599,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_22
       frameIndex: 22
       cellRect:
-        x: 4
+        x: 5
         y: -1
         width: 55
         height: 56
@@ -607,7 +607,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_0
       frameIndex: 0
       cellRect:
-        x: 3
+        x: 10
         y: 0
         width: 51
         height: 43
@@ -615,7 +615,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_1
       frameIndex: 1
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -623,7 +623,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_2
       frameIndex: 2
       cellRect:
-        x: 3
+        x: 10
         y: 0
         width: 51
         height: 43
@@ -631,7 +631,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_3
       frameIndex: 3
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -639,7 +639,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_4
       frameIndex: 4
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -647,7 +647,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_5
       frameIndex: 5
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -655,7 +655,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_6
       frameIndex: 6
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -663,7 +663,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_7
       frameIndex: 7
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -671,7 +671,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_8
       frameIndex: 8
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -679,7 +679,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_9
       frameIndex: 9
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -687,7 +687,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_10
       frameIndex: 10
       cellRect:
-        x: 3
+        x: 11
         y: 0
         width: 50
         height: 43
@@ -695,7 +695,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_11
       frameIndex: 11
       cellRect:
-        x: 6
+        x: 14
         y: 0
         width: 44
         height: 47
@@ -703,7 +703,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_12
       frameIndex: 12
       cellRect:
-        x: 10
+        x: 17
         y: 1
         width: 37
         height: 56
@@ -711,7 +711,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_13
       frameIndex: 13
       cellRect:
-        x: 12
+        x: 18
         y: 5
         width: 34
         height: 55
@@ -719,7 +719,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_14
       frameIndex: 14
       cellRect:
-        x: 5
+        x: 7
         y: 5
         width: 52
         height: 55
@@ -727,7 +727,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_15
       frameIndex: 15
       cellRect:
-        x: 2
+        x: 1
         y: 4
         width: 61
         height: 56
@@ -735,7 +735,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_16
       frameIndex: 16
       cellRect:
-        x: 6
+        x: 7
         y: 4
         width: 51
         height: 56
@@ -743,7 +743,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_17
       frameIndex: 17
       cellRect:
-        x: 6
+        x: 7
         y: 4
         width: 51
         height: 56
@@ -751,7 +751,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_18
       frameIndex: 18
       cellRect:
-        x: 6
+        x: 7
         y: 1
         width: 51
         height: 59
@@ -759,7 +759,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_19
       frameIndex: 19
       cellRect:
-        x: 4
+        x: 5
         y: -1
         width: 55
         height: 56
@@ -767,7 +767,7 @@ ScriptedImporter:
     - name: hauntingBlade_Frame_20
       frameIndex: 20
       cellRect:
-        x: 4
+        x: 5
         y: -1
         width: 55
         height: 56
