@@ -128,7 +128,7 @@ public class PlayerInputTracker : MonoBehaviour
             inputSequence.RemoveAt(0);
             inputStayTime.ResetCooldown();
             inputStayTime.StartCooldown();
-            Debug.Log("Removed");
+            //Debug.Log("Removed");
 
         }
         if (Input.anyKeyDown && inputStayTime.CurrentProgress == Timer.Progress.Ready)

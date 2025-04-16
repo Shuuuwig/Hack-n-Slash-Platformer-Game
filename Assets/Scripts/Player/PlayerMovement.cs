@@ -272,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
 
     protected void HorizontalMovement()
     {
-        if (combat.IsAttacking && grounded)
+        if ((combat.IsAttacking && grounded) || combat.IsParry)
         {
             attachedRigidbody.velocity = Vector2.zero;
             return;

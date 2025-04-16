@@ -22,12 +22,6 @@ public abstract class EnemyMovement : MonoBehaviour
     [SerializeField] protected LayerMask groundLayer;
     protected RaycastHit2D groundBoxcast;
 
-    [Header("--- Knockback Effect ---")]
-    [SerializeField] protected float knockedbackForce;
-    [SerializeField] protected Timer knockedbackTimer;
-    protected Vector2 knockedbackDirection;
-    protected Vector2 collisionPoint;
-
     protected int selectedBehaviour;
     protected float finalizedSpeed;
 
