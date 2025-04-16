@@ -155,7 +155,7 @@ MonoBehaviour:
   currentHealth: 20
   baseSpeed: 5
   baseJumpPower: 16
-  lightDamageMultiplier: 1.2
+  lightDamage: 0
 --- !u!114 &5442325369979177354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +275,14 @@ MonoBehaviour:
   airLightLowDuration: 2
   airLightHighDuration: 2
   sludgeBombDuration: 2
+  neutralLightMultiplier: 0
+  forwardLightMultiplier: 0
+  submergedLightMultiplier: 0
+  dashLightMultiplier: 0
+  airLightMultiplier: 0
+  airLightLowMultiplier: 0
+  airLightHighMultiplier: 0
+  sludgeBombMultiplier: 0
   attackCooldown:
     CurrentProgress: 0
     Duration: 0
@@ -284,6 +292,13 @@ MonoBehaviour:
   attackTime:
     CurrentProgress: 0
     Duration: 0
+  neutralLightCollider: {fileID: 0}
+  forwardLightCollider: {fileID: 0}
+  submergedLightCollider: {fileID: 0}
+  dashLightCollider: {fileID: 0}
+  airLightCollider: {fileID: 0}
+  airLightLowCollider: {fileID: 0}
+  airLightHighCollider: {fileID: 0}
   recoveryTime:
     CurrentProgress: 0
     Duration: 0.5
@@ -611,7 +626,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.6875, y: 1.5}
+  m_Size: {x: 1.625, y: 1.625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
