@@ -83,7 +83,7 @@ public class Timer
         {
             currentDuration -= Time.unscaledDeltaTime;
             CurrentProgress = Progress.InProgress;
-            Debug.Log(currentDuration);
+            //Debug.Log(currentDuration);
 
             yield return null;
         }

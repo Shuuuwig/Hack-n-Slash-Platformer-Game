@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -19,12 +20,12 @@ public class HauntingBladeMovement : EnemyMovement
 
     protected bool awaking;
     [SerializeField] protected Timer awakingTime;
-    [SerializeField] protected bool aggressive;
     [SerializeField] protected Timer defensiveTime;
-
-    private List<Node> openList = new List<Node>();
-    private List<Node> closedList = new List<Node>();
-    [SerializeField] private Tilemap groundTilemap;
+    [SerializeField] protected Timer passiveTimer;
+    [SerializeField] protected float minPassiveTime;
+    [SerializeField] protected float maxPassiveTime;
+    protected bool passive;
+    protected bool aggressive;
 
     public Timer AwakingTime { get { return awakingTime; } }
     public bool Aggressive 
@@ -60,8 +61,23 @@ public class HauntingBladeMovement : EnemyMovement
     protected override void Update()
     {
         PlayerCheck();
+        BehaviourManager();
         base.Update();
     }
+
+    protected override void Timers()
+    {
+        if (passiveTimer.CurrentProgress == Timer.Progress.Finished)
+        {
+            passiveTimer.ResetCooldown();
+            passive = false;
+        }
+        
+        if (awakingTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            hurtbox.enabled = true;
+        }
+    }  
 
     protected void PlayerCheck()
     {
@@ -79,7 +95,6 @@ public class HauntingBladeMovement : EnemyMovement
             }
 
             playerTooClose = true;
-            //BehaviourManager();
         }
         else
         {
@@ -89,31 +104,32 @@ public class HauntingBladeMovement : EnemyMovement
 
     protected override void BehaviourManager()
     {
-        if (awakingTime.CurrentProgress != Timer.Progress.Finished)
+        if (awakingTime.CurrentProgress != Timer.Progress.Finished || playerTooClose)
             return;
 
-        
+        if (passive || aggressive)
+            return;
 
-        //if (!behaviourDetermined)
-        //{
-        //    selectedBehaviour = Random.Range(0, 2);
+        float chooseBehaviour = Random.Range(0,2);
 
-        //    if (selectedBehaviour == 0)
-        //    {
-        //        Debug.Log("Aggro");
-        //        aggressive = true;
-        //    }
-        //    else if (selectedBehaviour == 1 && defensiveTime.CurrentProgress == Timer.Progress.Ready)
-        //    {
-        //        defensiveTime.StartCooldown();
-        //    }
+        if (chooseBehaviour == 0)
+        {
+            passive = true;
+            aggressive = false;
 
-        //    behaviourDetermined = true;
-        //}
-    }
+            passiveTimer.Duration = Random.Range(minPassiveTime, maxPassiveTime);
+            passiveTimer.StartCooldown();
+            return;
+        }
 
-    protected void BehaviourReset()
-    {
+        if (chooseBehaviour == 1)
+        {
+            passive = false;
+            aggressive = true;
+
+            
+            return;
+        }
 
     }
 
@@ -122,24 +138,25 @@ public class HauntingBladeMovement : EnemyMovement
         if (playerTarget == null || awakingTime.CurrentProgress != Timer.Progress.Finished)
             return;
 
-        
-
-
         if (combat.IsAttacking)
         {
             attachedRigidbody.velocity = Vector2.zero;
+            aggressive = false;
             return;
         }
 
-        if (playerTooClose)
+        float direction = Mathf.Sign(playerTarget.position.x - transform.position.x);
+
+        if (playerTooClose || passive)
         {
             finalizedSpeed = stats.BaseSpeed * speedBackwardsMultiplier;
-            attachedRigidbody.velocity = new Vector2(Mathf.Sign(playerTarget.position.x - transform.position.x) * -finalizedSpeed, attachedRigidbody.velocity.y);
+            attachedRigidbody.velocity = new Vector2(-direction * finalizedSpeed, attachedRigidbody.velocity.y);
+            aggressive = false;
         }
-        else
+        else if (aggressive)
         {
             finalizedSpeed = stats.BaseSpeed * speedForwardsMultiplier;
-            attachedRigidbody.velocity = new Vector2(Mathf.Sign(playerTarget.position.x - transform.position.x) * finalizedSpeed, attachedRigidbody.velocity.y);
+            attachedRigidbody.velocity = new Vector2(direction * finalizedSpeed, attachedRigidbody.velocity.y);
         }
     }
 

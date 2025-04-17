@@ -7,10 +7,19 @@ public class PlayerEventHandler : MonoBehaviour
     [Header("---Component Reference---")]
     [SerializeField] private PlayerCombat combat;
     [SerializeField] private PlayerMovement movement;
+    private void Parry()
+    {
+        combat.ParryCollider.enabled = !combat.ParryCollider.enabled;
+    }
 
     private void NeutralLight()
     {
         combat.NeutralLightCollider.enabled = !combat.NeutralLightCollider.enabled;
+    }
+
+    private void ForwardLight()
+    {
+        combat.ForwardLightCollider.enabled = !combat.ForwardLightCollider.enabled;
     }
 
     private void AirLight()
@@ -32,5 +41,4 @@ public class PlayerEventHandler : MonoBehaviour
     {
         combat.SubmergedLightCollider.enabled = !combat.SubmergedLightCollider.enabled;
     }
-
 }

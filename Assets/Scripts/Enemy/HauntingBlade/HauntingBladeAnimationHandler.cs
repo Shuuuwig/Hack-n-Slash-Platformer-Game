@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HauntingBladeAnimationHandler : EnemyAnimationHandler
 {
-    //[SerializeField] private HauntingBlade hauntingBlade;
     protected override void Start()
     {
         base.Start();
@@ -12,9 +11,9 @@ public class HauntingBladeAnimationHandler : EnemyAnimationHandler
         combat = GetComponent<HauntingBladeCombat>();
     }
 
-    // Update is called once per frame
     protected override void Update()
     {
+        flipLocked = combat.IsDirectionLocked;
         base.Update();
     }
 
@@ -36,6 +35,10 @@ public class HauntingBladeAnimationHandler : EnemyAnimationHandler
         else if (((HauntingBladeMovement)movement).WalkingForward)
         {
             ChangeAnimation("hauntingBladeWalkForward");
+        }
+        else if (((HauntingBladeMovement)movement).WalkingBackward)
+        {
+            ChangeAnimation("hauntingBladeWalkBackward");
         }
 
     }

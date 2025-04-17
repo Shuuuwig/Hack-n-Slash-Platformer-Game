@@ -47,7 +47,7 @@ public abstract class EnemyAnimationHandler : MonoBehaviour
             Flip();
     }
 
-    protected virtual void Flip()
+    public virtual void Flip()
     {
         transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
     }

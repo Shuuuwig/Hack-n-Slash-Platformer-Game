@@ -292,8 +292,8 @@ PolygonCollider2D:
     m_Paths:
     - - {x: -0.026601642, y: 1.6718103}
       - {x: -0.014899969, y: -1.030795}
-      - {x: -2.0461318, y: -1.0706825}
-      - {x: -2.061789, y: 0.682455}
+      - {x: 2.343454, y: -1.0249904}
+      - {x: 1.8280219, y: 0.8542058}
   m_UseDelaunayMesh: 0
 --- !u!1 &7036631612159486746
 GameObject:
@@ -369,6 +369,7 @@ GameObject:
   - component: {fileID: 6418422075384145247}
   - component: {fileID: 5600263758643440349}
   - component: {fileID: 6979271633491278255}
+  - component: {fileID: 3421203234983445865}
   - component: {fileID: 6189573152612510817}
   - component: {fileID: 2706697616977719305}
   - component: {fileID: 5940213697384727977}
@@ -491,6 +492,18 @@ MonoBehaviour:
   baseDamage: 3
   bodyDamage: 2
   baseKnockback: 8
+--- !u!114 &3421203234983445865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120255367531479453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd1b85d1afebd1e419c55a09edd9f3c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6189573152612510817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,10 +526,6 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  knockedbackForce: 0
-  knockedbackTimer:
-    CurrentProgress: 0
-    Duration: 0
   detectorRadius: 4
   detectorLayer:
     serializedVersion: 2
@@ -528,11 +537,14 @@ MonoBehaviour:
   awakingTime:
     CurrentProgress: 0
     Duration: 3
-  aggressive: 0
   defensiveTime:
     CurrentProgress: 0
     Duration: 2
-  groundTilemap: {fileID: 0}
+  passiveTimer:
+    CurrentProgress: 0
+    Duration: 0
+  minPassiveTime: 0.5
+  maxPassiveTime: 1
 --- !u!114 &2706697616977719305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -551,7 +563,7 @@ MonoBehaviour:
     Duration: 0
   attackDowntime:
     CurrentProgress: 0
-    Duration: 1
+    Duration: 0.5
   parryDuration: 0
   parryActiveTime:
     CurrentProgress: 0

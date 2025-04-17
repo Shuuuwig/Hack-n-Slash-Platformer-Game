@@ -62,9 +62,11 @@ public class MenuManager : MonoBehaviour
             SceneManager.LoadScene(nextSceneName); }
     }
 
-    /*public void OnQuitButtonClicked()
-    {
-        if (buttonsReady[1]) {
-            Application.Quit();}
-    }*/
+    //public void OnQuitButtonClicked()
+    //{
+    //    if (buttonsReady[1])
+    //    {
+    //        Application.Quit();
+    //    }
+    //}
 }

@@ -10,6 +10,7 @@ public class PlayerStatus : MonoBehaviour
 
     [SerializeField] protected Timer invulnerabilityDuration;
 
+    private bool isProcessingHit;
     protected bool isHit;
     protected bool isKnockedback;
     protected bool isSlowed;
@@ -18,6 +19,7 @@ public class PlayerStatus : MonoBehaviour
     protected bool isBurned;
     protected bool isDead;
 
+    protected bool parriedAttack;
     protected bool knockbackEnd;
 
     protected Vector2 collisionPoint;
@@ -59,6 +61,11 @@ public class PlayerStatus : MonoBehaviour
     }
 
     public bool IsDead { get { return isDead; } }
+    public bool ParriedAttack 
+    {
+        get { return parriedAttack; }
+        set { parriedAttack = value; }
+    }
 
     public bool KnockbackEnd { get { return knockbackEnd; } }
 
@@ -76,13 +83,11 @@ public class PlayerStatus : MonoBehaviour
     {
         InvulnerabilityFrames();
         StateManager();
+        
     }
 
     private void TakeDamage(float damageTaken)
     {
-        //if (invulnerabilityDuration.CurrentProgress != Timer.Progress.Ready)
-        //    return;
-
         stats.CurrentHealth -= damageTaken;
         invulnerabilityDuration.StartCooldown();
 
@@ -101,6 +106,7 @@ public class PlayerStatus : MonoBehaviour
         isHit = true;
         hostileCombat = collision.gameObject.GetComponentInParent<EnemyCombat>();
 
+        
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collisionPoint = collision.gameObject.transform.position;
@@ -111,37 +117,14 @@ public class PlayerStatus : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isProcessingHit) 
+            return;
+
         isHit = true;
         hostileCombat = collision.gameObject.GetComponentInParent<EnemyCombat>();
 
-        if (collision.gameObject.CompareTag("Knockback"))
-        {
-            isKnockedback = true;
-            knockedbackForce = hostileCombat.FinalizedKnockback;
-            collisionPoint = collision.gameObject.transform.position;
-            Debug.Log(collisionPoint);
-            TakeDamage(hostileCombat.FinalizedDamage);
-        }
+        StartCoroutine(WaitForParry(collision, hostileCombat));
 
-        if (collision.gameObject.CompareTag("Slow"))
-        {
-            isSlowed = true;
-        }
-
-        if (collision.gameObject.CompareTag("Stun"))
-        {
-            isStunned = true;
-        }
-
-        if (collision.gameObject.CompareTag("Paralyze"))
-        {
-            isParalyzed = true;
-        }
-
-        if (collision.gameObject.CompareTag("Burn"))
-        {
-            isBurned = true;
-        }
     }
 
     private void InvulnerabilityFrames()
@@ -173,4 +156,47 @@ public class PlayerStatus : MonoBehaviour
         }
     }
 
+    protected IEnumerator WaitForParry(Collider2D collision, EnemyCombat enemyCombat)
+    {
+        isProcessingHit = true;
+
+        yield return new WaitForSeconds(0.05f);
+        Debug.Log(parriedAttack);
+        if (parriedAttack)
+        {
+            parriedAttack = false;
+            isProcessingHit = false;
+            yield break;
+        }
+
+        if (collision.gameObject.CompareTag("Knockback"))
+        {
+            isKnockedback = true;
+            knockedbackForce = enemyCombat.FinalizedKnockback;
+            collisionPoint = collision.gameObject.transform.position;
+            TakeDamage(enemyCombat.FinalizedDamage);
+        }
+
+        if (collision.gameObject.CompareTag("Slow"))
+        {
+            isSlowed = true;
+        }
+
+        if (collision.gameObject.CompareTag("Stun"))
+        {
+            isStunned = true;
+        }
+
+        if (collision.gameObject.CompareTag("Paralyze"))
+        {
+            isParalyzed = true;
+        }
+
+        if (collision.gameObject.CompareTag("Burn"))
+        {
+            isBurned = true;
+        }
+
+        isProcessingHit = false;
+    }
 }

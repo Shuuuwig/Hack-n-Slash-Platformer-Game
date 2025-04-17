@@ -39,6 +39,7 @@ public class HauntingBladeCombat : EnemyCombat
         base.Start();
         movement = GetComponent<HauntingBladeMovement>();
         stats = GetComponent<HauntingBladeStats>();
+        animationHandler = GetComponent<HauntingBladeAnimationHandler>();
     }
 
     protected override void Update()
@@ -60,6 +61,16 @@ public class HauntingBladeCombat : EnemyCombat
     protected override void DirectionLock()
     {
 
+        if (animationHandler.FacingRight && playerTransform.position.x < transform.position.x ||
+                animationHandler.FacingLeft && playerTransform.position.x > transform.position.x)
+        {
+            isDirectionLocked = false;
+        }
+        else
+        {
+            isDirectionLocked = true;
+            Debug.Log("Dir locked");
+        }
     }
 
     protected override void Timers()
@@ -74,14 +85,13 @@ public class HauntingBladeCombat : EnemyCombat
     protected override void DetermineCombatState()
     {
         base.DetermineCombatState();
-        //aggroPlayer = ((HauntingBladeMovement)movement).Aggressive;
         
         if (isAttacking || attackDowntime.CurrentProgress != Timer.Progress.Ready)
             return;
 
         int moveChoosen = Random.Range(0, 1);
         neutralSlashRange = Physics2D.OverlapCircle(transform.position, neutralSlashRadius, attackLayer);
-        
+
         if (moveChoosen == 0)
         {
             neutralSlash = neutralSlashRange;
@@ -90,9 +100,6 @@ public class HauntingBladeCombat : EnemyCombat
 
     protected override void Attack()
     {
-        //if (!aggroPlayer)
-        //    return;
-
         if (isAttacking || attackDowntime.CurrentProgress != Timer.Progress.Ready)
             return;
 

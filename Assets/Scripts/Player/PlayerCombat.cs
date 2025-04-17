@@ -35,6 +35,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] protected Timer attackTime;
 
     [Header("--- Attack Colliders ---")]
+    [SerializeField] protected Collider2D parryCollider;
     [SerializeField] protected Collider2D neutralLightCollider;
     [SerializeField] protected Collider2D forwardLightCollider;
     [SerializeField] protected Collider2D submergedLightCollider;
@@ -50,13 +51,24 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] protected float parryDuration;
     [SerializeField] protected Timer parryActiveTime;
     [SerializeField] protected Timer parrySuccessTime;
-    [SerializeField] protected Transform parryTransform;
-    [SerializeField] protected Vector2 parryBoxSize;
-    [SerializeField] protected LayerMask parryableLayer;
-    protected Collider2D parryCollider;
 
     [Header("--- Hitstop ---")]
-    [SerializeField] protected Timer hitstopDuration;
+    [SerializeField] protected Timer hitstopTime;
+    [SerializeField] protected float parryHitstopDuration;
+    [SerializeField] protected float neutralLightHitstopDuration;
+    [SerializeField] protected float forwardLightHitstopDuration;
+    [SerializeField] protected float submergedLightHitstopDuration;
+    [SerializeField] protected float dashLightHitstopDuration;
+    [SerializeField] protected float airLightHitstopDuration;
+    [SerializeField] protected float airLightLowHitstopDuration;
+    [SerializeField] protected float airLightHighHitstopDuration;
+
+    [SerializeField] protected PlayerHitEnemy neutralLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy forwardLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy submergeLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightHighHitEnemy;
+    [SerializeField] protected PlayerHitEnemy airLightLowHitEnemy;
 
     protected float finalizedDamage;
     protected float maxBasicCombo;
@@ -64,9 +76,8 @@ public class PlayerCombat : MonoBehaviour
 
     protected bool cancellable;
     protected bool hitTarget;
-    protected bool parriedAttack;
+    protected bool parriedAttack = false;
 
-    protected bool parry;
     protected bool neutralLight;
     protected bool forwardLight;
     protected bool submergeLight;
@@ -89,6 +100,7 @@ public class PlayerCombat : MonoBehaviour
     protected bool isAirLightLow;
     protected bool isSludgeBomb;
 
+    protected bool canHitStop = false;
     protected bool canParry = true;
     protected bool canNeutralLight = true;
     protected bool canForwardLight = true;
@@ -102,9 +114,18 @@ public class PlayerCombat : MonoBehaviour
     protected PlayerMovement movement;
     protected PlayerStats stats;
     protected PlayerStatus status;
+    protected PlayerEventHandler eventHandler;
+    
+
+    public Timer ParryActiveTime { get { return parryActiveTime; } }
 
     public float FinalizedDamage { get { return finalizedDamage; } }
-    public bool Parry { get { return parry; } }
+    public bool ParriedAttack 
+    {
+        get { return parriedAttack; }
+        set { parriedAttack = value; }
+    }
+
     public bool NeutralLight { get { return neutralLight; } }
     public bool ForwardLight { get { return forwardLight; } }
     public bool SubmergeLight { get { return submergeLight; } }
@@ -131,6 +152,11 @@ public class PlayerCombat : MonoBehaviour
     public bool IsAirLightLow { get { return isAirLightLow; } }
     public bool IsSludgeBomb { get { return isSludgeBomb; } }
 
+    public Collider2D ParryCollider
+    {
+        get { return parryCollider; }
+        set { parryCollider = value; }
+    }
     public Collider2D NeutralLightCollider
     {
         get { return neutralLightCollider; }
@@ -182,9 +208,6 @@ public class PlayerCombat : MonoBehaviour
         if (gizmoToggleOn != true)
             return;
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(parryTransform.position, parryBoxSize);
-
     }
 
     protected void Start()
@@ -200,10 +223,11 @@ public class PlayerCombat : MonoBehaviour
         DetermineCombatState();
         DirectionLock();
 
+        HitStop();
         Timers();
 
-        Attack();
-        ParryState();
+        Combating();
+        ParryCheck();
     }
 
     protected void DirectionLock()
@@ -230,17 +254,24 @@ public class PlayerCombat : MonoBehaviour
 
     protected void HitStop()
     {
-        if (hitstopDuration.CurrentProgress is Timer.Progress.Ready)
+        if (!canHitStop)
+            return;
+
+        if (hitstopTime.CurrentProgress is Timer.Progress.Ready)
         {
-            hitstopDuration.StartCooldownRealtime();
+            hitstopTime.StartCooldownRealtime();
             Time.timeScale = 0;
             Debug.Log("hitstopped");
         }
-        if (hitstopDuration.CurrentProgress is Timer.Progress.Finished)
+        if (hitstopTime.CurrentProgress is Timer.Progress.Finished)
         {
-            hitstopDuration.ResetCooldown();
+            hitstopTime.ResetCooldown();
             Time.timeScale = 1;
             Debug.Log("hitstop ended");
+            canHitStop = false;
+
+            neutralLightHitEnemy.HitEnemy = false;
+            forwardLightHitEnemy.HitEnemy = false;
         }
     }
 
@@ -249,7 +280,11 @@ public class PlayerCombat : MonoBehaviour
         if (attackTime.CurrentProgress == Timer.Progress.Finished)
         {
             attackTime.ResetCooldown();
-            recoveryTime.StartCooldown();
+
+            if (parrySuccessTime.CurrentProgress != Timer.Progress.InProgress)
+            {
+                recoveryTime.StartCooldown();
+            } 
         }
 
         if (recoveryTime.CurrentProgress == Timer.Progress.Finished)
@@ -276,10 +311,13 @@ public class PlayerCombat : MonoBehaviour
     protected void DetermineCombatState()
     {
         isAttacking = attackTime.CurrentProgress == Timer.Progress.InProgress;
-        parry = parryActiveTime.CurrentProgress == Timer.Progress.InProgress;
-        parriedAttack = parryCollider;
+        if (neutralLightHitEnemy.HitEnemy || forwardLightHitEnemy.HitEnemy)
+            canHitStop = true;
 
-        if (attackTime.CurrentProgress == Timer.Progress.InProgress)
+        if (!isParry && !parriedAttack)
+            parryCollider.enabled = false;
+
+        if (attackTime.CurrentProgress == Timer.Progress.InProgress || parryActiveTime.CurrentProgress == Timer.Progress.InProgress)
             return;
 
         neutralLight = movement.Grounded && !inputTracker.InputLeft && !inputTracker.InputRight;
@@ -315,17 +353,25 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    protected void Attack()
+    protected void Combating()
     {
         if (recoveryTime.CurrentProgress != Timer.Progress.Ready)
             return;
-        if (isAttacking)
+        if (isAttacking || parryActiveTime.CurrentProgress != Timer.Progress.Ready)
             return;
         //&& comboActiveTime.CurrentProgress != Timer.Progress.InProgress
+        if (Input.GetKeyDown(inputTracker.ParryButton) && movement.Grounded)
+        {
+            if (parryActiveTime.CurrentProgress == Timer.Progress.Ready)
+            {
+                isParry = true;
+                parryActiveTime.Duration = parryDuration;
+                parryActiveTime.StartCooldown();
+            }
+        }
+
         if (Input.GetKeyDown(inputTracker.LightButton))
         {
-            DetermineCombatState();
-
             if (sludgeBomb && canSludgeBomb)
             {
                 Debug.Log("SludgeBomb");
@@ -340,6 +386,8 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = neutralLightDuration;
                 attackTime.StartCooldown();
                 canNeutralLight = false;
+                hitstopTime.Duration = neutralLightHitstopDuration;
+                
                 finalizedDamage = stats.LightDamage * neutralLightMultiplier;
             }
             else if (forwardLight && canForwardLight)
@@ -348,6 +396,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = forwardLightDuration;
                 attackTime.StartCooldown();
                 canForwardLight = false;
+                hitstopTime.Duration = forwardLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * forwardLightMultiplier;
             }
             else if (submergeLight && canSubmergeLight)
@@ -356,6 +405,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = submergedLightDuration;
                 attackTime.StartCooldown();
                 canSubmergeLight = false;
+                hitstopTime.Duration = submergedLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * submergedLightMultiplier;
             }
             else if (dashLight && canDashLight)
@@ -364,6 +414,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = dashLightDuration;
                 attackTime.StartCooldown();
                 canDashLight = false;
+                hitstopTime.Duration = dashLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * dashLightMultiplier;
             }
             else if (airLight && canAirLight)
@@ -372,6 +423,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightDuration;
                 attackTime.StartCooldown();
                 canAirLight = false;
+                hitstopTime.Duration = airLightHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightMultiplier;
             }
             else if (airLightHigh && canAirLightHigh)
@@ -380,6 +432,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightHighDuration;
                 attackTime.StartCooldown();
                 canAirLightHigh = false;
+                hitstopTime.Duration = airLightHighHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightHighMultiplier;
             }
             else if (airLightLow && canAirLightLow)
@@ -388,6 +441,7 @@ public class PlayerCombat : MonoBehaviour
                 attackTime.Duration = airLightLowDuration;
                 attackTime.StartCooldown();
                 canAirLightLow = false;
+                hitstopTime.Duration = airLightLowHitstopDuration;
                 finalizedDamage = stats.LightDamage * airLightLowMultiplier;
             }
         }
@@ -398,32 +452,34 @@ public class PlayerCombat : MonoBehaviour
         
     }
 
-    protected void ParryState()
+    protected void ParryCheck()
     {
-        if (parryActiveTime.CurrentProgress != Timer.Progress.Ready)
+        if (parryActiveTime.CurrentProgress == Timer.Progress.Ready && parrySuccessTime.CurrentProgress == Timer.Progress.Ready)
             return;
 
-        if (Input.GetKeyDown(inputTracker.ParryButton))
+        if (parriedAttack && parrySuccessTime.CurrentProgress == Timer.Progress.Ready)
         {
-            if (parryActiveTime.CurrentProgress == Timer.Progress.Ready)
-            {
-                parryActiveTime.StartCooldown();
-            }
+            parryActiveTime.ResetCooldown();
+            parrySuccessTime.StartCooldownRealtime();
+            hitstopTime.Duration = parryHitstopDuration;
+            canHitStop = true;
+            Debug.Log("Parried!");
+        }
 
-            if (parriedAttack)
-            {
-                parryActiveTime.ResetCooldown();
-                parrySuccessTime.StartCooldown();
-            }
+        if (parrySuccessTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            parrySuccessTime.ResetCooldown();
+            isParry = false;
+            parriedAttack = false;
+        }
+        
+        if (parryActiveTime.CurrentProgress == Timer.Progress.Finished)
+        {
+            parryActiveTime.ResetCooldown();
 
-            if (parrySuccessTime.CurrentProgress == Timer.Progress.Finished)
+            if (!parriedAttack)
             {
-                parrySuccessTime.ResetCooldown();
-            }
-
-            if (parryActiveTime.CurrentProgress == Timer.Progress.Finished)
-            {
-                parryActiveTime.ResetCooldown();
+                isParry = false;
             }
         }
     }

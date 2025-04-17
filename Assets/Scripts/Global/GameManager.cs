@@ -33,8 +33,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int currentlevel = 0;
     [SerializeField] private Vector2 playerSavedPosition;
 
+    private Transform checkpointPosition;
     private GameObject pauseMenu;
     private GameObject playerCharacter;
+    private PlayerStatus playerStatus;
 
     public int CurrentLevel { get { return currentlevel; } }
 
@@ -46,24 +48,36 @@ public class GameManager : MonoBehaviour
             pauseMenu.SetActive(false);
         }
 
-        //playerCharacter = GameObject.FindWithTag("Player");
-        //if (playerCharacter != null)
-        //{
-        //    playerCharacter.transform.position = m_Instance.playerSavedPosition;
-        //}
+        playerCharacter = GameObject.FindWithTag("Player");
+        if (playerCharacter == null && currentlevel != 0)
+        {
+            GameObject playerPrefab = Resources.Load<GameObject>("Prefab/PlayerCharacter");
+            Instantiate(playerPrefab, checkpointPosition);
+        }
 
         Debug.Log("Awoken");
     }
 
     private void Update()
     {
-        //PauseGame();
+        PauseGame();
         //ResetScene();
+    }
+
+    public void Play()
+    {
+        m_Instance.currentlevel = 1;
+        SceneManager.LoadScene(m_Instance.currentlevel);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     private void PauseGame()
     {
-        if (currentlevel == 0 || m_Instance.currentlevel == 0 )
+        if (currentlevel == 0)
             return;
 
         if (pauseMenu == null)
@@ -86,7 +100,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ResetScene()
+    private void RespawnOnCheckpoint()
     {
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
@@ -108,5 +122,10 @@ public class GameManager : MonoBehaviour
 
         m_Instance.currentlevel = nextSection;
         SceneManager.LoadScene(m_Instance.currentlevel);
+    }
+
+    private void PlayerDied()
+    {
+
     }
 }
