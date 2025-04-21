@@ -83,7 +83,7 @@ public class MenuManager : MonoBehaviour
             yield return null;
         }
 
-        SceneManager.LoadScene("A1_S1");
+        SceneManager.LoadScene("CutScene");
     }
 
     public void OnQuitButtonClicked()
