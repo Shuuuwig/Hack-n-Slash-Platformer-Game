@@ -239,6 +239,166 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 660, y: 192}
+  - name: MenuRITA_Frame_9
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 380
+      width: 320
+      height: 180
+    spriteID: c07cf181b5b331140b2d812fdccdb3d5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 380}
+  - name: MenuRITA_Frame_10
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 332
+      y: 380
+      width: 320
+      height: 180
+    spriteID: e71046ea98d46f84f909f42fa0973410
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 332, y: 380}
+  - name: MenuRITA_Frame_11
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 660
+      y: 380
+      width: 320
+      height: 180
+    spriteID: 685b68d5d55bea549b63876c8199b4f2
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 660, y: 380}
+  - name: MenuRITA_Frame_12
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 568
+      width: 320
+      height: 180
+    spriteID: 25fea546f8fec0d4f97ba24c973d1f2a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 568}
+  - name: MenuRITA_Frame_13
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 332
+      y: 568
+      width: 320
+      height: 180
+    spriteID: 7588d7d148106b444a63e72f19b9e340
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 332, y: 568}
+  - name: MenuRITA_Frame_3
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 660
+      y: 568
+      width: 320
+      height: 180
+    spriteID: b898c1c26d9c50e4d9f55c4b02a8f165
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 660, y: 568}
+  - name: MenuRITA_Frame_6
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 756
+      width: 320
+      height: 180
+    spriteID: c1a4ea4b3ea5f684d8b975ff533d1b8d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 756}
+  - name: MenuRITA_Frame_7
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 332
+      y: 756
+      width: 320
+      height: 180
+    spriteID: b2f80f97cd859b1488b5c5b0e740769a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 332, y: 756}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -256,22 +416,6 @@ ScriptedImporter:
         width: 320
         height: 180
       spriteId: db4dc6f6d1727a544942608dd64a9908
-    - name: MenuRITA_Frame_4
-      frameIndex: 4
-      cellRect:
-        x: 0
-        y: 0
-        width: 320
-        height: 180
-      spriteId: 3574c85eac5911f47982dea8c645f878
-    - name: MenuRITA_Frame_5
-      frameIndex: 5
-      cellRect:
-        x: 0
-        y: 0
-        width: 320
-        height: 180
-      spriteId: 34c3712b35fbf114a88ccd82e3b39cab
     - name: MenuRITA_Frame_1
       frameIndex: 1
       cellRect:
@@ -279,7 +423,7 @@ ScriptedImporter:
         y: 0
         width: 320
         height: 180
-      spriteId: 4ae4cf2e25cfad24ab94f28dca5c0a0f
+      spriteId: 3574c85eac5911f47982dea8c645f878
     - name: MenuRITA_Frame_2
       frameIndex: 2
       cellRect:
@@ -287,7 +431,71 @@ ScriptedImporter:
         y: 0
         width: 320
         height: 180
+      spriteId: 34c3712b35fbf114a88ccd82e3b39cab
+    - name: MenuRITA_Frame_4
+      frameIndex: 4
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: 4ae4cf2e25cfad24ab94f28dca5c0a0f
+    - name: MenuRITA_Frame_5
+      frameIndex: 5
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
       spriteId: 4a293222aa497a345b64f9e42df0b7b2
+    - name: MenuRITA_Frame_8
+      frameIndex: 8
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: 91260b3125a7d5b469ea24154b900f62
+    - name: MenuRITA_Frame_9
+      frameIndex: 9
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: c07cf181b5b331140b2d812fdccdb3d5
+    - name: MenuRITA_Frame_10
+      frameIndex: 10
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: e71046ea98d46f84f909f42fa0973410
+    - name: MenuRITA_Frame_11
+      frameIndex: 11
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: 685b68d5d55bea549b63876c8199b4f2
+    - name: MenuRITA_Frame_12
+      frameIndex: 12
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: 25fea546f8fec0d4f97ba24c973d1f2a
+    - name: MenuRITA_Frame_13
+      frameIndex: 13
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: 7588d7d148106b444a63e72f19b9e340
     - name: MenuRITA_Frame_3
       frameIndex: 3
       cellRect:
@@ -295,7 +503,23 @@ ScriptedImporter:
         y: 0
         width: 320
         height: 180
-      spriteId: 91260b3125a7d5b469ea24154b900f62
+      spriteId: b898c1c26d9c50e4d9f55c4b02a8f165
+    - name: MenuRITA_Frame_6
+      frameIndex: 6
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: c1a4ea4b3ea5f684d8b975ff533d1b8d
+    - name: MenuRITA_Frame_7
+      frameIndex: 7
+      cellRect:
+        x: 0
+        y: 0
+        width: 320
+        height: 180
+      spriteId: b2f80f97cd859b1488b5c5b0e740769a
     linkedCells: []
     parentIndex: -1
   platformSettings:
