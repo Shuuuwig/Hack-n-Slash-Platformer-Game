@@ -1,72 +1,93 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("Background Animation Settings")]
-    public Animator backgroundAnimator;
-    public string backgroundAnimationName = "BackgroundAnimation";
+    [Header("Menu Animation")]
+    public Animator menuAnimator;
+    public string menuAnimationName = "MenuAnimation";
 
-    [Header("Button Animation Settings")]
-    public Animator[] buttonAnimators; 
-    public float buttonAnimationDelay = 1f; 
+    [Header("Buttons")]
+    public Button[] buttons;
+    public float buttonEnableDelay = 0.5f;
 
-    [Header("Scene Management")]
-    public string nextSceneName = "GameScene"; 
+    [Header("Fade Transition")]
+    public Image fadePanel; 
+    public float fadeDuration = 1.0f;
 
-    private bool[] buttonsReady; //arrray for buttons
-    private bool backgroundAnimationFinished = false; 
+    private bool menuAnimationFinished = false;
 
     void Start()
     {
-        buttonsReady = new bool[buttonAnimators.Length];
-
-        if (backgroundAnimator != null) { 
-            backgroundAnimator.Play(backgroundAnimationName);}
-
-        StartCoroutine(WaitForButtonAnimations());
+        SetButtonsInteractable(false);
+        if (menuAnimator != null)
+        {
+            menuAnimator.Play(menuAnimationName);
+        }
     }
 
     void Update()
     {
-        if (!backgroundAnimationFinished && backgroundAnimator != null) {
-            if (backgroundAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f) {
-                backgroundAnimationFinished = true;
-                PauseAnimator(backgroundAnimator); }
-        }
-    }
-    private System.Collections.IEnumerator WaitForButtonAnimations()
-    {
-        yield return new WaitForSeconds(buttonAnimationDelay);
-
-        //loop for check
-        for (int i = 0; i < buttonAnimators.Length; i++)
+        if (!menuAnimationFinished && menuAnimator != null)
         {
-            if (buttonAnimators[i] != null) {
-                while (buttonAnimators[i].GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f) {
-                    yield return null;}
-                buttonsReady[i] = true; 
-                PauseAnimator(buttonAnimators[i]);}
+            if (menuAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            {
+                menuAnimationFinished = true;
+                PauseAnimator(menuAnimator);
+                StartCoroutine(EnableButtonsAfterDelay());
+            }
         }
     }
 
-    //stopping animator
     private void PauseAnimator(Animator animator)
     {
-        animator.speed = 0; 
+        animator.speed = 0;
+    }
+
+    private IEnumerator EnableButtonsAfterDelay()
+    {
+        yield return new WaitForSeconds(buttonEnableDelay);
+        SetButtonsInteractable(true);
+    }
+
+    private void SetButtonsInteractable(bool state)
+    {
+        foreach (Button button in buttons)
+        {
+            button.interactable = state;
+        }
     }
 
     public void OnStartButtonClicked()
     {
-        if (buttonsReady[0]) {
-            SceneManager.LoadScene(nextSceneName); }
+        StartCoroutine(FadeAndLoadScene());
     }
 
-    //public void OnQuitButtonClicked()
-    //{
-    //    if (buttonsReady[1])
-    //    {
-    //        Application.Quit();
-    //    }
-    //}
+    private IEnumerator FadeAndLoadScene()
+    {
+        SetButtonsInteractable(false);
+
+        fadePanel.gameObject.SetActive(true);
+        float elapsedTime = 0f;
+        Color startColor = fadePanel.color;
+        startColor.a = 0f;
+        fadePanel.color = startColor;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+            fadePanel.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+
+        SceneManager.LoadScene("CutScene");
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        Application.Quit();
+    }
 }

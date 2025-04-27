@@ -121,7 +121,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: PlayerAirDashBackward_Frame_0
     originalName: 
-    pivot: {x: 0.36363637, y: -0.6956522}
+    pivot: {x: 0.36363637, y: -0.6666667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -129,7 +129,7 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 22
-      height: 23
+      height: 24
     spriteID: 8be16c58d1cc9ba4c8b767a497b2fd24
     spriteBone: []
     spriteOutline: []
@@ -141,15 +141,15 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: PlayerAirDashBackward_Frame_1
     originalName: 
-    pivot: {x: 0.5, y: -0.6956522}
+    pivot: {x: 0.5, y: -0.6666667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 35
+      y: 36
       width: 18
-      height: 23
+      height: 24
     spriteID: 6b95b720093d129458fbfe081b49021c
     spriteBone: []
     spriteOutline: []
@@ -158,7 +158,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 35}
+    uvTransform: {x: 4, y: 36}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -174,7 +174,7 @@ ScriptedImporter:
         x: 24
         y: 16
         width: 22
-        height: 23
+        height: 24
       spriteId: 8be16c58d1cc9ba4c8b767a497b2fd24
     - name: PlayerAirDashBackward_Frame_1
       frameIndex: 1
@@ -182,7 +182,7 @@ ScriptedImporter:
         x: 23
         y: 16
         width: 18
-        height: 23
+        height: 24
       spriteId: 6b95b720093d129458fbfe081b49021c
     linkedCells: []
     parentIndex: -1

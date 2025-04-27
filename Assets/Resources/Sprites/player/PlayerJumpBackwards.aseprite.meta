@@ -121,7 +121,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: PlayerJumpBackwards_Frame_0
     originalName: 
-    pivot: {x: 0.3809524, y: -0.7727273}
+    pivot: {x: 0.3809524, y: -0.7083334}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -129,7 +129,7 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 21
-      height: 22
+      height: 24
     spriteID: 94b92abfd69f70449bf20e18a35decec
     spriteBone: []
     spriteOutline: []
@@ -141,15 +141,15 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: PlayerJumpBackwards_Frame_1
     originalName: 
-    pivot: {x: 0.47058824, y: -1.0526316}
+    pivot: {x: 0.47058824, y: -0.8333334}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 34
+      y: 36
       width: 17
-      height: 19
+      height: 24
     spriteID: 659da7227c871e745968c70afab3b293
     spriteBone: []
     spriteOutline: []
@@ -158,7 +158,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 34}
+    uvTransform: {x: 4, y: 36}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -174,7 +174,7 @@ ScriptedImporter:
         x: 24
         y: 17
         width: 21
-        height: 22
+        height: 24
       spriteId: 94b92abfd69f70449bf20e18a35decec
     - name: PlayerJumpBackwards_Frame_1
       frameIndex: 1
@@ -182,7 +182,7 @@ ScriptedImporter:
         x: 24
         y: 20
         width: 17
-        height: 19
+        height: 24
       spriteId: 659da7227c871e745968c70afab3b293
     linkedCells: []
     parentIndex: -1

@@ -121,7 +121,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: PlayerFallBackwards_Frame_0
     originalName: 
-    pivot: {x: 0.42105263, y: -1.0476191}
+    pivot: {x: 0.42105263, y: -1}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -129,7 +129,7 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 19
-      height: 21
+      height: 22
     spriteID: d3cb97889fb59fc40b2874280d75d272
     spriteBone: []
     spriteOutline: []
@@ -141,15 +141,15 @@ ScriptedImporter:
     uvTransform: {x: 4, y: 4}
   - name: PlayerFallBackwards_Frame_1
     originalName: 
-    pivot: {x: 0.5, y: -1.15}
+    pivot: {x: 0.5, y: -1.0952381}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
-      y: 33
+      y: 34
       width: 18
-      height: 20
+      height: 21
     spriteID: 32221d4d7ce8b5847b4baf3f00bed886
     spriteBone: []
     spriteOutline: []
@@ -158,7 +158,7 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 33}
+    uvTransform: {x: 4, y: 34}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
@@ -174,7 +174,7 @@ ScriptedImporter:
         x: 24
         y: 22
         width: 19
-        height: 21
+        height: 22
       spriteId: d3cb97889fb59fc40b2874280d75d272
     - name: PlayerFallBackwards_Frame_1
       frameIndex: 1
@@ -182,7 +182,7 @@ ScriptedImporter:
         x: 23
         y: 23
         width: 18
-        height: 20
+        height: 21
       spriteId: 32221d4d7ce8b5847b4baf3f00bed886
     linkedCells: []
     parentIndex: -1
